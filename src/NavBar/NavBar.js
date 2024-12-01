@@ -17,16 +17,10 @@ export function NavBar() {
                 {/* Menu */}
                 <ul className="menu">
                     <li className="menu-item">
-                        <a href="#" className="menu_links">Home</a>
+                        <a href="/" className="menu_links">Home</a>
                     </li>
                     <li className="menu-item">
-                        <a href="#" className="menu_links">Vehicles</a>
-                    </li>
-                    <li className="menu-item">
-                        <a href="#" className="menu_links">Contact</a>
-                    </li>
-                    <li className="menu-item">
-                        <a href="#" className="menu_links button">Sign Up</a>
+                        <a href="/contact" className="menu_links">Contact</a>
                     </li>
                 </ul>
             </div>
