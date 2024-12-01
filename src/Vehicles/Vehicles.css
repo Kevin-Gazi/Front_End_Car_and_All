@@ -1,0 +1,42 @@
+.vehicles {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    text-align: center;
+    color: #333;
+}
+
+.vehicles-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.vehicles-header p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.vehicle-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+.vehicle-card {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.vehicle-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.vehicle-card h2 {
+    font-size: 1.5rem;
+    color: #007BFF;
+}
