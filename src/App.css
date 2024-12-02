@@ -1,3 +1,8 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,12 +11,11 @@
 }
 
 .CarandAll {
-  background-color: #00337a;
-  height:95px;
+  background-image: url('Background.jpg');
+  height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
   position: sticky;
   top: 0;
   z-index: 999;
@@ -20,50 +24,71 @@
 .container {
   display: flex;
   justify-content: space-between;
-  height: 80px;
-  z-index: 1;
-  width: 100%;
-  max-width: 1350px;
+  align-items: center;
+  width: 80%;
   margin: 0 auto;
-  padding: 0 50px;
+  padding: 0 10px;
 }
 
 .Title {
   position: absolute;
-  top: 21px;
-  left: 200px;
-  color: white;
-  font-family: 'Brush Script MT', cursive;
-
-}
-
-.logo img{
-  position: absolute;
-  top: 0px;
-  left: 20px;
-  width: 120px;
-  height: 95px;
+  top: 10px;
+  left: 40px;
+  transition: all 0.5s ease;
+  font-size: 4rem;
   
 }
+
+.Title a {
+  color: white; 
+  text-decoration: none;
+  font-family: 'Brush Script MT', cursive;
+}
+
+.Title:hover {
+  color: #ff6347;
+  text-shadow: 0 0 15px #ff6347; 
+  transform: scale(1.1); 
+}
+
+
+.logo img {
+  position: relative;
+  top: 2.5px;
+  left: 500px;
+  width: 120px;
+  height: 105px;
+  transition: all 0.5s ease; 
+}
+
+.logo img:hover {
+  transform: scale(0.9); 
+}
+
 
 .menu {
   list-style: none;
   display: flex;
-  align-items: center;
-  text-align: center;
+  gap: 1.5rem;
 }
 
 .menu_item {
-  height: 80px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .menu_links {
   color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   text-decoration: none;
-  padding: 0px 1rem;
-  height: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  background-color: rgba(0, 0, 0, 0.5); 
 }
 
+.menu_links:hover {
+  background-color: #ff6347; 
+  box-shadow: 0 0 15px #ff6347;
+  transform: scale(1.1);
+}
