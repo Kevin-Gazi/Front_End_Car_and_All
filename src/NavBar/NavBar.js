@@ -22,7 +22,7 @@ export function NavBar() {
                     </li>
 
                     <li className="menu-item">
-                        <a href="/contact" className="menu_links">Contact</a>
+                        <a href="/Contact/Contact" className="menu_links">Contact</a>
                     </li>
 
                     <li className="menu-item">
