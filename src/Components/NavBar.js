@@ -25,8 +25,12 @@ export function NavBar() {
                     <li className="menu_item">
                         <a href="/vehicles" className="menu_links">Vehicles</a>
                     </li>
+                    <li className="menu_item">
+                        <a href="/Login/LoginScherm" className="menu_links">Login</a>
+                    </li>
                 </ul>
             </div>
         </nav>
     );
 }
+export default NavBar;

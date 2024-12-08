@@ -4,7 +4,7 @@ import './Contact.css';
 const Contact = () => {
     return (
         <div className="contact-container">
-            <h1 className="contact-title">Contact us!</h1>
+            <h1 className="contact-title"><b>Contact us!</b></h1>
             <p className="contact-description">
                 Do you have any questions, comments, or would you like more information about our services?
                 We are happy to assist you! Please contact us using one of the methods below.
