@@ -1,11 +1,11 @@
-body.login-background {
-    background: url('../Background.jpg') no-repeat center center fixed;
-    background-size: cover;
-    margin: 0;
-    min-height: 100vh;
+.login-container {
     display: flex;
     justify-content: center;
-    align-items: center; /* Centraal uitlijnen van de wrapper */
+    align-items: center;
+    min-height: 100vh;
+    /* background: url('../Background.jpg') no-repeat center center fixed; */
+    background-size: cover;
+    margin: 0;
     padding: 0;
 }
 
@@ -116,3 +116,8 @@ body.login-background {
 .register-link p a:hover {
     text-decoration: underline;
 }
+
+
+
+
+
