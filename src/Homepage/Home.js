@@ -1,8 +1,11 @@
 import React from "react";
 import './Home.css';
+import SearchSection from "../Components/SearchSection";
 
 export default function Home() {
     return (
+        <>
+        <SearchSection/>
         <div className="home">
             {/* Hero Section */}
             <header>
@@ -44,5 +47,6 @@ export default function Home() {
                 <p className = "cta-text">Discover our range of vehicles and find the one that suits your needs.</p>
             </section>
         </div>
+        </>
     );
 }

@@ -7,13 +7,6 @@ export function NavBar() {
             <div className="container">
                 <h1 className="Title"><a href = "/">Car And All</a></h1>
 
-                {/* Logo/Image */}
-                <div className="logo">
-                    <a href="/">
-                        <img src={logo} alt="Car and All Logo" />
-                    </a>
-                </div>
-
                 {/* Menu */}
                 <ul className="menu">
                     <li className="menu_item">
@@ -31,6 +24,7 @@ export function NavBar() {
                 </ul>
             </div>
         </nav>
+        
     );
 }
 export default NavBar;

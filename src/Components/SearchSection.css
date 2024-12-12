@@ -1,0 +1,125 @@
+/* Middle Section */
+.search-section {
+    background: url('HomePage_Background.png') no-repeat center center;
+    background-size: cover;
+    padding: 50px 20px; 
+    border-radius: 10px;
+    color: white; 
+}
+
+.search-section {
+    min-height: 400px;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1; 
+}
+
+
+
+.search-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icon-group {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.icon-button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.icon-button:hover {
+    background-color: #ff6347;
+}
+
+.search-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group select,
+.form-group input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-button {
+    grid-column: span 2;
+    padding: 15px;
+    background-color: #ff6347;
+    color: #fff;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.search-button:hover {
+    background-color: #e8533b;
+}
+
+.advanced-search {
+    margin-top: 10px;
+}
+
+.advanced-search a {
+    color: #ff6347;
+    text-decoration: none;
+}
+
+.advanced-search a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .search-form {
+        grid-template-columns: 1fr;
+    }
+
+    .search-button {
+        grid-column: span 1;
+    }
+}
