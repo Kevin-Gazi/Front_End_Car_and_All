@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 function SignUpScherm() {
     const [username, setUsername] = useState(''); // Voeg de state voor username toe
+    const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [typeKlant, setTypeKlant] = useState('Particulier');  // Als je een bolletje voor typeKlant hebt
@@ -16,24 +17,24 @@ function SignUpScherm() {
 
         // Gebruikersgegevens in een object
         const user = {
-            Naam: username,  // Zorg ervoor dat de veldnamen overeenkomen met wat de backend verwacht
+            Naam: username,
+            Achternaam: lastname,
             Email: email,
-            wachtwoord: password,
-            TypeKlant: typeKlant
+            TypeKlant: typeKlant,
         };
 
         try {
-            // Verstuur de gegevens naar de back-end
-            const response = await fetch('https://carandall.azurewebsites.net/api/gebruikers/register', {
+            const queryString = new URLSearchParams({ wachtwoord: password }).toString();
+
+            const response = await fetch(`https://localhost:7017/api/gebruiker/register?${queryString}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(user),
+                body: JSON.stringify(user), // Body contains other parameters
             });
 
             if (response.ok) {
-                // Als de registratie succesvol is, stuur de gebruiker naar de login pagina
                 navigate('/Login/LoginScherm');
             } else {
                 console.error('Er is iets mis gegaan bij het registreren');
@@ -57,8 +58,19 @@ function SignUpScherm() {
                             onChange={(e) => setUsername(e.target.value)}  // Verbind username state
                             required
                         />
-                        <FaUserAlt className="icon" />
+                        <FaUserAlt className="icon"/>
                     </div>
+                    <div className="input-box">
+                        <input
+                            type="text"
+                            placeholder="LastName"
+                            value={lastname}
+                            onChange={(e) => setLastname(e.target.value)}  // Verbind achternaam state
+                            required
+                        />
+                        <FaUserAlt className="icon"/>
+                    </div>
+
                     <div className="input-box">
                         <input
                             type="email"
@@ -67,7 +79,7 @@ function SignUpScherm() {
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
-                        <FaEnvelope className="icon" />
+                        <FaEnvelope className="icon"/>
                     </div>
                     <div className="input-box">
                         <input
@@ -77,7 +89,7 @@ function SignUpScherm() {
                             onChange={(e) => setPassword(e.target.value)}  // Verbind wachtwoord state
                             required
                         />
-                        <FaLock className="icon" />
+                        <FaLock className="icon"/>
                     </div>
                     <div className="input-box">
                         <label>

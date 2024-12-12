@@ -2,7 +2,7 @@
   "name": "car_and_all_web",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://carandall.azurewebsites.net",  
+  "homepage": "https://localhost:7017",  
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
