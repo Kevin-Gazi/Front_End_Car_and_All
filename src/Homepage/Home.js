@@ -1,5 +1,5 @@
 import React from "react";
-import './Home.css';
+import '../App.css';
 import SearchSection from "../Components/SearchSection";
 
 export default function Home() {

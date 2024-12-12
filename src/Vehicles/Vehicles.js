@@ -1,5 +1,5 @@
 import React from "react";
-import "./Vehicles.css";
+import "../App.css";
 import Tesla_Model_S from "../Vehicles/Tesla_Model_S.png";
 import BMW_3_Series from "../Vehicles/BMW_3_Series.png";
 import MercedesBenz_C_Class from "../Vehicles/MercedesBenz_C_Class.png";

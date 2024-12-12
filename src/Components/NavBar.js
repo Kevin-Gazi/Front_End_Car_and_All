@@ -1,4 +1,5 @@
 import React from "react";
+import '../App.css';
 import logo from "../Homepage/CarAndAllFoto.png";
 
 export function NavBar() {

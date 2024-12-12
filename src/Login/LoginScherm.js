@@ -1,5 +1,5 @@
 import React from "react";
-import './LoginScherm.css';
+import '../App.css';
 import { FaUserAlt, FaLock } from "react-icons/fa";
 
 function LoginScherm() {

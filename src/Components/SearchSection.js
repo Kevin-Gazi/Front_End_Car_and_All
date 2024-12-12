@@ -1,5 +1,6 @@
 import React from "react";
-import './SearchSection.css';
+import '../App.css';
+
 
 export function SearchSection() {
     return (
@@ -24,9 +25,10 @@ export function SearchSection() {
                     <div className="form-group">
                         <label>Merk</label>
                         <select>
-                            <option value="">Selecteer Merk</option>
-                            <option value="BMW">BMW</option>
-                            <option value="Audi">Audi</option>
+                            <option value="">Select Vehicle</option>
+                            <option value="BMW">Car</option>
+                            <option value="Audi">Camper</option>
+                            <option value="Audi">Caravan</option>
                         </select>
                     </div>
 
@@ -51,7 +53,7 @@ export function SearchSection() {
 
                     {/* Submit Button */}
                     <button type="submit" className="search-button">
-                        Resultaten
+                        Results
                     </button>
                 </form>
 
