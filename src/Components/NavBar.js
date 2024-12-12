@@ -1,31 +1,34 @@
 import React from "react";
 import '../App.css';
-import logo from "../Homepage/CarAndAllFoto.png";
+import { Link } from "react-router-dom";
+import logo from "../Homepage/CarAndAllFoto.png"; // Zorg ervoor dat het logo bestand correct is
+import './NavBar.css'; // CSS-bestand importeren
 
 export function NavBar() {
     return (
-        <nav className="CarandAll">
-            <div className="container">
-                <h1 className="Title"><a href = "/">Car And All</a></h1>
+        <nav className="navbar">
+            <div className="navbar-container">
+                <h1 className="navbar-title">
+                    <Link to="/" className="navbar-logo">Car And All</Link>
+                </h1>
 
-                {/* Menu */}
-                <ul className="menu">
-                    <li className="menu_item">
-                        <a href="/" className="menu_links">Home</a>
+                <ul className="navbar-menu">
+                    <li className="navbar-item">
+                        <Link to="/" className="navbar-links">Home</Link>
                     </li>
-                    <li className="menu_item">
-                        <a href="/Contact/Contact" className="menu_links">Contact</a>
+                    <li className="navbar-item">
+                        <Link to="/Contact/Contact" className="navbar-links">Contact</Link>
                     </li>
-                    <li className="menu_item">
-                        <a href="/vehicles" className="menu_links">Vehicles</a>
+                    <li className="navbar-item">
+                        <Link to="/vehicles" className="navbar-links">Vehicles</Link>
                     </li>
-                    <li className="menu_item">
-                        <a href="/Login/LoginScherm" className="menu_links">Login</a>
+                    <li className="navbar-item">
+                        <Link to="/Login/LoginScherm" className="navbar-links">Login</Link>
                     </li>
                 </ul>
             </div>
         </nav>
-        
     );
 }
+
 export default NavBar;
