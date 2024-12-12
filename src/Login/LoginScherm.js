@@ -19,7 +19,7 @@ function LoginScherm() {
                     </div>
 
                     <div className="remember-forgot">
-                        <a href="#">Forgot password?</a>
+                        
                     </div>
                     <button type="submit">Login</button>
 

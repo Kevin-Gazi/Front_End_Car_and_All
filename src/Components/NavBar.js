@@ -1,8 +1,8 @@
 import React from "react";
 import '../App.css';
 import { Link } from "react-router-dom";
-import logo from "../Homepage/CarAndAllFoto.png"; // Zorg ervoor dat het logo bestand correct is
 import './NavBar.css'; // CSS-bestand importeren
+// import logo from "../Homepage/CarAndAllFoto.png";
 
 export function NavBar() {
     return (

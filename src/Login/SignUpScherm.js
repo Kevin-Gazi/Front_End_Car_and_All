@@ -24,7 +24,7 @@ function SignUpScherm() {
 
         try {
             // Verstuur de gegevens naar de back-end
-            const response = await fetch('https://localhost:7017/api/gebruikers/register', {
+            const response = await fetch('https://carandall.azurewebsites.net/api/gebruikers/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
