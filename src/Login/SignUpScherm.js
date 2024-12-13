@@ -99,8 +99,7 @@ function SignUpScherm() {
                                 checked={typeKlant === 'Particulier'}
                                 onChange={() => setTypeKlant('Particulier')}
                             />
-                            Particulier
-                        </label>
+                            Particulier </label>
                         <label>
                             <input
                                 type="radio"
