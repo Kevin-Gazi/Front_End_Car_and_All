@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../App.css";
+import "./LoginScherm.css";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
