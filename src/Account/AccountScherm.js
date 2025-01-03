@@ -73,7 +73,8 @@
                         <p><strong>Name:</strong> {user.naam}</p>
                         <p><strong>Email:</strong> {user.email}</p>
                         <p><strong>Customer type:</strong> {user.typeKlant}</p>
-    
+                        <p><strong>KvKNummer:</strong> {user.kvkNummer}</p>
+
                         {user.typeKlant === 'Zakelijk' && (
                             <div>
                                 <h3>Employees:</h3>
@@ -82,36 +83,36 @@
                                         <li key={employee.id}>{employee.naam} ({employee.email})</li>
                                     ))}
                                 </ul>
-    
+
                                 <h4>Add an employee:</h4>
                                 <input
                                     type="text"
                                     placeholder="Name"
                                     value={newEmployee.naam}
-                                    onChange={(e) => setNewEmployee({ ...newEmployee, naam: e.target.value })}
+                                    onChange={(e) => setNewEmployee({...newEmployee, naam: e.target.value})}
                                 />
                                 <input
                                     type="text"
                                     placeholder="Last name"
                                     value={newEmployee.achternaam}
-                                    onChange={(e) => setNewEmployee({ ...newEmployee, achternaam: e.target.value })}
+                                    onChange={(e) => setNewEmployee({...newEmployee, achternaam: e.target.value})}
                                 />
                                 <input
                                     type="email"
                                     placeholder="Email"
                                     value={newEmployee.email}
-                                    onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
+                                    onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}
                                 />
                                 <input
                                     type="password"
                                     placeholder="Password"
                                     value={newEmployee.wachtwoord}
-                                    onChange={(e) => setNewEmployee({ ...newEmployee, wachtwoord: e.target.value })}
+                                    onChange={(e) => setNewEmployee({...newEmployee, wachtwoord: e.target.value})}
                                 />
                                 <button onClick={handleAddEmployee}>Add employee</button>
                             </div>
                         )}
-    
+
                         {editing ? (
                             <div>
                                 <input

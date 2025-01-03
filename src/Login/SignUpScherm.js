@@ -34,7 +34,7 @@ function SignUpScherm() {
             });
 
             if (response.ok) {
-                navigate('/Login/LoginScherm');
+                navigate('/Login');
             } else {
                 console.error('Er is iets mis gegaan bij het registreren');
             }
@@ -61,7 +61,7 @@ function SignUpScherm() {
                     <div className="input-box">
                         <input
                             type="text"
-                            placeholder="LastName"
+                            placeholder="Last Name"
                             value={lastname}
                             onChange={(e) => setLastname(e.target.value)}
                             required
