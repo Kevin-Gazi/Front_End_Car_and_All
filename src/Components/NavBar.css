@@ -49,3 +49,9 @@
 .navbar-links:hover {
     color: #ff6f61; /* Een kleur voor de hover-effecten */
 }
+.logout-button {
+    background: none; 
+    border: none;    
+    padding: 0;       
+    cursor: pointer;  
+}

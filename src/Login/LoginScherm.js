@@ -1,34 +1,40 @@
 import React, { useState } from "react";
 import "./LoginScherm.css";
 import { FaUserAlt, FaLock } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
-function LoginScreen() {
+function LoginScreen({ setIsLoggedIn }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        const loginDetails = { email, password }; // Stuur email en wachtwoord in de body
+        const loginDetails = { email, password };
 
         try {
             const response = await fetch(`https://localhost:7017/api/gebruiker/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(loginDetails), // Voeg het wachtwoord toe in de body
+                body: JSON.stringify(loginDetails),
             });
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("Successfully logged in:", data); // Beheer sessie of redirect
+                console.log("Successfully logged in:", data);
+                // Sla token op in localStorage (of in cookies)
+                localStorage.setItem('authToken', data.token);
+                setIsLoggedIn(true); // Update de inlogstatus
+                navigate("/"); // Redirect naar de homepagina
             } else {
                 const errorMsg = await response.text();
-                console.error("Login failed:", errorMsg);
+                setError(errorMsg); // Toon foutmelding als login mislukt
             }
         } catch (err) {
             console.error("Login error:", err);
+            setError("Er is een fout opgetreden bij het inloggen.");
         }
     };
 
@@ -46,7 +52,7 @@ function LoginScreen() {
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
-                        <FaUserAlt className="icon" />
+                        <FaUserAlt className="icon"/>
                     </div>
                     <div className="input-box">
                         <input
@@ -56,7 +62,7 @@ function LoginScreen() {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
-                        <FaLock className="icon" />
+                        <FaLock className="icon"/>
                     </div>
                     <button type="submit">Login</button>
                     <div className="register-link">
@@ -65,7 +71,7 @@ function LoginScreen() {
                 </form>
             </div>
         </div>
-    );
+);
 }
 
 export default LoginScreen;
