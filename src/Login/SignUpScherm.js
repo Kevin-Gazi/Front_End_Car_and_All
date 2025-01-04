@@ -4,7 +4,7 @@ import { FaUserAlt, FaEnvelope, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 function SignUpScherm() {
-    const [username, setUsername] = useState(''); // Voeg de state voor username toe
+    const [name, setName] = useState(''); // Voeg de state voor username toe
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -17,7 +17,7 @@ function SignUpScherm() {
 
         // Gebruikersgegevens in een object
         const user = {
-            Naam: username,
+            Naam: name,
             Achternaam: lastname,
             Email: email,
             Password: password, // Voeg het wachtwoord hier toe
@@ -52,8 +52,8 @@ function SignUpScherm() {
                         <input
                             type="text"
                             placeholder="Username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}  // Verbind username state
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}  // Verbind username state
                             required
                         />
                         <FaUserAlt className="icon"/>
