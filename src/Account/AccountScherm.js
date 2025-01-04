@@ -47,23 +47,25 @@
                 }
             }
         }, [navigate]);
-    
+
         const handleAddEmployee = () => {
-            const token = localStorage.getItem('authToken');
+            const token = localStorage.getItem("authToken");
             axios
-                .post(`http://localhost:7017/api/gebruiker/${user.id}/add-employee`, newEmployee, {
-                    headers: { Authorization: `Bearer ${token}` }
-                })
-                .then(response => {
+                .post(
+                    `http://localhost:7017/api/Employee/${user.id}/add-employee`,
+                    newEmployee,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                )
+                .then((response) => {
                     setEmployees([...employees, response.data]);
-                    // Reset de invoervelden en behoud het KvK-nummer
-                    setNewEmployee({ naam: '', achternaam: '', email: '', wachtwoord: '', typeKlant: 'Werknemer', kvkNummer: user.kvkNummer });
+                    setNewEmployee({ naam: "", achternaam: "", email: "", wachtwoord: "", kvkNummer: user.kvkNummer });
                 })
-                .catch(error => {
-                    console.error('Fout bij het toevoegen van werknemer:', error);
+                .catch((error) => {
+                    console.error("Fout bij het toevoegen van werknemer:", error);
                 });
         };
-    
+
+
         return (
             <div className="account-container">
                 <h1>Account</h1>
