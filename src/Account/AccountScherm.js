@@ -16,7 +16,7 @@
         useEffect(() => {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                navigate('/Login/LoginScherm');
+                navigate('/');
             } else {
                 try {
                     const decodedToken = jwtDecode(token);
@@ -39,11 +39,11 @@
                         })
                         .catch(error => {
                             console.error('Fout bij ophalen gebruiker:', error);
-                            navigate('/Login/LoginScherm');
+                            navigate('/');
                         });
                 } catch (error) {
                     console.error('Fout bij het decoderen van het token:', error);
-                    navigate('/Login/LoginScherm');
+                    navigate('/');
                 }
             }
         }, [navigate]);
@@ -52,7 +52,7 @@
             const token = localStorage.getItem("authToken");
             axios
                 .post(
-                    `http://localhost:7017/api/Employee/${user.id}/add-employee`,
+                    `https://localhost:7017/api/Employee/${user.id}/add-employee`,
                     newEmployee,
                     { headers: { Authorization: `Bearer ${token}` } }
                 )
