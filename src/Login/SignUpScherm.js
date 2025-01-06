@@ -36,7 +36,7 @@ function SignUpScherm() {
             if (response.ok) {
                 navigate('/Login');
             } else {
-                console.error('Er is iets mis gegaan bij het registreren');
+                alert('Er is iets mis gegaan bij het registreren');
             }
         } catch (error) {
             console.error('Fout bij het verbinden met de server:', error);
