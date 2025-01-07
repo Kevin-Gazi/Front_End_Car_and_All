@@ -50,6 +50,47 @@ function Account({ setIsLoggedIn }) {
         }
     }, [navigate]);
 
+    const handleDeleteEmployee = (employeeId) => {
+        const token = localStorage.getItem('authToken');
+        axios
+            .delete(`https://localhost:7017/api/Employee/${employeeId}/delete`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            .then(() => {
+                setEmployees(employees.filter(employee => employee.id !== employeeId));
+            })
+            .catch(error => {
+                console.error('Fout bij het verwijderen van werknemer:', error);
+                setError('Er is een fout opgetreden bij het verwijderen van de werknemer.');
+            });
+    };
+    const handleUpdatePassword = (employeeId) => {
+        const newPassword = prompt('Voer het nieuwe wachtwoord in:');
+        if (newPassword) {
+            const token = localStorage.getItem('authToken');
+            axios
+                .put(
+                    `https://localhost:7017/api/Employee/${employeeId}/update-password`,
+                    { newPassword: newPassword }, // Verstuur de nieuwe wachtwoord in een object
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json', // Voeg deze header toe
+                        }
+                    }
+                )
+                .then(() => {
+                    alert('Wachtwoord succesvol gewijzigd.');
+                })
+                .catch(error => {
+                    console.error('Fout bij het wijzigen van wachtwoord:', error);
+                    setError('Er is een fout opgetreden bij het wijzigen van het wachtwoord.');
+                });
+        }
+    };
+
+
+
     const handleAddEmployee = () => {
         const token = localStorage.getItem('authToken');
         if (!newEmployee.naam || !newEmployee.achternaam || !newEmployee.email || !newEmployee.wachtwoord) {
@@ -57,20 +98,40 @@ function Account({ setIsLoggedIn }) {
             return;
         }
 
+        // Controleer of de e-mail al bestaat
         axios
-            .post(
-                `https://localhost:7017/api/Employee/${user.id}/add-employee`,
-                newEmployee,
-                { headers: { Authorization: `Bearer ${token}` } }
-            )
+            .get(`https://localhost:7017/api/Employee/check-email/${newEmployee.email}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
             .then(response => {
-                setEmployees([...employees, response.data]);
-                setNewEmployee({ naam: '', achternaam: '', email: '', wachtwoord: '', kvkNummer: user.kvkNummer });
-                setError('');
+                if (response.data.exists) {
+                    setError('E-mail bestaat al in de database.');
+                } else {
+                    // Voeg nieuwe werknemer toe
+                    axios
+                        .post(
+                            `https://localhost:7017/api/Employee/${user.id}/add-employee`,
+                            newEmployee,
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        )
+                        .then(response => {
+                            setEmployees([...employees, response.data]);
+                            setNewEmployee({ naam: '', achternaam: '', email: '', wachtwoord: '', kvkNummer: user.kvkNummer });
+                            setError('');
+                        })
+                        .catch(error => {
+                            console.error('Fout bij het toevoegen van werknemer:', error);
+                            if (error.response && error.response.data) {
+                                setError(error.response.data);
+                            } else {
+                                setError('Er is een fout opgetreden bij het toevoegen van de werknemer. Probeer opnieuw.');
+                            }
+                        });
+                }
             })
             .catch(error => {
-                console.error('Fout bij het toevoegen van werknemer:', error);
-                setError('Er is een fout opgetreden bij het toevoegen van de werknemer. Probeer opnieuw.');
+                console.error('Fout bij het controleren van e-mail:', error);
+                setError('Er is een fout opgetreden bij het controleren van de e-mail.');
             });
     };
 
@@ -113,7 +174,11 @@ function Account({ setIsLoggedIn }) {
                                 <h3>Werknemers:</h3>
                                 <ul>
                                     {employees.map(employee => (
-                                        <li key={employee.id}>{employee.naam} ({employee.email})</li>
+                                        <li key={employee.id}>
+                                            {employee.naam} ({employee.email})
+                                            <button onClick={() => handleDeleteEmployee(employee.id)}>Verwijder</button>
+                                            <button onClick={() => handleUpdatePassword(employee.id)}>Wijzig wachtwoord</button>
+                                        </li>
                                     ))}
                                 </ul>
                                 <h4>Voeg een werknemer toe:</h4>
