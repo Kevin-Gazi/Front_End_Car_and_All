@@ -4,7 +4,7 @@ import { FaUserAlt, FaEnvelope, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 function SignUpScherm() {
-    const [username, setUsername] = useState('');
+    const [name, setName] = useState(''); // Voeg de state voor username toe
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -12,14 +12,16 @@ function SignUpScherm() {
     const [kvkNummer, setKvkNummer] = useState(''); 
     const navigate = useNavigate();
 
+    // Functie om formulier in te dienen
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Gebruikersgegevens in een object
         const user = {
-            Naam: username,
+            Naam: name,
             Achternaam: lastname,
             Email: email,
-            Password: password,
+            Password: password, // Voeg het wachtwoord hier toe
             TypeKlant: typeKlant,
             KvkNummer: typeKlant === 'Zakelijk' ? kvkNummer : null, 
         };
@@ -30,7 +32,7 @@ function SignUpScherm() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(user),
+                body: JSON.stringify(user), // Body contains all user parameters, including wachtwoord
             });
 
             if (response.ok) {
@@ -52,8 +54,8 @@ function SignUpScherm() {
                         <input
                             type="text"
                             placeholder="Username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}  // Verbind username state
                             required
                         />
                         <FaUserAlt className="icon"/>
@@ -63,7 +65,7 @@ function SignUpScherm() {
                             type="text"
                             placeholder="Last Name"
                             value={lastname}
-                            onChange={(e) => setLastname(e.target.value)}
+                            onChange={(e) => setLastname(e.target.value)}  // Verbind achternaam state
                             required
                         />
                         <FaUserAlt className="icon"/>
@@ -84,7 +86,7 @@ function SignUpScherm() {
                             type="password"
                             placeholder="Password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => setPassword(e.target.value)}  // Verbind wachtwoord state
                             required
                         />
                         <FaLock className="icon"/>

@@ -28,14 +28,14 @@ body {
 .vehicles-container {
     display: flex;
     gap: 20px;
-    padding: 20px;
+    padding: 3rem 10rem;
 }
 
 /* Filters styling */
 .filters {
     display: flex;
     flex-direction: column;
-    max-width: 300px;
+    max-width: 200px;
     width: 100%;
 }
 
@@ -64,35 +64,45 @@ body {
     margin-right: 10px;
 }
 
-/* Vehicle grid */
 .vehicle-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    padding: 20px;
-    justify-items: center;
-    width: 100%; /* Ensure grid takes available space */
+    grid-template-columns: 1fr; /* Always one column */
+    gap: 20px; /* Add spacing between cards */
+    width: 100%; /* Take full width of the parent container */
+    min-height: 80vh; /* Ensure the grid has a minimum height to fill the page */
+    align-content: start; /* Centers items vertically if there's extra space */
 }
 
-/* Individual vehicle card */
+
 .vehicle-card {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    text-align: center;
+    padding: 2rem;
+    height: 230px;
     transition: transform 0.3s ease, background-color 0.3s ease;
-    cursor: pointer;
-    max-width: 320px;
-    min-width: 280px;
+    display: flex; /* Enables flexbox */
+    flex-direction: row; /* Stack elements vertically */
+    gap: 10px; /* Space between elements */
 }
 
-.vehicle-card:hover,
-.vehicle-card:focus {
-    background-color: #e0fbfc;
-    transform: scale(1.05);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+.vehicle-card div.vehicle-start {
+    flex: 2;
+}
+
+/* Align the price and button to the right */
+.vehicle-card div.vehicle-end {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+h2 {
+    font-weight: bold;
 }
 
 .vehicle-card img {
@@ -161,18 +171,3 @@ body {
     background-color: #004a58;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-    .vehicle-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    /* Adjust layout for smaller screens */
-    .vehicles-container {
-        flex-direction: column;
-    }
-
-    .filters {
-        margin-bottom: 15px;
-    }
-}
