@@ -4,24 +4,24 @@ import { FaUserAlt, FaEnvelope, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 function SignUpScherm() {
-    const [username, setUsername] = useState(''); // Voeg de state voor username toe
+    const [username, setUsername] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [typeKlant, setTypeKlant] = useState('Particulier');  // Als je een bolletje voor typeKlant hebt
+    const [typeKlant, setTypeKlant] = useState('Particulier');
+    const [kvkNummer, setKvkNummer] = useState(''); 
     const navigate = useNavigate();
 
-    // Functie om formulier in te dienen
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Gebruikersgegevens in een object
         const user = {
             Naam: username,
             Achternaam: lastname,
             Email: email,
-            Password: password, // Voeg het wachtwoord hier toe
+            Password: password,
             TypeKlant: typeKlant,
+            KvkNummer: typeKlant === 'Zakelijk' ? kvkNummer : null, 
         };
 
         try {
@@ -30,11 +30,11 @@ function SignUpScherm() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(user), // Body contains all user parameters, including wachtwoord
+                body: JSON.stringify(user),
             });
 
             if (response.ok) {
-                navigate('/Login/LoginScherm');
+                navigate('/Login');
             } else {
                 console.error('Er is iets mis gegaan bij het registreren');
             }
@@ -53,7 +53,7 @@ function SignUpScherm() {
                             type="text"
                             placeholder="Username"
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}  // Verbind username state
+                            onChange={(e) => setUsername(e.target.value)}
                             required
                         />
                         <FaUserAlt className="icon"/>
@@ -61,9 +61,9 @@ function SignUpScherm() {
                     <div className="input-box">
                         <input
                             type="text"
-                            placeholder="LastName"
+                            placeholder="Last Name"
                             value={lastname}
-                            onChange={(e) => setLastname(e.target.value)}  // Verbind achternaam state
+                            onChange={(e) => setLastname(e.target.value)}
                             required
                         />
                         <FaUserAlt className="icon"/>
@@ -84,7 +84,7 @@ function SignUpScherm() {
                             type="password"
                             placeholder="Password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}  // Verbind wachtwoord state
+                            onChange={(e) => setPassword(e.target.value)}
                             required
                         />
                         <FaLock className="icon"/>
@@ -97,7 +97,8 @@ function SignUpScherm() {
                                 checked={typeKlant === 'Particulier'}
                                 onChange={() => setTypeKlant('Particulier')}
                             />
-                            Particulier </label>
+                            Particulier
+                        </label>
                         <label>
                             <input
                                 type="radio"
@@ -108,6 +109,19 @@ function SignUpScherm() {
                             Zakelijk
                         </label>
                     </div>
+
+                    {typeKlant === 'Zakelijk' && (
+                        <div className="input-box">
+                            <input
+                                type="text"
+                                placeholder="KVK Nummer"
+                                value={kvkNummer}
+                                onChange={(e) => setKvkNummer(e.target.value)}
+                                required={typeKlant === 'Zakelijk'}
+                            />
+                        </div>
+                    )}
+
                     <button type="submit">Sign Up</button>
 
                     <div className="login-link">
