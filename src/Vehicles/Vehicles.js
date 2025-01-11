@@ -7,7 +7,7 @@ export default function Vehicles() {
     const [filteredVehicles, setFilteredVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedVehicle, setSelectedVehicle] = useState(null);
-    
+
     const [selectedType, setSelectedType] = useState('All');
     const [selectedBrand, setSelectedBrand] = useState([]);
     const [selectedColor, setSelectedColor] = useState([]);
@@ -29,6 +29,7 @@ export default function Vehicles() {
         fetchVehicles();
     }, []);
 
+    // Filter vehicles based on selected filters
     useEffect(() => {
         let filtered = vehicles;
 
@@ -47,17 +48,14 @@ export default function Vehicles() {
         setFilteredVehicles(filtered);
     }, [selectedType, selectedBrand, selectedColor, vehicles]);
 
-    if (loading) {
-        return <div>Loading vehicles...</div>;
-    }
-
+    // Get unique values for brands and colors based on filtered vehicles
     const getUniqueBrands = () => {
-        const brands = vehicles.map(vehicle => vehicle.merk);
+        const brands = filteredVehicles.map(vehicle => vehicle.merk);
         return [...new Set(brands)];
     };
 
     const getUniqueColors = () => {
-        const colors = vehicles.map(vehicle => vehicle.kleur);
+        const colors = filteredVehicles.map(vehicle => vehicle.kleur);
         return [...new Set(colors)];
     };
 
@@ -90,6 +88,10 @@ export default function Vehicles() {
             // Add real rental API logic here
         }
     };
+
+    if (loading) {
+        return <div>Loading vehicles...</div>;
+    }
 
     return (
         <div className="vehicles">
@@ -194,7 +196,6 @@ export default function Vehicles() {
                         </div>
                     ))}
                 </section>
-
             </div>
         </div>
     );
