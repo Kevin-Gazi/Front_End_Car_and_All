@@ -31,26 +31,23 @@ export function SearchSection() {
                             <option value="Audi">Caravan</option>
                         </select>
                     </div>
-
-                    <div className="form-group">
-                        <label>Model</label>
-                        <select>
-                            <option value="">Selecteer Model</option>
-                            <option value="X5">X5</option>
-                            <option value="A4">A4</option>
-                        </select>
-                    </div>
-
+                    
                     <div className="form-group">
                         <label>Bouwjaar vanaf</label>
-                        <input type="number" placeholder="2020" />
+                        <input type="number" placeholder="2024"/>
+                    </div>
+
+                    {/* Date*/}
+                    <div className="form-group">
+                        <label>Start Datum</label>
+                        <input type="date" />
                     </div>
 
                     <div className="form-group">
-                        <label>Prijs tot (€)</label>
-                        <input type="number" placeholder="50000" />
+                        <label>Eind Datum</label>
+                        <input type="date" />
                     </div>
-
+                    
                     {/* Submit Button */}
                     <button type="submit" className="search-button">
                         Results

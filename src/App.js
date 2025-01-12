@@ -7,6 +7,8 @@ import Vehicles from "./Vehicles/Vehicles";
 import { NavBar } from "./Components/NavBar";  // Import van de NavBar
 import Login from "./Login/LoginScherm";
 import SignUp from "./Login/SignUpScherm"; // Je SignUp component
+import Schadeclaims from "./Backofficemedewerker/Schadeclaims";
+import Subscriptions from "./Abonnement/Subscriptions";
 
 function App() {
     return (
@@ -19,6 +21,8 @@ function App() {
                 <Route path="/vehicles" element={<Vehicles />} />
                 <Route path="/Login/LoginScherm" element={<Login />} />
                 <Route path="/SignUp" element={<SignUp />} />
+                <Route path="/schadeclaims" element={<Schadeclaims />} />
+                <Route path="/subscriptions" element={<Subscriptions />} />
             </Routes>
         </Router>
     );

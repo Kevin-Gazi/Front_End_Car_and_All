@@ -25,6 +25,13 @@ export function NavBar() {
                     <li className="navbar-item">
                         <Link to="/Login/LoginScherm" className="navbar-links">Login</Link>
                     </li>
+                    <li className="navbar-item">
+                        <Link to="/schadeclaims" className="navbar-links">Schadeclaims</Link>
+                    </li>
+                    <li className="navbar-item"></li>
+                    <li>
+                        <Link to="/subscriptions" className="navbar-links">Subscriptions</Link>
+                    </li>
                 </ul>
             </div>
         </nav>
