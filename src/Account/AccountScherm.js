@@ -10,7 +10,6 @@ function Account({ setIsLoggedIn }) {
     const [newPassword, setNewPassword] = useState('');
     const [employees, setEmployees] = useState([]);
     const [newEmployee, setNewEmployee] = useState({ naam: '', achternaam: '', email: '', wachtwoord: '', typeKlant: 'Werknemer', kvkNummer: '' });
-    const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -22,33 +21,52 @@ function Account({ setIsLoggedIn }) {
             try {
                 const decodedToken = jwtDecode(token);
                 const userId = decodedToken.sub;
-
-                axios
-                    .get(`https://localhost:7017/api/gebruiker/${userId}`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    })
-                    .then(response => {
-                        setUser(response.data);
-                        if (response.data.typeKlant === 'Zakelijk') {
-                            setEmployees(response.data.employees);
-                            setNewEmployee(prevState => ({
-                                ...prevState,
-                                kvkNummer: response.data.kvkNummer
-                            }));
-                        }
-                        setIsLoading(false);
-                    })
-                    .catch(error => {
-                        console.error('Fout bij ophalen gebruiker:', error);
-                        setError('Kan gebruiker niet ophalen. Probeer later opnieuw.');
-                        navigate('/');
-                    });
+                
+                if (decodedToken.userType === 'Employee') {
+                    // Ophalen van employee gegevens
+                    axios
+                        .get(`https://localhost:7017/api/employee/${userId}`, {
+                            headers: { Authorization: `Bearer ${token}` }
+                        })
+                        .then(response => {
+                            setUser(response.data);
+                            setIsLoading(false);
+                        })
+                        .catch(error => {
+                            console.error('Fout bij ophalen werknemer:', error);
+                            alert('Kan werknemer niet ophalen. Probeer later opnieuw.');
+                            navigate('/');
+                        });
+                } else {
+                    // Ophalen van gebruiker gegevens voor zakelijke gebruikers
+                    axios
+                        .get(`https://localhost:7017/api/gebruiker/${userId}`, {
+                            headers: { Authorization: `Bearer ${token}` }
+                        })
+                        .then(response => {
+                            setUser(response.data);
+                            if (response.data.typeKlant === 'Zakelijk') {
+                                setEmployees(response.data.employees);
+                                setNewEmployee(prevState => ({
+                                    ...prevState,
+                                    kvkNummer: response.data.kvkNummer
+                                }));
+                            }
+                            setIsLoading(false);
+                        })
+                        .catch(error => {
+                            console.error('Fout bij ophalen gebruiker:', error);
+                            alert('Kan gebruiker niet ophalen. Probeer later opnieuw.');
+                            navigate('/');
+                        });
+                }
             } catch (error) {
                 console.error('Fout bij het decoderen van het token:', error);
                 navigate('/');
             }
         }
     }, [navigate]);
+
 
     const handleDeleteEmployee = (employeeId) => {
         const token = localStorage.getItem('authToken');
@@ -61,9 +79,10 @@ function Account({ setIsLoggedIn }) {
             })
             .catch(error => {
                 console.error('Fout bij het verwijderen van werknemer:', error);
-                setError('Er is een fout opgetreden bij het verwijderen van de werknemer.');
+                alert('Er is een fout opgetreden bij het verwijderen van de werknemer.');
             });
     };
+
     const handleUpdatePassword = (employeeId) => {
         const newPassword = prompt('Voer het nieuwe wachtwoord in:');
         if (newPassword) {
@@ -71,11 +90,11 @@ function Account({ setIsLoggedIn }) {
             axios
                 .put(
                     `https://localhost:7017/api/Employee/${employeeId}/update-password`,
-                    { newPassword: newPassword }, // Verstuur de nieuwe wachtwoord in een object
+                    { newPassword: newPassword },
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
-                            'Content-Type': 'application/json', // Voeg deze header toe
+                            'Content-Type': 'application/json',
                         }
                     }
                 )
@@ -84,30 +103,26 @@ function Account({ setIsLoggedIn }) {
                 })
                 .catch(error => {
                     console.error('Fout bij het wijzigen van wachtwoord:', error);
-                    setError('Er is een fout opgetreden bij het wijzigen van het wachtwoord.');
+                    alert('Er is een fout opgetreden bij het wijzigen van het wachtwoord.');
                 });
         }
     };
 
-
-
     const handleAddEmployee = () => {
         const token = localStorage.getItem('authToken');
         if (!newEmployee.naam || !newEmployee.achternaam || !newEmployee.email || !newEmployee.wachtwoord) {
-            setError('Alle velden zijn verplicht.');
+            alert('Vul alle velden in.');
             return;
         }
 
-        // Controleer of de e-mail al bestaat
         axios
             .get(`https://localhost:7017/api/Employee/check-email/${newEmployee.email}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             .then(response => {
                 if (response.data.exists) {
-                    setError('E-mail bestaat al in de database.');
+                    alert('Email bestaat al.');
                 } else {
-                    // Voeg nieuwe werknemer toe
                     axios
                         .post(
                             `https://localhost:7017/api/Employee/${user.id}/add-employee`,
@@ -117,21 +132,16 @@ function Account({ setIsLoggedIn }) {
                         .then(response => {
                             setEmployees([...employees, response.data]);
                             setNewEmployee({ naam: '', achternaam: '', email: '', wachtwoord: '', kvkNummer: user.kvkNummer });
-                            setError('');
                         })
                         .catch(error => {
                             console.error('Fout bij het toevoegen van werknemer:', error);
-                            if (error.response && error.response.data) {
-                                setError(error.response.data);
-                            } else {
-                                setError('Er is een fout opgetreden bij het toevoegen van de werknemer. Probeer opnieuw.');
-                            }
+                            alert('Er is een fout opgetreden bij het toevoegen van de werknemer.');
                         });
                 }
             })
             .catch(error => {
                 console.error('Fout bij het controleren van e-mail:', error);
-                setError('Er is een fout opgetreden bij het controleren van de e-mail.');
+                alert('Er is een fout opgetreden bij het controleren van de e-mail.');
             });
     };
 
@@ -149,11 +159,10 @@ function Account({ setIsLoggedIn }) {
                     email: newEmail || prevUser.email
                 }));
                 setEditing(false);
-                setError('');
             })
             .catch(error => {
                 console.error('Fout bij het bijwerken van gegevens:', error);
-                setError('Kan gegevens niet bijwerken. Controleer je invoer en probeer opnieuw.');
+                alert('Kan gegevens niet bijwerken. Controleer je invoer en probeer opnieuw.');
             });
     };
 
@@ -161,74 +170,82 @@ function Account({ setIsLoggedIn }) {
         <div className="account-container">
             <h1>Account</h1>
             {isLoading ? (
-                <p>Gegevens laden...</p>
+                <p>Details worden geladen...</p>
             ) : (
                 user && (
                     <div>
                         <p><strong>Naam:</strong> {user.naam}</p>
                         <p><strong>Email:</strong> {user.email}</p>
-                        <p><strong>Type klant:</strong> {user.typeKlant}</p>
+                        <p><strong>Klanttype:</strong> {user.typeKlant}</p>
                         {user.typeKlant === 'Zakelijk' && (
                             <div>
-                                <p><strong>KvKNummer:</strong> {user.kvkNummer}</p>
-                                <h3>Werknemers:</h3>
-                                <ul>
-                                    {employees.map(employee => (
-                                        <li key={employee.id}>
-                                            {employee.naam} ({employee.email})
-                                            <button onClick={() => handleDeleteEmployee(employee.id)}>Verwijder</button>
-                                            <button onClick={() => handleUpdatePassword(employee.id)}>Wijzig wachtwoord</button>
-                                        </li>
-                                    ))}
-                                </ul>
-                                <h4>Voeg een werknemer toe:</h4>
-                                {error && <p className="error-message">{error}</p>}
-                                <input
-                                    type="text"
-                                    placeholder="Voornaam"
-                                    value={newEmployee.naam}
-                                    onChange={(e) => setNewEmployee({ ...newEmployee, naam: e.target.value })}
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="Achternaam"
-                                    value={newEmployee.achternaam}
-                                    onChange={(e) => setNewEmployee({ ...newEmployee, achternaam: e.target.value })}
-                                />
-                                <input
-                                    type="email"
-                                    placeholder="E-mailadres"
-                                    value={newEmployee.email}
-                                    onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
-                                />
-                                <input
-                                    type="password"
-                                    placeholder="Wachtwoord"
-                                    value={newEmployee.wachtwoord}
-                                    onChange={(e) => setNewEmployee({ ...newEmployee, wachtwoord: e.target.value })}
-                                />
-                                <button onClick={handleAddEmployee}>Voeg werknemer toe</button>
+                                <p><strong>KvK-Nummer:</strong> {user.kvkNummer}</p>
+                                {editing ? (
+                                    <div>
+                                        <input
+                                            type="text"
+                                            placeholder="Nieuw e-mailadres"
+                                            value={newEmail}
+                                            onChange={(e) => setNewEmail(e.target.value)}
+                                        />
+                                        <input
+                                            type="password"
+                                            placeholder="Nieuw wachtwoord"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                        />
+                                        <button onClick={handleEditData}>Bevestig wijzigingen</button>
+                                        <button onClick={() => setEditing(false)}>Annuleer</button>
+                                    </div>
+                                ) : (
+                                    <button onClick={() => setEditing(true)}>Bewerk accountgegevens</button>
+                                )}
+                                <h3>Werknemer toevoegen:</h3>
+                                {/* Geen optie om werknemer toe te voegen voor niet-zakelijke accounts */}
+                                {user.typeKlant === 'Zakelijk' && (
+                                    <div>
+                                        <input
+                                            type="text"
+                                            placeholder="Naam"
+                                            value={newEmployee.naam}
+                                            onChange={(e) => setNewEmployee({...newEmployee, naam: e.target.value})}
+                                        />
+                                        <input
+                                            type="text"
+                                            placeholder="Achternaam"
+                                            value={newEmployee.achternaam}
+                                            onChange={(e) => setNewEmployee({...newEmployee, achternaam: e.target.value})}
+                                        />
+                                        <input
+                                            type="email"
+                                            placeholder="E-mailadres"
+                                            value={newEmployee.email}
+                                            onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}
+                                        />
+                                        <input
+                                            type="password"
+                                            placeholder="Wachtwoord"
+                                            value={newEmployee.wachtwoord}
+                                            onChange={(e) => setNewEmployee({...newEmployee, wachtwoord: e.target.value})}
+                                        />
+                                        <button onClick={handleAddEmployee}>Werknemer toevoegen</button>
+                                    </div>
+                                )}
                             </div>
                         )}
-                        {editing ? (
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder="Nieuw e-mailadres"
-                                    value={newEmail}
-                                    onChange={(e) => setNewEmail(e.target.value)}
-                                />
-                                <input
-                                    type="password"
-                                    placeholder="Nieuw wachtwoord"
-                                    value={newPassword}
-                                    onChange={(e) => setNewPassword(e.target.value)}
-                                />
-                                <button onClick={handleEditData}>Gegevens bijwerken</button>
-                                <button onClick={() => setEditing(false)}>Annuleren</button>
-                            </div>
+                        <h4>Werknemers:</h4>
+                        {employees.length === 0 ? (
+                            <p>Je hebt nog geen werknemers toegevoegd.</p>
                         ) : (
-                            <button onClick={() => setEditing(true)}>Wijzig gegevens</button>
+                            <ul>
+                                {employees.map(employee => (
+                                    <li key={employee.id}>
+                                        {employee.naam} ({employee.email})
+                                        <button onClick={() => handleDeleteEmployee(employee.id)}>Verwijder</button>
+                                        <button onClick={() => handleUpdatePassword(employee.id)}>Wachtwoord wijzigen</button>
+                                    </li>
+                                ))}
+                            </ul>
                         )}
                     </div>
                 )
