@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import "./LoginScherm.css";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
+function MedewerkerLogin({ setIsLoggedIn, setIsEmployee, setFunctie }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -15,7 +14,7 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
         const loginDetails = { email, password };
 
         try {
-            const response = await fetch(`https://localhost:7017/api/gebruiker/login`, {
+            const response = await fetch(`https://localhost:7017/api/carmedewerker/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(loginDetails),
@@ -24,24 +23,15 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Successfully logged in:", data);
-
-                // Sla het token op in localStorage
                 localStorage.setItem('authToken', data.token);
-                setIsLoggedIn(true); // Update de inlogstatus
-
-                // Als de gebruiker een medewerker is, sla de functie op
-                if (data.functie) {
-                    setIsEmployee(true); // Stel in dat de gebruiker een medewerker is
-                    setFunctie(data.functie); // Sla de functie van de medewerker op (bijv. 'BackOfficeMedewerker')
-                    localStorage.setItem('functie', data.functie); // Sla de functie van de medewerker op
-                } else {
-                    setIsEmployee(false); // De gebruiker is geen medewerker
-                }
-
+                localStorage.setItem('functie', data.functie); // Sla de functie op
+                setIsLoggedIn(true);
+                setIsEmployee(true); // Zorg ervoor dat isEmployee op true staat
+                setFunctie(data.functie); // Sla de functie op in de state
                 navigate("/"); // Redirect naar de homepagina
             } else {
                 const errorMsg = await response.text();
-                setError(errorMsg); // Toon foutmelding als login mislukt
+                setError(errorMsg);
             }
         } catch (err) {
             console.error("Login error:", err);
@@ -54,7 +44,7 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
         <div className="login-container">
             <div className="wrapper">
                 <form onSubmit={handleLogin}>
-                    <h1>Login</h1>
+                    <h1>Employee Login</h1>
                     {error && <p className="error-message">{error}</p>}
                     <div className="input-box">
                         <input
@@ -78,8 +68,7 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                     </div>
                     <button type="submit">Login</button>
                     <div className="register-link">
-                        <p>CarAndAll Employee? <Link to="/CarMedewerkerLogin">Login as Employee</Link></p>
-                        <p>Don't have an account? <Link to="/SignUp">Register</Link></p>
+                        <p>Not an employee? <Link to="/Login">Login as User</Link></p>
                     </div>
                 </form>
             </div>
@@ -87,4 +76,4 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
     );
 }
 
-export default LoginScreen;
+export default MedewerkerLogin;
