@@ -1,11 +1,10 @@
 import React from "react";
-import '../App.css';
-import SearchSection from "../Components/SearchSection";
+import './Home.css';
+
 
 export default function Home() {
     return (
         <>
-        <SearchSection/>
         <div className="home">
             {/* Hero Section */}
             <header>

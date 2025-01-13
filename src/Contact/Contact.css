@@ -1,0 +1,63 @@
+.contact-container {
+    font-family: 'Arial, sans-serif';
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.contact-title {
+    text-align: center;
+    color: #003366;
+}
+
+.contact-description {
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.contact-section {
+    margin-top: 30px;
+}
+
+.contact-heading {
+    color: #003366;
+}
+
+.contact-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.contact-list a {
+    color: #FF6600;
+}
+
+.contact-hours strong {
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.contact-form button {
+    background-color: #003366;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
