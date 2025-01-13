@@ -26,8 +26,7 @@ function Account({ setIsLoggedIn }) {
                     // Ophalen van employee gegevens
                     axios.get(`https://localhost:7017/api/employees/employee/${userId}`)
                         .then(response => {
-                            // De employee gegevens worden nu opgeslagen in de user state
-                            setUser(response.data);  // Stel de user in met de data van de werknemer
+                            setUser(response.data);
                             setIsLoading(false);
                         })
                         .catch(error => {
@@ -64,8 +63,6 @@ function Account({ setIsLoggedIn }) {
             }
         }
     }, [navigate]);
-
-
 
     const handleDeleteEmployee = (employeeId) => {
         const token = localStorage.getItem('authToken');
@@ -115,18 +112,16 @@ function Account({ setIsLoggedIn }) {
         }
 
         axios
-            .get(`https://localhost:7017/api/Employee/check-email/${newEmployee.email}`, {
+            .get(`https://localhost:7017/api/employees/check-email/${newEmployee.email}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             .then(response => {
-                if (response.data.exists) {
-                    alert('Email bestaat al.');
-                } else {
+                if (response.data === "Het e-mailadres is beschikbaar.") {
                     axios
                         .post(
-                            `https://localhost:7017/api/Employee/${user.id}/add-employee`,
+                            `https://localhost:7017/api/employees/${user.id}/add-employee`,
                             newEmployee,
-                            { headers: { Authorization: `Bearer ${token}` } }
+                            { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
                         )
                         .then(response => {
                             setEmployees([...employees, response.data]);
@@ -136,6 +131,8 @@ function Account({ setIsLoggedIn }) {
                             console.error('Fout bij het toevoegen van werknemer:', error);
                             alert('Er is een fout opgetreden bij het toevoegen van de werknemer.');
                         });
+                } else {
+                    alert('Het e-mailadres bestaat al.');
                 }
             })
             .catch(error => {
@@ -143,6 +140,7 @@ function Account({ setIsLoggedIn }) {
                 alert('Er is een fout opgetreden bij het controleren van de e-mail.');
             });
     };
+
 
     const handleEditData = () => {
         const token = localStorage.getItem('authToken');
@@ -175,10 +173,14 @@ function Account({ setIsLoggedIn }) {
                     <div>
                         <p><strong>Naam:</strong> {user.naam}</p>
                         <p><strong>Email:</strong> {user.email}</p>
-                        <p><strong>Klanttype:</strong> {user.typeKlant}</p>
-                        {user.typeKlant === 'Zakelijk' && (
+                        <div>
+                            {user.typeKlant && (user.typeKlant === 'Zakelijk' || user.typeKlant === 'Particulier') ? (
+                                <p>Klanttype: {user.typeKlant}</p>
+                            ) : null}
+                        </div>
+
+                        {user.typeKlant === 'Zakelijk' || user.typeKlant === 'Particulier' ? (
                             <div>
-                                <p><strong>KvK-Nummer:</strong> {user.kvkNummer}</p>
                                 {editing ? (
                                     <div>
                                         <input
@@ -199,52 +201,60 @@ function Account({ setIsLoggedIn }) {
                                 ) : (
                                     <button onClick={() => setEditing(true)}>Bewerk accountgegevens</button>
                                 )}
-                                <h3>Werknemer toevoegen:</h3>
-                                {/* Geen optie om werknemer toe te voegen voor niet-zakelijke accounts */}
-                                {user.typeKlant === 'Zakelijk' && (
-                                    <div>
-                                        <input
-                                            type="text"
-                                            placeholder="Naam"
-                                            value={newEmployee.naam}
-                                            onChange={(e) => setNewEmployee({...newEmployee, naam: e.target.value})}
-                                        />
-                                        <input
-                                            type="text"
-                                            placeholder="Achternaam"
-                                            value={newEmployee.achternaam}
-                                            onChange={(e) => setNewEmployee({...newEmployee, achternaam: e.target.value})}
-                                        />
-                                        <input
-                                            type="email"
-                                            placeholder="E-mailadres"
-                                            value={newEmployee.email}
-                                            onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}
-                                        />
-                                        <input
-                                            type="password"
-                                            placeholder="Wachtwoord"
-                                            value={newEmployee.wachtwoord}
-                                            onChange={(e) => setNewEmployee({...newEmployee, wachtwoord: e.target.value})}
-                                        />
-                                        <button onClick={handleAddEmployee}>Werknemer toevoegen</button>
-                                    </div>
-                                )}
                             </div>
-                        )}
-                        <h4>Werknemers:</h4>
-                        {employees.length === 0 ? (
-                            <p>Je hebt nog geen werknemers toegevoegd.</p>
-                        ) : (
-                            <ul>
-                                {employees.map(employee => (
-                                    <li key={employee.id}>
-                                        {employee.naam} ({employee.email})
-                                        <button onClick={() => handleDeleteEmployee(employee.id)}>Verwijder</button>
-                                        <button onClick={() => handleUpdatePassword(employee.id)}>Wachtwoord wijzigen</button>
-                                    </li>
-                                ))}
-                            </ul>
+                        ) : null}
+
+                        {user.typeKlant === 'Zakelijk' && (
+                            <div>
+                                <h4>Werknemers:</h4>
+                                {employees.length === 0 ? (
+                                    <p>Je hebt nog geen werknemers toegevoegd.</p>
+                                ) : (
+                                    <ul>
+                                        {employees.map(employee => (
+                                            <li key={employee.id}>
+                                                {employee.naam} ({employee.email})
+                                                <button onClick={() => handleDeleteEmployee(employee.id)}>Verwijder</button>
+                                                <button onClick={() => handleUpdatePassword(employee.id)}>Wachtwoord wijzigen</button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                                <h3>Werknemer toevoegen:</h3>
+                                <div>
+                                    <input
+                                        type="text"
+                                        placeholder="Naam"
+                                        value={newEmployee.naam}
+                                        onChange={(e) => setNewEmployee({...newEmployee, naam: e.target.value})}
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="Achternaam"
+                                        value={newEmployee.achternaam}
+                                        onChange={(e) => setNewEmployee({
+                                            ...newEmployee,
+                                            achternaam: e.target.value
+                                        })}
+                                    />
+                                    <input
+                                        type="email"
+                                        placeholder="E-mailadres"
+                                        value={newEmployee.email}
+                                        onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}
+                                    />
+                                    <input
+                                        type="password"
+                                        placeholder="Wachtwoord"
+                                        value={newEmployee.wachtwoord}
+                                        onChange={(e) => setNewEmployee({
+                                            ...newEmployee,
+                                            wachtwoord: e.target.value
+                                        })}
+                                    />
+                                    <button onClick={handleAddEmployee}>Werknemer toevoegen</button>
+                                </div>
+                            </div>
                         )}
                     </div>
                 )
