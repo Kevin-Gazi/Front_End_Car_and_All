@@ -21,15 +21,13 @@ function Account({ setIsLoggedIn }) {
             try {
                 const decodedToken = jwtDecode(token);
                 const userId = decodedToken.sub;
-                
+
                 if (decodedToken.userType === 'Employee') {
                     // Ophalen van employee gegevens
-                    axios
-                        .get(`https://localhost:7017/api/employee/${userId}`, {
-                            headers: { Authorization: `Bearer ${token}` }
-                        })
+                    axios.get(`https://localhost:7017/api/employees/employee/${userId}`)
                         .then(response => {
-                            setUser(response.data);
+                            // De employee gegevens worden nu opgeslagen in de user state
+                            setUser(response.data);  // Stel de user in met de data van de werknemer
                             setIsLoading(false);
                         })
                         .catch(error => {
@@ -66,6 +64,7 @@ function Account({ setIsLoggedIn }) {
             }
         }
     }, [navigate]);
+
 
 
     const handleDeleteEmployee = (employeeId) => {

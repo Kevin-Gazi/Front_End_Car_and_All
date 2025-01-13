@@ -1,12 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import './NavBar.css'; // Zorg ervoor dat je de juiste CSS hebt
 
+
 export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
+    const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('functie');
         setIsLoggedIn(false);
+        navigate ('/');
     };
 
     return (
