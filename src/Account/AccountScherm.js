@@ -21,11 +21,11 @@ function Account({ setIsLoggedIn }) {
             try {
                 const decodedToken = jwtDecode(token);
                 const userId = decodedToken.sub;
-                
+
                 if (decodedToken.userType === 'Employee') {
                     // Ophalen van employee gegevens
                     axios
-                        .get(`https://localhost:7017/api/employee/${userId}`, {
+                        .get(`https://localhost:7017/api/account/{gebruikerId}/employees`, {
                             headers: { Authorization: `Bearer ${token}` }
                         })
                         .then(response => {
@@ -67,11 +67,10 @@ function Account({ setIsLoggedIn }) {
         }
     }, [navigate]);
 
-
     const handleDeleteEmployee = (employeeId) => {
         const token = localStorage.getItem('authToken');
         axios
-            .delete(`https://localhost:7017/api/Employee/${employeeId}/delete`, {
+            .delete(`https://localhost:7017/api/employee/${employeeId}/delete`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             .then(() => {
@@ -89,7 +88,7 @@ function Account({ setIsLoggedIn }) {
             const token = localStorage.getItem('authToken');
             axios
                 .put(
-                    `https://localhost:7017/api/Employee/${employeeId}/update-password`,
+                    `https://localhost:7017/api/employee/${employeeId}/update-password`,
                     { newPassword: newPassword },
                     {
                         headers: {
@@ -110,46 +109,57 @@ function Account({ setIsLoggedIn }) {
 
     const handleAddEmployee = () => {
         const token = localStorage.getItem('authToken');
+
+        // Controleer of alle velden ingevuld zijn
         if (!newEmployee.naam || !newEmployee.achternaam || !newEmployee.email || !newEmployee.wachtwoord) {
             alert('Vul alle velden in.');
             return;
         }
 
+        // Controleer of het e-mailadres al bestaat
         axios
-            .get(`https://localhost:7017/api/Employee/check-email/${newEmployee.email}`, {
+            .get(`https://localhost:7017/api/account/check-email/${newEmployee.email}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             .then(response => {
                 if (response.data.exists) {
+                    // Als het e-mailadres al bestaat
                     alert('Email bestaat al.');
                 } else {
+                    // Als het e-mailadres nog niet bestaat, probeer dan de werknemer aan te maken
                     axios
                         .post(
-                            `https://localhost:7017/api/Employee/${user.id}/add-employee`,
+                            `https://localhost:7017/api/account/${user.id}/add-employee`,
                             newEmployee,
                             { headers: { Authorization: `Bearer ${token}` } }
                         )
                         .then(response => {
+                            // Voeg de nieuwe werknemer toe aan de lijst
                             setEmployees([...employees, response.data]);
+                            // Reset de invoervelden
                             setNewEmployee({ naam: '', achternaam: '', email: '', wachtwoord: '', kvkNummer: user.kvkNummer });
+                            alert('Werknemer succesvol toegevoegd.');
                         })
                         .catch(error => {
-                            console.error('Fout bij het toevoegen van werknemer:', error);
-                            alert('Er is een fout opgetreden bij het toevoegen van de werknemer.');
+                            console.error('Fout bij het toevoegen van werknemer:', error.response ? error.response.data : error.message);
+                            alert('Het is niet gelukt een Werknemer aan te maken.');
                         });
                 }
             })
             .catch(error => {
-                console.error('Fout bij het controleren van e-mail:', error);
+                // Log de foutdetails om te zien wat er misgaat
+                console.error('Fout bij het controleren van e-mail:', error.response ? error.response.data : error.message);
                 alert('Er is een fout opgetreden bij het controleren van de e-mail.');
             });
     };
+
+
 
     const handleEditData = () => {
         const token = localStorage.getItem('authToken');
         axios
             .put(
-                `https://localhost:7017/api/gebruiker/${user.id}/update`,
+                `https://localhost:7017/api/account/gebruiker/${user.id}/update`,
                 { email: newEmail, newPassword: newPassword },
                 { headers: { Authorization: `Bearer ${token}` } }
             )
@@ -201,7 +211,6 @@ function Account({ setIsLoggedIn }) {
                                     <button onClick={() => setEditing(true)}>Bewerk accountgegevens</button>
                                 )}
                                 <h3>Werknemer toevoegen:</h3>
-                                {/* Geen optie om werknemer toe te voegen voor niet-zakelijke accounts */}
                                 {user.typeKlant === 'Zakelijk' && (
                                     <div>
                                         <input

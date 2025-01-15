@@ -29,11 +29,9 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                 localStorage.setItem('authToken', data.token);
                 setIsLoggedIn(true); // Update de inlogstatus
 
-                // Als de gebruiker een medewerker is, sla de functie op
-                if (data.functie) {
+                // Controleer of de gebruiker een medewerker is
+                if (data.userType === "Werknemer") {
                     setIsEmployee(true); // Stel in dat de gebruiker een medewerker is
-                    setFunctie(data.functie); // Sla de functie van de medewerker op (bijv. 'BackOfficeMedewerker')
-                    localStorage.setItem('functie', data.functie); // Sla de functie van de medewerker op
                 } else {
                     setIsEmployee(false); // De gebruiker is geen medewerker
                 }
