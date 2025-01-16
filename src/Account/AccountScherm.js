@@ -86,16 +86,15 @@ function Account({ setIsLoggedIn }) {
         const newPassword = prompt('Voer het nieuwe wachtwoord in:');
         if (newPassword) {
             const token = localStorage.getItem('authToken');
-            axios
-                .put(
-                    `https://localhost:7017/api/employee/${employeeId}/update-password`,
-                    { newPassword: newPassword },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'application/json',
-                        }
+            axios.put(
+                `https://localhost:7017/api/employee/${employeeId}/update-password`, 
+                newPassword,  // Verstuur het wachtwoord direct als string
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
                     }
+                }
                 )
                 .then(() => {
                     alert('Wachtwoord succesvol gewijzigd.');
