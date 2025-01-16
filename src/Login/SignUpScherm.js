@@ -21,18 +21,19 @@ function SignUpScherm() {
             Naam: name,
             Achternaam: lastname,
             Email: email,
-            Password: password, // Voeg het wachtwoord hier toe
+            Password: password,
             TypeKlant: typeKlant,
-            KvkNummer: typeKlant === 'Zakelijk' ? kvkNummer : null, 
+            KvkNummer: typeKlant === 'Zakelijk' ? kvkNummer : null,
         };
 
         try {
-            const response = await fetch('https://localhost:7017/api/gebruiker/register', {
+            // Update de URL naar het juiste endpoint
+            const response = await fetch('https://localhost:7017/api/user/register', {  // Aangepaste endpoint
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(user), // Body contains all user parameters, including wachtwoord
+                body: JSON.stringify(user),
             });
 
             if (response.ok) {
@@ -44,6 +45,7 @@ function SignUpScherm() {
             console.error('Fout bij het verbinden met de server:', error);
         }
     };
+
 
     return (
         <div className="signup-container">

@@ -25,7 +25,7 @@ function Account({ setIsLoggedIn }) {
                 if (decodedToken.userType === 'Employee') {
                     // Ophalen van employee gegevens
                     axios
-                        .get(`https://localhost:7017/api/account/{gebruikerId}/employees`, {
+                        .get(`https://localhost:7017/api/account`, {
                             headers: { Authorization: `Bearer ${token}` }
                         })
                         .then(response => {
@@ -40,7 +40,7 @@ function Account({ setIsLoggedIn }) {
                 } else {
                     // Ophalen van gebruiker gegevens voor zakelijke gebruikers
                     axios
-                        .get(`https://localhost:7017/api/gebruiker/${userId}`, {
+                        .get(`https://localhost:7017/api/user/${userId}`, {
                             headers: { Authorization: `Bearer ${token}` }
                         })
                         .then(response => {
@@ -77,7 +77,7 @@ function Account({ setIsLoggedIn }) {
                 setEmployees(employees.filter(employee => employee.id !== employeeId));
             })
             .catch(error => {
-                console.error('Fout bij het verwijderen van werknemer:', error);
+                console.error('Fout bij het verwijderen werknemer:', error);
                 alert('Er is een fout opgetreden bij het verwijderen van de werknemer.');
             });
     };
@@ -117,19 +117,9 @@ function Account({ setIsLoggedIn }) {
         }
 
         // Controleer of het e-mailadres al bestaat
-        axios
-            .get(`https://localhost:7017/api/account/check-email/${newEmployee.email}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            })
-            .then(response => {
-                if (response.data.exists) {
-                    // Als het e-mailadres al bestaat
-                    alert('Email bestaat al.');
-                } else {
-                    // Als het e-mailadres nog niet bestaat, probeer dan de werknemer aan te maken
-                    axios
-                        .post(
-                            `https://localhost:7017/api/account/${user.id}/add-employee`,
+        
+                        axios.post(
+                            `https://localhost:7017/api/employee/{gebruikerId}/add-employee`,
                             newEmployee,
                             { headers: { Authorization: `Bearer ${token}` } }
                         )
@@ -143,9 +133,8 @@ function Account({ setIsLoggedIn }) {
                         .catch(error => {
                             console.error('Fout bij het toevoegen van werknemer:', error.response ? error.response.data : error.message);
                             alert('Het is niet gelukt een Werknemer aan te maken.');
-                        });
-                }
-            })
+                        })
+                            
             .catch(error => {
                 // Log de foutdetails om te zien wat er misgaat
                 console.error('Fout bij het controleren van e-mail:', error.response ? error.response.data : error.message);
@@ -153,13 +142,11 @@ function Account({ setIsLoggedIn }) {
             });
     };
 
-
-
     const handleEditData = () => {
         const token = localStorage.getItem('authToken');
         axios
             .put(
-                `https://localhost:7017/api/account/gebruiker/${user.id}/update`,
+                `https://localhost:7017/api/account/update`,
                 { email: newEmail, newPassword: newPassword },
                 { headers: { Authorization: `Bearer ${token}` } }
             )
@@ -211,35 +198,33 @@ function Account({ setIsLoggedIn }) {
                                     <button onClick={() => setEditing(true)}>Bewerk accountgegevens</button>
                                 )}
                                 <h3>Werknemer toevoegen:</h3>
-                                {user.typeKlant === 'Zakelijk' && (
-                                    <div>
-                                        <input
-                                            type="text"
-                                            placeholder="Naam"
-                                            value={newEmployee.naam}
-                                            onChange={(e) => setNewEmployee({...newEmployee, naam: e.target.value})}
-                                        />
-                                        <input
-                                            type="text"
-                                            placeholder="Achternaam"
-                                            value={newEmployee.achternaam}
-                                            onChange={(e) => setNewEmployee({...newEmployee, achternaam: e.target.value})}
-                                        />
-                                        <input
-                                            type="email"
-                                            placeholder="E-mailadres"
-                                            value={newEmployee.email}
-                                            onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}
-                                        />
-                                        <input
-                                            type="password"
-                                            placeholder="Wachtwoord"
-                                            value={newEmployee.wachtwoord}
-                                            onChange={(e) => setNewEmployee({...newEmployee, wachtwoord: e.target.value})}
-                                        />
-                                        <button onClick={handleAddEmployee}>Werknemer toevoegen</button>
-                                    </div>
-                                )}
+                                <div>
+                                    <input
+                                        type="text"
+                                        placeholder="Naam"
+                                        value={newEmployee.naam}
+                                        onChange={(e) => setNewEmployee({...newEmployee, naam: e.target.value})}
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="Achternaam"
+                                        value={newEmployee.achternaam}
+                                        onChange={(e) => setNewEmployee({...newEmployee, achternaam: e.target.value})}
+                                    />
+                                    <input
+                                        type="email"
+                                        placeholder="E-mailadres"
+                                        value={newEmployee.email}
+                                        onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}
+                                    />
+                                    <input
+                                        type="password"
+                                        placeholder="Wachtwoord"
+                                        value={newEmployee.wachtwoord}
+                                        onChange={(e) => setNewEmployee({...newEmployee, wachtwoord: e.target.value})}
+                                    />
+                                    <button onClick={handleAddEmployee}>Werknemer toevoegen</button>
+                                </div>
                             </div>
                         )}
                         <h4>Werknemers:</h4>

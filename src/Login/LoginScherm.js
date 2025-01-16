@@ -15,7 +15,8 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
         const loginDetails = { email, password };
 
         try {
-            const response = await fetch(`https://localhost:7017/api/gebruiker/login`, {
+            // Aangepaste URL voor login, bijvoorbeeld voor gebruikerslogin
+            const response = await fetch('https://localhost:7017/api/user/login', {  // Aangepast endpoint
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(loginDetails),
@@ -27,25 +28,27 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
 
                 // Sla het token op in localStorage
                 localStorage.setItem('authToken', data.token);
-                setIsLoggedIn(true); // Update de inlogstatus
+                setIsLoggedIn(true);
 
-                // Controleer of de gebruiker een medewerker is
+                // Controleer of de gebruiker een werknemer is
                 if (data.userType === "Werknemer") {
-                    setIsEmployee(true); // Stel in dat de gebruiker een medewerker is
+                    setIsEmployee(true);
+                    setFunctie(data.functie);  // Voeg de functie van de medewerker toe
                 } else {
-                    setIsEmployee(false); // De gebruiker is geen medewerker
+                    setIsEmployee(false);
                 }
 
                 navigate("/"); // Redirect naar de homepagina
             } else {
                 const errorMsg = await response.text();
-                setError(errorMsg); // Toon foutmelding als login mislukt
+                setError(errorMsg);
             }
         } catch (err) {
             console.error("Login error:", err);
             setError("Er is een fout opgetreden bij het inloggen.");
         }
     };
+
 
 
     return (
