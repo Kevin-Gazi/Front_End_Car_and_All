@@ -16,53 +16,52 @@ function Account({ setIsLoggedIn }) {
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         if (!token) {
-            navigate('/');
-        } else {
-            try {
-                const decodedToken = jwtDecode(token);
-                const userId = decodedToken.sub;
+            navigate('/login'); // Als er geen token is, stuur de gebruiker naar de loginpagina
+            return;
+        }
+        try {
+            const decodedToken = jwtDecode(token); // Decodeer het token
+            const userId = decodedToken.sub;
 
-                if (decodedToken.userType === 'Employee') {
-                    // Ophalen van employee gegevens
-                    axios.get(`https://localhost:7017/api/employees/employee/${userId}`)
-                        .then(response => {
-                            setUser(response.data);
-                            setIsLoading(false);
-                        })
-                        .catch(error => {
-                            console.error('Fout bij ophalen werknemer:', error);
-                            alert('Kan werknemer niet ophalen. Probeer later opnieuw.');
-                            navigate('/');
-                        });
-                } else {
-                    // Ophalen van gebruiker gegevens voor zakelijke gebruikers
-                    axios
-                        .get(`https://localhost:7017/api/gebruiker/${userId}`, {
-                            headers: { Authorization: `Bearer ${token}` }
-                        })
-                        .then(response => {
-                            setUser(response.data);
-                            if (response.data.typeKlant === 'Zakelijk') {
-                                setEmployees(response.data.employees);
-                                setNewEmployee(prevState => ({
-                                    ...prevState,
-                                    kvkNummer: response.data.kvkNummer
-                                }));
-                            }
-                            setIsLoading(false);
-                        })
-                        .catch(error => {
-                            console.error('Fout bij ophalen gebruiker:', error);
-                            alert('Kan gebruiker niet ophalen. Probeer later opnieuw.');
-                            navigate('/');
-                        });
-                }
-            } catch (error) {
-                console.error('Fout bij het decoderen van het token:', error);
-                navigate('/');
+            if (decodedToken.userType === 'Employee') {
+                axios.get(`https://localhost:7017/api/employees/employee/${userId}`)
+                    .then(response => {
+                        setUser(response.data);
+                        setIsLoading(false);
+                    })
+                    .catch(error => {
+                        console.error('Fout bij ophalen werknemer:', error);
+                        alert('Kan werknemer niet ophalen. Probeer later opnieuw.');
+                        navigate('/login');
+                    });
+            } else {
+                axios
+                    .get(`https://localhost:7017/api/gebruiker/${userId}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })
+                    .then(response => {
+                        setUser(response.data);
+                        if (response.data.typeKlant === 'Zakelijk') {
+                            setEmployees(response.data.employees);
+                            setNewEmployee(prevState => ({
+                                ...prevState,
+                                kvkNummer: response.data.kvkNummer
+                            }));
+                        }
+                        setIsLoading(false);
+                    })
+                    .catch(error => {
+                        console.error('Fout bij ophalen gebruiker:', error);
+                        alert('Kan gebruiker niet ophalen. Probeer later opnieuw.');
+                        navigate('/');
+                    });
             }
+        } catch (error) {
+            console.error('Fout bij het decoderen van het token:', error);
+            navigate('/');
         }
     }, [navigate]);
+
 
     const handleDeleteEmployee = (employeeId) => {
         const token = localStorage.getItem('authToken');

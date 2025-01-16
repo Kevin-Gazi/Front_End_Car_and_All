@@ -4,7 +4,7 @@ import { FaUserAlt, FaEnvelope, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 function SignUpScherm() {
-    const [name, setName] = useState(''); // Voeg de state voor username toe
+    const [name, setName] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -14,13 +14,12 @@ function SignUpScherm() {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Gebruikersgegevens in een object
+        
         const user = {
             Naam: name,
             Achternaam: lastname,
             Email: email,
-            Password: password, // Voeg het wachtwoord hier toe
+            Password: password,
             TypeKlant: typeKlant,
             KvkNummer: typeKlant === 'Zakelijk' ? kvkNummer : null, 
         };
@@ -31,7 +30,7 @@ function SignUpScherm() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(user), // Body contains all user parameters, including wachtwoord
+                body: JSON.stringify(user),
             });
 
             if (response.ok) {

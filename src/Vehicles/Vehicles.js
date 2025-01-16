@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './Vehicles.css';
 import vehicleImage from './IMG_8180.JPG';
+import { useNavigate } from 'react-router-dom';
 
 export default function Vehicles() {
     const [vehicles, setVehicles] = useState([]);
     const [filteredVehicles, setFilteredVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedVehicle, setSelectedVehicle] = useState(null);
+    const navigate = useNavigate();
 
     const [selectedType, setSelectedType] = useState('All');
     const [selectedBrand, setSelectedBrand] = useState([]);
@@ -81,6 +83,7 @@ export default function Vehicles() {
     };
 
     const openModal = (vehicle) => {
+        console.log('Modal openen voor voertuig:', vehicle);
         setSelectedVehicle(vehicle);
         setIsModalOpen(true);
     };
@@ -95,6 +98,14 @@ export default function Vehicles() {
             return;
         }
 
+        if (new Date(rentalDate.end) < new Date(rentalDate.start)) {
+            alert('End date cannot be earlier than start date.');
+            return;
+        }
+        
+        const startDate = new Date(rentalDate.start).toISOString().split('T')[0];
+        const endDate = new Date(rentalDate.end).toISOString().split('T')[0];
+
         try {
             const user = JSON.parse(localStorage.getItem('user'));
             const response = await fetch('https://localhost:7017/api/rentals', {
@@ -106,16 +117,17 @@ export default function Vehicles() {
                 body: JSON.stringify({
                     gebruikerId: user.userId,
                     voertuigId: selectedVehicle.id,
-                    startDate: rentalDate.start,
-                    endDate: rentalDate.end
+                    startDate: startDate,
+                    endDate: endDate
                 }),
             });
 
             if (response.ok) {
-                alert('Rental successfully submitted!');
+                alert('Rental request submitted. Awaiting approval.');
                 closeModal();
             } else {
                 alert('Failed to rent vehicle.');
+                console.log('Error:', response.status, await response.text());
             }
         } catch (error) {
             console.error('Error renting vehicle:', error);
@@ -123,16 +135,17 @@ export default function Vehicles() {
         }
     };
 
+
     const handleRentClick = (vehicle) => {
         const user = JSON.parse(localStorage.getItem('user'));
+        console.log('Gebruiker uit localStorage:', user);
         if (!user) {
             alert('Please log in to rent a vehicle.');
-            window.location.href = 'Login';
+            navigate('/login');
         } else {
             openModal(vehicle);
         }
     };
-
     if (loading) {
         return <div>Loading vehicles...</div>;
     }
@@ -259,9 +272,11 @@ export default function Vehicles() {
                             <input
                                 type="date"
                                 value={rentalDate.end}
-                                onChange={(e) => setRentalDate({ ...rentalDate, end: e.target.value })}
+                                onChange={(e) => setRentalDate({...rentalDate, end: e.target.value})}
+                                min={rentalDate.start}
                             />
                         </label>
+
                         <button onClick={handleConfirmRent}>Confirm Rent</button>
                         <button onClick={closeModal}>Cancel</button>
                     </div>

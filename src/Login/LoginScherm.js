@@ -24,31 +24,41 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Successfully logged in:", data);
-
-                // Sla het token op in localStorage
+                
+                localStorage.removeItem("authToken");
+                localStorage.removeItem("functie");
+                
                 localStorage.setItem('authToken', data.token);
-                setIsLoggedIn(true); // Update de inlogstatus
-
-                // Als de gebruiker een medewerker is, sla de functie op
+                
+                const userData = {
+                    token: data.token,
+                    userId: data.userId,
+                    userNaam: data.userNaam,
+                    userEmail: data.userEmail,
+                    userType: data.userType,
+                };
+                localStorage.setItem("user", JSON.stringify(userData));
+                
+                setIsLoggedIn(true);
+                
                 if (data.functie) {
-                    setIsEmployee(true); // Stel in dat de gebruiker een medewerker is
-                    setFunctie(data.functie); // Sla de functie van de medewerker op (bijv. 'BackOfficeMedewerker')
-                    localStorage.setItem('functie', data.functie); // Sla de functie van de medewerker op
+                    setIsEmployee(true);
+                    setFunctie(data.functie);
+                    localStorage.setItem('functie', data.functie);
                 } else {
-                    setIsEmployee(false); // De gebruiker is geen medewerker
+                    setIsEmployee(false);
                 }
-
-                navigate("/"); // Redirect naar de homepagina
+                
+                navigate("/");
             } else {
                 const errorMsg = await response.text();
-                setError(errorMsg); // Toon foutmelding als login mislukt
+                setError(errorMsg);
             }
         } catch (err) {
             console.error("Login error:", err);
             setError("Er is een fout opgetreden bij het inloggen.");
         }
     };
-
 
     return (
         <div className="login-container">
