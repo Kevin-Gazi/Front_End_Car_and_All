@@ -9,7 +9,7 @@ function Account({ setIsLoggedIn }) {
     const [newEmail, setNewEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [employees, setEmployees] = useState([]);
-    const [newEmployee, setNewEmployee] = useState({ naam: '', achternaam: '', email: '', wachtwoord: '', typeKlant: 'Werknemer', kvkNummer: '' });
+    const [newEmployee, setNewEmployee] = useState({ naam: '', achternaam: '', email: '', wachtwoord: '', typeKlant: 'Werknemer'});
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -40,7 +40,7 @@ function Account({ setIsLoggedIn }) {
                 } else {
                     // Ophalen van gebruiker gegevens voor zakelijke gebruikers
                     axios
-                        .get(`https://localhost:7017/api/user/${userId}`, {
+                        .get(`https://localhost:7017/api/gebruiker/${userId}`, {
                             headers: { Authorization: `Bearer ${token}` }
                         })
                         .then(response => {
@@ -49,7 +49,7 @@ function Account({ setIsLoggedIn }) {
                                 setEmployees(response.data.employees);
                                 setNewEmployee(prevState => ({
                                     ...prevState,
-                                    kvkNummer: response.data.kvkNummer
+                                    ZakelijkeGebruikerId: response.data.id
                                 }));
                             }
                             setIsLoading(false);
@@ -116,31 +116,41 @@ function Account({ setIsLoggedIn }) {
             return;
         }
 
-        // Controleer of het e-mailadres al bestaat
-        
-                        axios.post(
-                            `https://localhost:7017/api/employee/{gebruikerId}/add-employee`,
-                            newEmployee,
-                            { headers: { Authorization: `Bearer ${token}` } }
-                        )
-                        .then(response => {
-                            // Voeg de nieuwe werknemer toe aan de lijst
-                            setEmployees([...employees, response.data]);
-                            // Reset de invoervelden
-                            setNewEmployee({ naam: '', achternaam: '', email: '', wachtwoord: '', kvkNummer: user.kvkNummer });
-                            alert('Werknemer succesvol toegevoegd.');
-                        })
-                        .catch(error => {
-                            console.error('Fout bij het toevoegen van werknemer:', error.response ? error.response.data : error.message);
-                            alert('Het is niet gelukt een Werknemer aan te maken.');
-                        })
-                            
+        // Maak het employeeData-object en voeg ZakelijkeGebruikerId en KlantType toe
+        const employeeData = {
+            naam: newEmployee.naam,
+            achternaam: newEmployee.achternaam,
+            email: newEmployee.email,
+            password: newEmployee.wachtwoord, // Gebruik 'password' voor de backend
+            gebruikerId: user.id, // ID van de zakelijke gebruiker
+            typeKlant: 'Werknemer', // Specificeer het klanttype
+        };
+
+        console.log('Verstuurde gegevens:', employeeData); // Debugging
+
+        // Verstuur het verzoek naar de backend
+        axios
+            .post(
+                `https://localhost:7017/api/employee/add-employee`,
+                employeeData,
+                { headers: { Authorization: `Bearer ${token}` } }
+            )
+            .then(response => {
+                // Voeg de nieuwe werknemer toe aan de lijst
+                setEmployees([...employees, response.data]);
+                // Reset de invoervelden
+                setNewEmployee({ naam: '', achternaam: '', email: '', wachtwoord: '' });
+                alert('Werknemer succesvol toegevoegd.');
+            })
             .catch(error => {
-                // Log de foutdetails om te zien wat er misgaat
-                console.error('Fout bij het controleren van e-mail:', error.response ? error.response.data : error.message);
-                alert('Er is een fout opgetreden bij het controleren van de e-mail.');
+                console.error('Fout bij het toevoegen van werknemer:', error.response ? error.response.data : error.message);
+                alert('Het is niet gelukt een Werknemer aan te maken.');
             });
     };
+
+
+
+
 
     const handleEditData = () => {
         const token = localStorage.getItem('authToken');

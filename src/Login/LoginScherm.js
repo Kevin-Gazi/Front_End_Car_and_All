@@ -16,7 +16,7 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
 
         try {
             // Aangepaste URL voor login, bijvoorbeeld voor gebruikerslogin
-            const response = await fetch('https://localhost:7017/api/user/login', {  // Aangepast endpoint
+            const response = await fetch('https://localhost:7017/api/gebruiker/login', {  // Aangepast endpoint
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(loginDetails),
