@@ -11,8 +11,7 @@ function SignUpScherm() {
     const [typeKlant, setTypeKlant] = useState('Particulier');
     const [kvkNummer, setKvkNummer] = useState(''); 
     const navigate = useNavigate();
-
-    // Functie om formulier in te dienen
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
 

@@ -12,6 +12,9 @@ export default function Vehicles() {
     const [selectedBrand, setSelectedBrand] = useState([]);
     const [selectedColor, setSelectedColor] = useState([]);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [rentalDate, setRentalDate] = useState({ start: '', end: '' });
+
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
@@ -77,15 +80,56 @@ export default function Vehicles() {
         );
     };
 
-    const handleRentClick = () => {
+    const openModal = (vehicle) => {
+        setSelectedVehicle(vehicle);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleConfirmRent = async () => {
+        if (!rentalDate.start || !rentalDate.end) {
+            alert('Please select both start and end dates.');
+            return;
+        }
+
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const response = await fetch('https://localhost:7017/api/rentals', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`,
+                },
+                body: JSON.stringify({
+                    gebruikerId: user.userId,
+                    voertuigId: selectedVehicle.id,
+                    startDate: rentalDate.start,
+                    endDate: rentalDate.end
+                }),
+            });
+
+            if (response.ok) {
+                alert('Rental successfully submitted!');
+                closeModal();
+            } else {
+                alert('Failed to rent vehicle.');
+            }
+        } catch (error) {
+            console.error('Error renting vehicle:', error);
+            alert('An error occurred while processing your rental.');
+        }
+    };
+
+    const handleRentClick = (vehicle) => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) {
             alert('Please log in to rent a vehicle.');
-            window.location.href = 'Login/LoginScherm';
+            window.location.href = 'Login';
         } else {
-            // Mock rental request
-            alert(`Rental request submitted for vehicle: ${selectedVehicle.model}`);
-            // Add real rental API logic here
+            openModal(vehicle);
         }
     };
 
@@ -191,12 +235,38 @@ export default function Vehicles() {
                             </div>
                             <div className="vehicle-end">
                                 <p><strong>€ {vehicle.prijsPerDag}</strong> / day</p>
-                                <button onClick={handleRentClick}>Rent</button>
+                                <button onClick={() => handleRentClick(vehicle)}>Rent</button>
                             </div>
                         </div>
                     ))}
                 </section>
             </div>
+
+            {isModalOpen && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>Select Rental Dates</h2>
+                        <label>
+                            Start Date:
+                            <input
+                                type="date"
+                                value={rentalDate.start}
+                                onChange={(e) => setRentalDate({ ...rentalDate, start: e.target.value })}
+                            />
+                        </label>
+                        <label>
+                            End Date:
+                            <input
+                                type="date"
+                                value={rentalDate.end}
+                                onChange={(e) => setRentalDate({ ...rentalDate, end: e.target.value })}
+                            />
+                        </label>
+                        <button onClick={handleConfirmRent}>Confirm Rent</button>
+                        <button onClick={closeModal}>Cancel</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
