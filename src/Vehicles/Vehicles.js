@@ -8,6 +8,7 @@ export default function Vehicles() {
     const [filteredVehicles, setFilteredVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedVehicle, setSelectedVehicle] = useState(null);
+    const [unavailableDates, setUnavailableDates] = useState([]);
     const navigate = useNavigate();
 
     const [selectedType, setSelectedType] = useState('All');
@@ -59,6 +60,27 @@ export default function Vehicles() {
         return [...new Set(brands)];
     };
 
+    const fetchUnavailableDates = async (vehicleId) => {
+        try {
+            const response = await fetch(`https://localhost:7017/api/vehicles/${vehicleId}/unavailable-dates`);
+            const text = await response.text();
+            console.log('Response:', text);
+
+            try {
+                const dates = JSON.parse(text);
+                setUnavailableDates(dates.map(date => new Date(date).toISOString().split('T')[0])); // Zet de data in de juiste indeling
+            } catch (parseError) {
+                console.error('JSON parse error:', parseError);
+                alert('Error parsing the unavailable dates response.');
+            }
+        } catch (error) {
+            console.error('Error fetching unavailable dates:', error);
+            alert('An error occurred while fetching unavailable dates.');
+        }
+    };
+
+
+
     const getUniqueColors = () => {
         const colors = filteredVehicles.map(vehicle => vehicle.kleur);
         return [...new Set(colors)];
@@ -83,13 +105,28 @@ export default function Vehicles() {
     };
 
     const openModal = (vehicle) => {
-        console.log('Modal openen voor voertuig:', vehicle);
         setSelectedVehicle(vehicle);
+        fetchUnavailableDates(vehicle.id);
         setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
+    };
+    const checkVehicleAvailability = async () => {
+        const startDate = new Date(rentalDate.start).toISOString().split('T')[0];
+        const endDate = new Date(rentalDate.end).toISOString().split('T')[0];
+
+        try {
+            const response = await fetch(
+                `https://localhost:7017/api/vehicles/availability?voertuigId=${selectedVehicle.id}&startDate=${startDate}&endDate=${endDate}`
+            );
+            const data = await response.json();
+            return data.isAvailable;
+        } catch (error) {
+            console.error('Error checking vehicle availability:', error);
+            return false;
+        }
     };
 
     const handleConfirmRent = async () => {
@@ -102,9 +139,15 @@ export default function Vehicles() {
             alert('End date cannot be earlier than start date.');
             return;
         }
-        
+
         const startDate = new Date(rentalDate.start).toISOString().split('T')[0];
         const endDate = new Date(rentalDate.end).toISOString().split('T')[0];
+
+        // Check if the selected dates are unavailable
+        if (unavailableDates.includes(startDate) || unavailableDates.includes(endDate)) {
+            alert('The selected dates are unavailable for rent.');
+            return;
+        }
 
         try {
             const user = JSON.parse(localStorage.getItem('user'));
@@ -134,6 +177,7 @@ export default function Vehicles() {
             alert('An error occurred while processing your rental.');
         }
     };
+
 
 
     const handleRentClick = (vehicle) => {
@@ -264,7 +308,8 @@ export default function Vehicles() {
                             <input
                                 type="date"
                                 value={rentalDate.start}
-                                onChange={(e) => setRentalDate({ ...rentalDate, start: e.target.value })}
+                                min={new Date().toISOString().split('T')[0]} // Stel de minimale datum in op vandaag
+                                onChange={(e) => setRentalDate({...rentalDate, start: e.target.value})}
                             />
                         </label>
                         <label>
@@ -272,8 +317,8 @@ export default function Vehicles() {
                             <input
                                 type="date"
                                 value={rentalDate.end}
+                                min={rentalDate.start || new Date().toISOString().split('T')[0]} // Stel minimale datum in op startDate of vandaag
                                 onChange={(e) => setRentalDate({...rentalDate, end: e.target.value})}
-                                min={rentalDate.start}
                             />
                         </label>
 
