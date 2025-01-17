@@ -87,15 +87,15 @@ function Account({ setIsLoggedIn }) {
         if (newPassword) {
             const token = localStorage.getItem('authToken');
             axios.put(
-                `https://localhost:7017/api/employee/${employeeId}/update-password`, 
-                newPassword,  // Verstuur het wachtwoord direct als string
+                `https://localhost:7017/api/employee/${employeeId}/update-password`,
+                { password: newPassword },  // Verzend het wachtwoord als een object
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json', // Zorg ervoor dat het type juist is
                     }
                 }
-                )
+            )
                 .then(() => {
                     alert('Wachtwoord succesvol gewijzigd.');
                 })
@@ -103,6 +103,7 @@ function Account({ setIsLoggedIn }) {
                     console.error('Fout bij het wijzigen van wachtwoord:', error);
                     alert('Er is een fout opgetreden bij het wijzigen van het wachtwoord.');
                 });
+
         }
     };
 
@@ -147,30 +148,49 @@ function Account({ setIsLoggedIn }) {
             });
     };
 
-
-
-
-
     const handleEditData = () => {
         const token = localStorage.getItem('authToken');
+        const userId = user.id;
+
+        // Check of er een e-mail of wachtwoord is ingevoerd
+        if (!newEmail && !newPassword) {
+            alert('Vul alstublieft een e-mail of wachtwoord in.');
+            return;
+        }
+
+        // Zorg ervoor dat de e-mail correct is (en geen vreemde tekens bevat)
+        const sanitizedEmail = newEmail.trim();
+
+        // Maak het updateDto object met de velden die je wilt bijwerken
+        const updateDto = {
+            email: sanitizedEmail,
+            newPassword: newPassword,
+        };
+
         axios
             .put(
-                `https://localhost:7017/api/account/update`,
-                { email: newEmail, newPassword: newPassword },
+                `https://localhost:7017/api/gebruiker/${userId}/updateUserInfo`,
+                updateDto, // Verstuur het updateDto object
                 { headers: { Authorization: `Bearer ${token}` } }
             )
             .then(() => {
+                alert('Gegevens succesvol bijgewerkt!');
                 setUser(prevUser => ({
                     ...prevUser,
-                    email: newEmail || prevUser.email
+                    email: sanitizedEmail || prevUser.email,
                 }));
-                setEditing(false);
             })
             .catch(error => {
                 console.error('Fout bij het bijwerken van gegevens:', error);
                 alert('Kan gegevens niet bijwerken. Controleer je invoer en probeer opnieuw.');
             });
     };
+
+    
+    
+
+
+
 
     return (
         <div className="account-container">
@@ -183,29 +203,28 @@ function Account({ setIsLoggedIn }) {
                         <p><strong>Naam:</strong> {user.naam}</p>
                         <p><strong>Email:</strong> {user.email}</p>
                         <p><strong>Klanttype:</strong> {user.typeKlant}</p>
+                        {editing ? (
+                            <div>
+                                <input
+                                    type="text"
+                                    placeholder="Nieuw e-mailadres"
+                                    value={newEmail}
+                                    onChange={(e) => setNewEmail(e.target.value)}
+                                />
+                                <input
+                                    type="password"
+                                    placeholder="Nieuw wachtwoord"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                />
+                                <button onClick={handleEditData}>Bevestig wijzigingen</button>
+                                <button onClick={() => setEditing(false)}>Annuleer</button>
+                            </div>
+                        ) : (
+                            <button onClick={() => setEditing(true)}>Bewerk accountgegevens</button>
+                        )}
                         {user.typeKlant === 'Zakelijk' && (
                             <div>
-                                <p><strong>KvK-Nummer:</strong> {user.kvkNummer}</p>
-                                {editing ? (
-                                    <div>
-                                        <input
-                                            type="text"
-                                            placeholder="Nieuw e-mailadres"
-                                            value={newEmail}
-                                            onChange={(e) => setNewEmail(e.target.value)}
-                                        />
-                                        <input
-                                            type="password"
-                                            placeholder="Nieuw wachtwoord"
-                                            value={newPassword}
-                                            onChange={(e) => setNewPassword(e.target.value)}
-                                        />
-                                        <button onClick={handleEditData}>Bevestig wijzigingen</button>
-                                        <button onClick={() => setEditing(false)}>Annuleer</button>
-                                    </div>
-                                ) : (
-                                    <button onClick={() => setEditing(true)}>Bewerk accountgegevens</button>
-                                )}
                                 <h3>Werknemer toevoegen:</h3>
                                 <div>
                                     <input
@@ -236,21 +255,25 @@ function Account({ setIsLoggedIn }) {
                                 </div>
                             </div>
                         )}
-                        <h4>Werknemers:</h4>
-                        {employees.length === 0 ? (
-                            <p>Je hebt nog geen werknemers toegevoegd.</p>
-                        ) : (
-                            <ul>
-                                {employees.map(employee => (
-                                    <li key={employee.id}>
-                                        {employee.naam} ({employee.email})
-                                        <button onClick={() => handleDeleteEmployee(employee.id)}>Verwijder</button>
-                                        <button onClick={() => handleUpdatePassword(employee.id)}>Wachtwoord wijzigen</button>
-                                    </li>
-                                ))}
-                            </ul>
+                        {user.typeKlant === 'Zakelijk' && employees.length > 0 && (
+                            <div>
+                                <h4>Werknemers:</h4>
+                                <ul>
+                                    {employees.map((employee) => (
+                                        <li key={employee.id}>
+                                            {employee.naam} ({employee.email})
+                                            <button onClick={() => handleDeleteEmployee(employee.id)}>Verwijder</button>
+                                            <button onClick={() => handleUpdatePassword(employee.id)}>Wachtwoord
+                                                wijzigen
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         )}
                     </div>
+
+
                 )
             )}
         </div>

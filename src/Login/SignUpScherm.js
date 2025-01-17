@@ -28,7 +28,7 @@ function SignUpScherm() {
 
         try {
             // Update de URL naar het juiste endpoint
-            const response = await fetch('https://localhost:7017/api/user/register', {  // Aangepaste endpoint
+            const response = await fetch('https://localhost:7017/api/gebruiker/register', {  // Aangepaste endpoint
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ function SignUpScherm() {
                     <button type="submit">Sign Up</button>
 
                     <div className="login-link">
-                        <p>Already have an account? <a href="/Login/LoginScherm">Login</a></p>
+                        <p>Already have an account? <a href="/Login">Login</a></p>
                     </div>
                 </form>
             </div>
