@@ -1,135 +1,122 @@
 import React, { useState } from "react";
-import './SignUpScherm.css';
-import { FaUserAlt, FaEnvelope, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import "./SignUpScherm.css";
 
 function SignUpScherm() {
-    const [name, setName] = useState(''); // Voeg de state voor username toe
-    const [lastname, setLastname] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [typeKlant, setTypeKlant] = useState('Particulier');
-    const [kvkNummer, setKvkNummer] = useState(''); 
+    const [formData, setFormData] = useState({
+        naam: "",
+        achternaam: "",
+        email: "",
+        password: "",
+        typeKlant: "Particulier",
+        kvkNummer: "",
+    });
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    // Functie om formulier in te dienen
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Gebruikersgegevens in een object
-        const user = {
-            Naam: name,
-            Achternaam: lastname,
-            Email: email,
-            Password: password,
-            TypeKlant: typeKlant,
-            KvkNummer: typeKlant === 'Zakelijk' ? kvkNummer : null,
-        };
+        setError("");
 
         try {
-            // Update de URL naar het juiste endpoint
-            const response = await fetch('https://localhost:7017/api/gebruiker/register', {  // Aangepaste endpoint
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(user),
+            const response = await fetch("https://localhost:7017/api/users/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
             });
 
             if (response.ok) {
-                navigate('/Login');
+                alert("Account succesvol aangemaakt!");
+                navigate("/login");
             } else {
-                console.error('Er is iets mis gegaan bij het registreren');
+                const errorMessage = await response.text();
+                setError(errorMessage);
             }
-        } catch (error) {
-            console.error('Fout bij het verbinden met de server:', error);
+        } catch (err) {
+            console.error("Error during registration:", err);
+            setError("Er is een fout opgetreden tijdens het registreren.");
         }
     };
 
-
     return (
-        <div className="signup-container">
+        <div className="login-container">
             <div className="wrapper">
                 <form onSubmit={handleSubmit}>
-                    <h1>Register</h1>
+                    <h1>Maak een Account</h1>
+                    {error && <p className="error-message">{error}</p>}
                     <div className="input-box">
                         <input
                             type="text"
-                            placeholder="Username"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}  // Verbind username state
+                            name="naam"
+                            placeholder="Voornaam"
+                            value={formData.naam}
+                            onChange={handleChange}
                             required
                         />
-                        <FaUserAlt className="icon"/>
                     </div>
                     <div className="input-box">
                         <input
                             type="text"
-                            placeholder="Last Name"
-                            value={lastname}
-                            onChange={(e) => setLastname(e.target.value)}  // Verbind achternaam state
+                            name="achternaam"
+                            placeholder="Achternaam"
+                            value={formData.achternaam}
+                            onChange={handleChange}
                             required
                         />
-                        <FaUserAlt className="icon"/>
                     </div>
-
                     <div className="input-box">
                         <input
                             type="email"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            name="email"
+                            placeholder="E-mailadres"
+                            value={formData.email}
+                            onChange={handleChange}
                             required
                         />
-                        <FaEnvelope className="icon"/>
                     </div>
                     <div className="input-box">
                         <input
                             type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}  // Verbind wachtwoord state
+                            name="password"
+                            placeholder="Wachtwoord"
+                            value={formData.password}
+                            onChange={handleChange}
                             required
                         />
-                        <FaLock className="icon"/>
                     </div>
                     <div className="input-box">
-                        <label>
-                            <input
-                                type="radio"
-                                value="Particulier"
-                                checked={typeKlant === 'Particulier'}
-                                onChange={() => setTypeKlant('Particulier')}
-                            />
-                            Particulier
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                value="Zakelijk"
-                                checked={typeKlant === 'Zakelijk'}
-                                onChange={() => setTypeKlant('Zakelijk')}
-                            />
-                            Zakelijk
-                        </label>
+                        <select
+                            name="typeKlant"
+                            value={formData.typeKlant}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="Particulier">Particulier</option>
+                            <option value="Zakelijk">Zakelijk</option>
+                        </select>
                     </div>
-
-                    {typeKlant === 'Zakelijk' && (
+                    {formData.typeKlant === "Zakelijk" && (
                         <div className="input-box">
                             <input
                                 type="text"
-                                placeholder="KVK Nummer"
-                                value={kvkNummer}
-                                onChange={(e) => setKvkNummer(e.target.value)}
-                                required={typeKlant === 'Zakelijk'}
+                                name="kvkNummer"
+                                placeholder="KvK-nummer"
+                                value={formData.kvkNummer}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
                     )}
-
-                    <button type="submit">Sign Up</button>
-
-                    <div className="login-link">
-                        <p>Already have an account? <a href="/Login">Login</a></p>
+                    <button type="submit">Account aanmaken</button>
+                    <div className="register-link">
+                        <p>
+                            Heb je al een account? <a href="/login">Log in</a>
+                        </p>
                     </div>
                 </form>
             </div>
