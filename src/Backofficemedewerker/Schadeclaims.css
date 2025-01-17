@@ -1,16 +1,10 @@
-
-.gebruikerid {
-    position: absolute;
-    color: black;
-}
-
-.voertuigid {
-    color: black;
+.damage {
+    color: indianred;
 }
 .schadeclaim-card {
     background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+    border: 15px solid #ccc;
+    border-radius: 60px;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -24,29 +18,48 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+.schadeclaim-card .info-row {
+    display: flex;
+    gap: 320px;
+    margin-bottom: 10px;
+}
+.schadeclaim-card .info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.schadeclaim-card .info-item strong {
+    font-weight: bold;
+}
+
 /* Status Section */
 .status-section {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    justify-content: center; 
+    align-items: center;     
     margin-top: 10px;
     padding-top: 10px;
     border-top: 1px solid #ddd;
+    position: relative;      
 }
 
+/* Position the status text at the bottom left */
 .status-section p {
+    position: absolute;
+    left: 0;                  
+    bottom: 0px;        
     font-size: 1rem;
     font-weight: bold;
     color: #555;
     margin: 0;
 }
 
-/* Action Buttons Section */
-.action-buttons {
+/*Approve and Reject button*/
+.approve_reject {
     display: flex;
-    justify-content: flex-start;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 5px;
 }
 
 /* Approve Button */
@@ -54,11 +67,13 @@
     background-color: #4CAF50;
     color: white;
     border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 1rem;
+    border-radius: 5px;  
+    padding: 5px 10px;    
+    font-size: 1rem;   
     font-weight: bold;
     cursor: pointer;
+    width: auto;          
+    min-width: 500px;     
     transition: background-color 0.3s ease;
 }
 
@@ -71,11 +86,13 @@
     background-color: #f44336;
     color: white;
     border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 1rem;
+    border-radius: 5px; 
+    padding: 5px 10px;  
+    font-size: 1rem;    
     font-weight: bold;
     cursor: pointer;
+    width: auto;         
+    min-width: 500px;     
     transition: background-color 0.3s ease;
 }
 
@@ -89,3 +106,5 @@
     background-color: #ddd;
     cursor: not-allowed;
 }
+
+

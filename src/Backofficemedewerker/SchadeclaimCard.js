@@ -80,15 +80,29 @@ const SchadeclaimCard = ({ claim, fetchClaims }) => {
 
     return (
         <div className="schadeclaim-card">
-            <p className="gebruikerid"><strong>GebruikerId:</strong> {claim.gebruikerId}</p>
-            <p className="voertuigid"><strong>VoertuigId:</strong> {claim.voertuigId}</p>
-            <p><strong>Description:</strong> {claim.beschrijving}</p>
-            <p><strong>Date:</strong> {claim.datum}</p>
+            <div className="info-row">
+                <div className="info-item">
+                    <strong>GebruikerId:</strong>
+                    <p>{claim.gebruikerId}</p>
+                </div>
+                <div className="info-item">
+                    <strong>VoertuigId:</strong>
+                    <p>{claim.voertuigId}</p>
+                </div>
+                <div className="info-item">
+                    <strong>Description:</strong>
+                    <p>{claim.beschrijving}</p>
+                </div>
+                <div className="info-item">
+                    <strong>Date:</strong>
+                    <p>{claim.datum}</p>
+                </div>
+            </div>
 
             {/* Always show the saved schadeKosten */}
-            <p>
+            <p className = "damage">
                 <strong>Damage costs:</strong>{" "}
-                {schadeKosten !== "" ? `€ ${schadeKosten}` : "Nog niet ingevuld"}
+                {schadeKosten !== "" ? `€ ${schadeKosten}` : "No info"}
             </p>
 
             {/* Schadekosten input only visible if Pending */}
@@ -111,6 +125,7 @@ const SchadeclaimCard = ({ claim, fetchClaims }) => {
             <div className="status-section">
                 <p><strong>Status:</strong> {status}</p>
 
+                <div className="approve_reject">
                 {/* Approve and Reject Buttons only enabled if status is Pending */}
                 <button
                     className="approve-button"
@@ -126,9 +141,11 @@ const SchadeclaimCard = ({ claim, fetchClaims }) => {
                 >
                     Reject
                 </button>
+                </div>
             </div>
             {responseMessage && <p className="response-message">{responseMessage}</p>}
         </div>
+
     );
 };
 
