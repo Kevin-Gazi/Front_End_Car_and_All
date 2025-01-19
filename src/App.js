@@ -7,7 +7,6 @@ import Vehicles from "./Vehicles/Vehicles";
 import { NavBar } from "./Components/NavBar";
 import Login from "./Login/LoginScherm";
 import SignUp from "./Login/SignUpScherm";
-import Account from "./Account/AccountScherm";
 import MedewerkerLogin from "./CarMedewerker/MedewerkerLogin/MedewerkerLogin";
 import MedewerkerDashboard from './CarMedewerker/MedewerkerDashboard/MedewerkerDashboard';
 
@@ -34,7 +33,6 @@ function App() {
                 <Route path="/Login" element={<Login setIsLoggedIn={setIsLoggedIn} setIsEmployee={setIsEmployee} setFunctie={setFunctie} />} />
                 <Route path="/CarMedewerkerLogin" element={<MedewerkerLogin setIsLoggedIn={setIsLoggedIn} setIsEmployee={setIsEmployee} setFunctie={setFunctie} />} />
                 <Route path="/SignUp" element={<SignUp />} />
-                <Route path="/Account" element={<Account setIsLoggedIn={setIsLoggedIn} />} />
                 <Route path="/MedewerkerDashboard" element={<MedewerkerDashboard />} />
             </Routes>
         </Router>

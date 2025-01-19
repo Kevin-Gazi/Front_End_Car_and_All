@@ -27,7 +27,7 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                 console.log("Successfully logged in:", data);
 
                 // Sla het token op in localStorage
-                localStorage.setItem("userNaam", data.userNaam);
+                localStorage.setItem("Typeklant", data.typeKlant);
 
                 setIsLoggedIn(true);
                 
