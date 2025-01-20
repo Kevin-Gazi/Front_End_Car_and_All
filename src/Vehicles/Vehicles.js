@@ -81,7 +81,7 @@ export default function Vehicles() {
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) {
             alert('Please log in to rent a vehicle.');
-            window.location.href = 'Login/LoginScherm';
+            window.location.href = 'Login';
         } else {
             // Mock rental request
             alert(`Rental request submitted for vehicle: ${selectedVehicle.model}`);
