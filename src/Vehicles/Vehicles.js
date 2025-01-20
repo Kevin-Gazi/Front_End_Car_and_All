@@ -133,8 +133,12 @@ export default function Vehicles() {
     };
 
 
+
     const closeModal = () => {
         setIsModalOpen(false);
+    };
+    const closeConfirmModal = () => {
+        setIsConfirmModalOpen(false);
     };
 
     /*const checkVehicleAvailability = async () => {
@@ -167,14 +171,22 @@ export default function Vehicles() {
         const startDate = new Date(rentalDate.start).toISOString().split('T')[0];
         const endDate = new Date(rentalDate.end).toISOString().split('T')[0];
 
-        // Check if the selected dates are unavailable
         if (unavailableDates.includes(startDate) || unavailableDates.includes(endDate)) {
             alert('The selected dates are unavailable for rent.');
             return;
         }
 
+        if (!selectedVehicle?.id) {
+            alert('Invalid vehicle selected.');
+            return;
+        }
+
         try {
             const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) {
+                alert('User is not logged in.');
+                return;
+            }
             const response = await fetch('https://localhost:7017/api/rentals', {
                 method: 'POST',
                 headers: {
@@ -192,6 +204,7 @@ export default function Vehicles() {
             if (response.ok) {
                 alert('Rental request submitted. Awaiting approval.');
                 closeModal();
+                closeConfirmModal();
             } else {
                 alert('Failed to rent vehicle.');
                 console.log('Error:', response.status, await response.text());
@@ -201,6 +214,14 @@ export default function Vehicles() {
             alert('An error occurred while processing your rental.');
         }
     };
+
+    const customImages = [
+        require('./Images/Corolla.jpg').default,
+        require('./Images/Focus.jpg').default,
+        require('./Images/Golf.jpg').default,
+        require('./Images/Civic.jpg').default,
+        require('./Images/3Serie.jpg').default
+    ];
 
 
 
@@ -302,10 +323,13 @@ export default function Vehicles() {
                 </div>
 
                 <section className="vehicle-grid">
-                    {filteredVehicles.map((vehicle) => (
+                    {filteredVehicles.map((vehicle, index) => (
                         <div className="vehicle-card" key={vehicle.id}>
                             <div className="vehicle-image">
-                                <img src={vehicle.image || vehicleImage} alt="picture of vehicle"/>
+                                <img
+                                    src={index < 5 ? customImages[index] : vehicle.image || vehicleImage}
+                                    alt={`picture of ${vehicle.model}`}
+                                />
                             </div>
                             <div className="vehicle-start">
                                 <h2>{vehicle.model}</h2>
@@ -320,6 +344,7 @@ export default function Vehicles() {
                         </div>
                     ))}
                 </section>
+
             </div>
 
             {isModalOpen && (
@@ -331,7 +356,7 @@ export default function Vehicles() {
                             <input
                                 type="date"
                                 value={rentalDate.start}
-                                min={new Date().toISOString().split('T')[0]} // Stel de minimale datum in op vandaag
+                                min={new Date().toISOString().split('T')[0]}
                                 onChange={(e) => setRentalDate({...rentalDate, start: e.target.value})}
                             />
                         </label>
@@ -340,7 +365,7 @@ export default function Vehicles() {
                             <input
                                 type="date"
                                 value={rentalDate.end}
-                                min={rentalDate.start || new Date().toISOString().split('T')[0]} // Stel minimale datum in op startDate of vandaag
+                                min={rentalDate.start || new Date().toISOString().split('T')[0]} 
                                 onChange={(e) => setRentalDate({...rentalDate, end: e.target.value})}
                             />
                         </label>
@@ -359,7 +384,7 @@ export default function Vehicles() {
                         <p><strong>Until:</strong> {rentalDate.end}</p>
                         <p><strong>Total price:</strong> €{selectedVehicle.prijsPerDag * (new Date(rentalDate.end) - new Date(rentalDate.start)) / (1000 * 60 * 60 * 24)}</p>
 
-                        <button onClick={handleRentClick}>Confirm</button>
+                        <button onClick={handleConfirmRent}>Confirm</button>
                         <button onClick={() => setIsConfirmModalOpen(false)}>Cancel</button>
                     </div>
                 </div>
