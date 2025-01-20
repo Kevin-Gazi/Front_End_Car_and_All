@@ -60,6 +60,10 @@ export default function Vehicles() {
         const brands = filteredVehicles.map(vehicle => vehicle.merk);
         return [...new Set(brands)];
     };
+    
+    const isConfirmModelOpen = () => {
+        setIsConfirmModalOpen(true);
+    }
 
     const fetchUnavailableDates = async (vehicleId) => {
         try {
@@ -341,7 +345,7 @@ export default function Vehicles() {
                             />
                         </label>
 
-                        <button onClick={handleConfirmRent}>Confirm Rent</button>
+                        <button onClick={isConfirmModelOpen}>Confirm Rent</button>
                         <button onClick={closeModal}>Cancel</button>
                     </div>
                 </div>

@@ -74,13 +74,13 @@ button:hover {
 }
 
 /* Succes- en foutberichten */
-p {
+.success-message {
     text-align: center;
     font-size: 1rem;
     margin-top: 20px;
-    color: #28a745; /* Groene tekst voor succes */
+    color: #28a745;
 }
 
-p.error {
-    color: #dc3545; /* Rode tekst voor fouten */
+.error-message {
+    color: #dc3545;
 }
