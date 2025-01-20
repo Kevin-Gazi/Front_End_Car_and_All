@@ -1,12 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import './NavBar.css'; 
+import { Link, useNavigate } from 'react-router-dom';
+import './NavBar.css';
+
 
 export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
+    const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('functie');
         setIsLoggedIn(false);
+        navigate('/');
     };
 
     return (
@@ -20,7 +23,6 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
                     {/* Indien ingelogd */}
                     {isLoggedIn ? (
                         isEmployee ? (
-                            // Medewerker navigatie
                             <>
                                 <li className="navbar-item"><Link to="/DamageClaims"
                                                                   className="navbar-links">DamageClaims</Link></li>
@@ -36,7 +38,6 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
                                 </li>
                             </>
                         ) : (
-                            // Normale gebruiker navigatie
                             <>
                                 <li className="navbar-item"><Link to="/Vehicles"
                                                                   className="navbar-links">Vehicles</Link></li>

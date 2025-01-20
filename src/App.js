@@ -12,7 +12,7 @@ import MedewerkerLogin from "./CarMedewerker/MedewerkerLogin/MedewerkerLogin";
 import MedewerkerDashboard from './CarMedewerker/MedewerkerDashboard/MedewerkerDashboard';
 import DamageClaims from "./Backofficemedewerker/Schadeclaims";
 import Subscriptions from "./Abonnement/Subscriptions";
-import Profile from "./Account/Profile";
+//import Profile from "./Account/Profile";
 import DamageReport from "./Frontofficemedewerker/Schadeformulier";
 
 function App() {
@@ -42,7 +42,7 @@ function App() {
                 <Route path="/MedewerkerDashboard" element={<MedewerkerDashboard />} />
                 <Route path="/DamageClaims" element={<DamageClaims />} />
                 <Route path="/Subscriptions" element={<Subscriptions />} />
-                <Route path="/Profile" element={<Profile />} />
+                {/*<Route path="/Profile" element={<Profile />} />*/}
                 <Route path="/DamageReport" element={<DamageReport />} />
                 
             </Routes>

@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import './Vehicles.css';
 import vehicleImage from './IMG_8180.JPG';
+import { useNavigate } from 'react-router-dom';
 
 export default function Vehicles() {
     const [vehicles, setVehicles] = useState([]);
     const [filteredVehicles, setFilteredVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedVehicle, setSelectedVehicle] = useState(null);
+    const [unavailableDates, setUnavailableDates] = useState([]);
+    const navigate = useNavigate();
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
     const [selectedType, setSelectedType] = useState('All');
     const [selectedBrand, setSelectedBrand] = useState([]);
     const [selectedColor, setSelectedColor] = useState([]);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [rentalDate, setRentalDate] = useState({ start: '', end: '' });
+
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
-                const response = await fetch('https://localhost:7017/api/vehicles');
+                const response = await fetch('https://localhost:7017/api/vehicles/GetVehicles');
                 const data = await response.json();
                 setVehicles(data);
                 setFilteredVehicles(data);
@@ -54,6 +61,38 @@ export default function Vehicles() {
         return [...new Set(brands)];
     };
 
+    const fetchUnavailableDates = async (vehicleId) => {
+        try {
+            const response = await fetch(`https://localhost:7017/api/vehicles/${vehicleId}/unavailable-dates`);
+            console.log('Status code:', response.status);
+            const text = await response.text();
+            console.log('Response text:', text);
+
+
+            if (!response.ok) {
+                throw new Error(`API returned status ${response.status}`);
+            }
+
+            if (text) {
+                try {
+                    const dates = JSON.parse(text);
+                    setUnavailableDates(dates.map(date => new Date(date).toISOString().split('T')[0]));
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    alert('Error parsing the unavailable dates response.');
+                }
+            } else {
+                console.warn('Received empty response for unavailable dates.');
+                setUnavailableDates([]);
+            }
+        } catch (error) {
+            console.error('Error fetching unavailable dates:', error);
+            alert('An error occurred while fetching unavailable dates.');
+        }
+    };
+
+
+
     const getUniqueColors = () => {
         const colors = filteredVehicles.map(vehicle => vehicle.kleur);
         return [...new Set(colors)];
@@ -77,18 +116,100 @@ export default function Vehicles() {
         );
     };
 
-    const handleRentClick = () => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (!user) {
-            alert('Please log in to rent a vehicle.');
-            window.location.href = 'Login';
-        } else {
-            // Mock rental request
-            alert(`Rental request submitted for vehicle: ${selectedVehicle.model}`);
-            // Add real rental API logic here
+    const openModal = (vehicle) => {
+        if (!vehicle?.id) {
+            console.error('Vehicle ID is missing or invalid:', vehicle);
+            alert('Invalid vehicle selected.');
+            return;
+        }
+        setSelectedVehicle(vehicle);
+        fetchUnavailableDates(vehicle.id);
+        setIsModalOpen(true);
+        console.log('Modal state set to open:', true);
+    };
+
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    /*const checkVehicleAvailability = async () => {
+        const startDate = new Date(rentalDate.start).toISOString().split('T')[0];
+        const endDate = new Date(rentalDate.end).toISOString().split('T')[0];
+
+        try {
+            const response = await fetch(
+                `https://localhost:7017/api/vehicles/availability?voertuigId=${selectedVehicle.id}&startDate=${startDate}&endDate=${endDate}`
+            );
+            const data = await response.json();
+            return data.isAvailable;
+        } catch (error) {
+            console.error('Error checking vehicle availability:', error);
+            return false;
+        }
+    };*/
+
+    const handleConfirmRent = async () => {
+        if (!rentalDate.start || !rentalDate.end) {
+            alert('Please select both start and end dates.');
+            return;
+        }
+
+        if (new Date(rentalDate.end) < new Date(rentalDate.start)) {
+            alert('End date cannot be earlier than start date.');
+            return;
+        }
+
+        const startDate = new Date(rentalDate.start).toISOString().split('T')[0];
+        const endDate = new Date(rentalDate.end).toISOString().split('T')[0];
+
+        // Check if the selected dates are unavailable
+        if (unavailableDates.includes(startDate) || unavailableDates.includes(endDate)) {
+            alert('The selected dates are unavailable for rent.');
+            return;
+        }
+
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const response = await fetch('https://localhost:7017/api/rentals', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`,
+                },
+                body: JSON.stringify({
+                    gebruikerId: user.userId,
+                    voertuigId: selectedVehicle.id,
+                    startDate: startDate,
+                    endDate: endDate
+                }),
+            });
+
+            if (response.ok) {
+                alert('Rental request submitted. Awaiting approval.');
+                closeModal();
+            } else {
+                alert('Failed to rent vehicle.');
+                console.log('Error:', response.status, await response.text());
+            }
+        } catch (error) {
+            console.error('Error renting vehicle:', error);
+            alert('An error occurred while processing your rental.');
         }
     };
 
+
+
+    const handleRentClick = (vehicle) => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        console.log('Gebruiker uit localStorage:', user);
+        if (!user) {
+            alert('Please log in to rent a vehicle.');
+            navigate('/login');
+        } else {
+            openModal(vehicle);
+        }
+    };
     if (loading) {
         return <div>Loading vehicles...</div>;
     }
@@ -99,7 +220,6 @@ export default function Vehicles() {
                 <h1>Our Vehicles</h1>
                 <p>Explore our wide selection of vehicles available for rent.</p>
             </header>
-
             <div className="vehicles-container">
                 <div className="filters">
                     <div className="filter-category">
@@ -191,12 +311,55 @@ export default function Vehicles() {
                             </div>
                             <div className="vehicle-end">
                                 <p><strong>€ {vehicle.prijsPerDag}</strong> / day</p>
-                                <button onClick={handleRentClick}>Rent</button>
+                                <button onClick={() => handleRentClick(vehicle)}>Rent</button>
                             </div>
                         </div>
                     ))}
                 </section>
             </div>
+
+            {isModalOpen && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>Select Rental Dates</h2>
+                        <label>
+                            Start Date:
+                            <input
+                                type="date"
+                                value={rentalDate.start}
+                                min={new Date().toISOString().split('T')[0]} // Stel de minimale datum in op vandaag
+                                onChange={(e) => setRentalDate({...rentalDate, start: e.target.value})}
+                            />
+                        </label>
+                        <label>
+                            End Date:
+                            <input
+                                type="date"
+                                value={rentalDate.end}
+                                min={rentalDate.start || new Date().toISOString().split('T')[0]} // Stel minimale datum in op startDate of vandaag
+                                onChange={(e) => setRentalDate({...rentalDate, end: e.target.value})}
+                            />
+                        </label>
+
+                        <button onClick={handleConfirmRent}>Confirm Rent</button>
+                        <button onClick={closeModal}>Cancel</button>
+                    </div>
+                </div>
+            )}
+            {isConfirmModalOpen && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>You are about to rent:</h2>
+                        <p><strong>Vehicle:</strong> {selectedVehicle.model}</p>
+                        <p><strong>From:</strong> {rentalDate.start}</p>
+                        <p><strong>Until:</strong> {rentalDate.end}</p>
+                        <p><strong>Total price:</strong> €{selectedVehicle.prijsPerDag * (new Date(rentalDate.end) - new Date(rentalDate.start)) / (1000 * 60 * 60 * 24)}</p>
+
+                        <button onClick={handleRentClick}>Confirm</button>
+                        <button onClick={() => setIsConfirmModalOpen(false)}>Cancel</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
