@@ -1,52 +1,110 @@
-.schadeclaims-container {
+.damage {
+    color: indianred;
+}
+.schadeclaim-card {
+    background-color: white;
+    border: 15px solid #ccc;
+    border-radius: 60px;
     padding: 20px;
-    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.schadeclaims-container h1 {
-    color: #333;
+.schadeclaim-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.input-group {
-    margin-bottom: 15px;
+.schadeclaim-card .info-row {
+    display: flex;
+    gap: 320px;
+    margin-bottom: 10px;
+}
+.schadeclaim-card .info-item {
+    display: flex;
+    flex-direction: column;
 }
 
-.input-group label {
-    display: block;
+.schadeclaim-card .info-item strong {
     font-weight: bold;
 }
 
-.input-group input,
-.input-group textarea {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+/* Status Section */
+.status-section {
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+    position: relative;      
 }
 
-button {
-    background-color: #007bff;
+/* Position the status text at the bottom left */
+.status-section p {
+    position: absolute;
+    left: 0;                  
+    bottom: 0px;        
+    font-size: 1rem;
+    font-weight: bold;
+    color: #555;
+    margin: 0;
+}
+
+/*Approve and Reject button*/
+.approve_reject {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+/* Approve Button */
+.approve-button {
+    background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 10px 20px;
+    border-radius: 5px;  
+    padding: 5px 10px;    
+    font-size: 1rem;   
+    font-weight: bold;
     cursor: pointer;
-    border-radius: 4px;
+    width: auto;          
+    min-width: 500px;     
+    transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #0056b3;
+.approve-button:hover {
+    background-color: #45a049;
 }
 
-.claims-list {
-    list-style-type: none;
-    padding: 0;
+/* Reject Button */
+.reject-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px; 
+    padding: 5px 10px;  
+    font-size: 1rem;    
+    font-weight: bold;
+    cursor: pointer;
+    width: auto;         
+    min-width: 500px;     
+    transition: background-color 0.3s ease;
 }
 
-.claims-list li {
-    background: #f9f9f9;
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+.reject-button:hover {
+    background-color: #e53935;
 }
+
+/* Disabled Buttons */
+.approve-button:disabled,
+.reject-button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+

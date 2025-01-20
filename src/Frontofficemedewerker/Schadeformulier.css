@@ -1,0 +1,86 @@
+/* Algemene container styling */
+.schadeclaim-form-container {
+    max-width: 600px; /* Maximale breedte van het formulier */
+    margin: 50px auto; /* Centraal plaatsen op de pagina */
+    padding: 20px;
+    background-color: #f9f9f9; /* Lichtgrijze achtergrond */
+    border-radius: 10px; /* Afgeronde hoeken */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Schaduw voor diepte */
+}
+
+/* Titel styling */
+.schadeclaim-form-container h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Formuliergroepen */
+.form-group {
+    margin-bottom: 15px; /* Ruimte tussen formuliergroepen */
+    display: flex;
+    flex-direction: column; /* Plaats labels boven invoervelden */
+}
+
+/* Labels */
+.form-group label {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+/* Invoervelden */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea {
+    width: 100%; /* Volledige breedte van de container */
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc; /* Subtiele rand */
+    border-radius: 5px; /* Afgeronde hoeken */
+    background-color: #fff; /* Witte achtergrond */
+    color: #333;
+}
+
+/* Textarea */
+textarea {
+    resize: none; /* Schakel handmatige grootte-aanpassing uit */
+    height: 100px; /* Stel een standaardhoogte in */
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+    margin-left: 5px; /* Ruimte tussen checkbox en tekst */
+}
+
+/* Knoppen */
+button {
+    width: 100%; /* Knop beslaat de hele breedte */
+    padding: 12px;
+    font-size: 1rem;
+    background-color: #007bff; /* Blauwe achtergrond */
+    color: white; /* Witte tekst */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover-effect voor de knop */
+button:hover {
+    background-color: #0056b3; /* Donkerder blauw */
+}
+
+/* Succes- en foutberichten */
+p {
+    text-align: center;
+    font-size: 1rem;
+    margin-top: 20px;
+    color: #28a745; /* Groene tekst voor succes */
+}
+
+p.error {
+    color: #dc3545; /* Rode tekst voor fouten */
+}

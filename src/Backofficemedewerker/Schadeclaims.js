@@ -1,118 +1,131 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import SchadeclaimCard from "./SchadeclaimCard";
 
-const SchadeclaimForm = () => {
-    const [formData, setFormData] = useState({
-        beschrijving: "",
-        datum: "",
-        schadeKosten: "",
-        gebruikerId: "",
-        voertuigId: "",
-        isAfgehandeld: false,
-    });
+const DamageClaims = () => {
+    const [claims, setClaims] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    const [filter, setFilter] = useState("all"); // To filter approved/rejected claims
 
-    const [responseMessage, setResponseMessage] = useState("");
-
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData({
-            ...formData,
-            [name]: type === "checkbox" ? checked : value,
-        });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const fetchClaims = async () => {
+        setLoading(true);
+        setError("");
 
         try {
-            const response = await axios.post("https://localhost:7017/api/Schadeclaim", formData);
-            setResponseMessage("Schadeclaim succesvol aangemaakt!");
-            setFormData({
-                beschrijving: "",
-                datum: "",
-                schadeKosten: "",
-                gebruikerId: "",
-                voertuigId: "",
-                isAfgehandeld: false,
-            });
+            const response = await axios.get(
+                "https://localhost:7017/api/Schadeclaim/schadeclaim"
+            );
+            setClaims(response.data);
         } catch (error) {
-            setResponseMessage("Er is een fout opgetreden bij het indienen van d e schadeclaim.");
+            setError(
+                "Fout bij het ophalen van schadeclaims. Probeer het later opnieuw."
+            );
+        } finally {
+            setLoading(false);
         }
     };
 
+    useEffect(() => {
+        fetchClaims();
+    }, []);
+
+    const handleFilterChange = (status) => {
+        setFilter(status);
+    };
+
+    const filteredClaims =
+        filter === "all"
+            ? claims
+            : claims.filter((claim) => claim.status === filter);
+
+    if (loading) {
+        return <p>Gegevens worden geladen...</p>;
+    }
+
     return (
-        <div className="schadeclaim-form-container">
-            <h1>Dien een Schadeclaim in</h1>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="beschrijving">Beschrijving:</label>
-                    <textarea
-                        id="beschrijving"
-                        name="beschrijving"
-                        value={formData.beschrijving}
-                        onChange={handleChange}
-                        required
-                    />
+        <div>
+            <h1>Damage Claims</h1>
+
+            {/* Filter Buttons */}
+            <div style={styles.filterContainer}>
+                <button
+                    onClick={() => handleFilterChange("all")}
+                    style={{
+                        ...styles.filterButton,
+                        backgroundColor: filter === "all" ? "#007BFF" : "#ddd",
+                    }}
+                >
+                    All Claims
+                </button>
+                <button
+                    onClick={() => handleFilterChange("Approved")}
+                    style={{
+                        ...styles.filterButton,
+                        backgroundColor: filter === "Approved" ? "#4CAF50" : "#ddd",
+                    }}
+                >
+                    Approved
+                </button>
+                <button
+                    onClick={() => handleFilterChange("Rejected")}
+                    style={{
+                        ...styles.filterButton,
+                        backgroundColor: filter === "Rejected" ? "#f44336" : "#ddd",
+                    }}
+                >
+                    Rejected
+                </button>
+                <button
+                    onClick={() => handleFilterChange("Pending")}
+                    style={{
+                        ...styles.filterButton,
+                        backgroundColor: filter === "Pending" ? "#FF9800" : "#ddd",
+                    }}
+                >
+                    Pending
+                </button>
+            </div>
+
+            {/* Error Message */}
+            {error && <p style={styles.error}>{error}</p>}
+
+            {/* Display Claims */}
+            {filteredClaims.length === 0 ? (
+                <p>No claims found for the selected filter.</p>
+            ) : (
+                <div>
+                    {filteredClaims.map((claim) => (
+                        <SchadeclaimCard
+                            key={claim.id}
+                            claim={claim}
+                            fetchClaims={fetchClaims}
+                        />
+                    ))}
                 </div>
-                <div className="form-group">
-                    <label htmlFor="datum">Datum:</label>
-                    <input
-                        type="date"
-                        id="datum"
-                        name="datum"
-                        value={formData.datum}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="schadeKosten">Schade Kosten (€):</label>
-                    <input
-                        type="number"
-                        id="schadeKosten"
-                        name="schadeKosten"
-                        value={formData.schadeKosten}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="gebruikerId">Gebruiker ID:</label>
-                    <input
-                        type="number"
-                        id="gebruikerId"
-                        name="gebruikerId"
-                        value={formData.gebruikerId}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="voertuigId">Voertuig ID:</label>
-                    <input
-                        type="number"
-                        id="voertuigId"
-                        name="voertuigId"
-                        value={formData.voertuigId}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="isAfgehandeld">Is Afgehandeld:</label>
-                    <input
-                        type="checkbox"
-                        id="isAfgehandeld"
-                        name="isAfgehandeld"
-                        checked={formData.isAfgehandeld}
-                        onChange={handleChange}
-                    />
-                </div>
-                <button type="submit">Dien Schadeclaim In</button>
-            </form>
-            {responseMessage && <p>{responseMessage}</p>}
+            )}
         </div>
     );
 };
 
-export default SchadeclaimForm;
+// Styles
+const styles = {
+    filterContainer: {
+        marginBottom: "20px",
+        display: "flex",
+        gap: "10px",
+    },
+    filterButton: {
+        padding: "10px 15px",
+        border: "none",
+        borderRadius: "5px",
+        cursor: "pointer",
+        fontSize: "16px",
+    },
+    error: {
+        color: "red",
+        fontWeight: "bold",
+    },
+};
+
+export default DamageClaims;
