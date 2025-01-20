@@ -10,6 +10,9 @@ import SignUp from "./Login/SignUpScherm";
 import Account from "./Account/AccountScherm";
 import MedewerkerLogin from "./CarMedewerker/MedewerkerLogin/MedewerkerLogin";
 import MedewerkerDashboard from './CarMedewerker/MedewerkerDashboard/MedewerkerDashboard';
+//import DamageClaims from "./Backofficemedewerker/Schadeclaims";
+//import Subscriptions from "./Abonnement/Subscriptions";
+//import DamageReport from "./Frontofficemedewerker/Schadeformulier";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -36,6 +39,11 @@ function App() {
                 <Route path="/SignUp" element={<SignUp />} />
                 <Route path="/Account" element={<Account setIsLoggedIn={setIsLoggedIn} />} />
                 <Route path="/MedewerkerDashboard" element={<MedewerkerDashboard />} />
+                {/*<Route path="/DamageClaims" element={<DamageClaims />} />
+                <Route path="/Subscriptions" element={<Subscriptions />} />
+                <Route path="/Profile" element={<Profile />} />
+                <Route path="/DamageReport" element={<DamageReport />} />*/}
+                
             </Routes>
         </Router>
     );

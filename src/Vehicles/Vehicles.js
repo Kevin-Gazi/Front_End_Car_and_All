@@ -63,15 +63,26 @@ export default function Vehicles() {
     const fetchUnavailableDates = async (vehicleId) => {
         try {
             const response = await fetch(`https://localhost:7017/api/vehicles/${vehicleId}/unavailable-dates`);
+            console.log('Status code:', response.status);
             const text = await response.text();
-            console.log('Response:', text);
+            console.log('Response text:', text);
+            
 
-            try {
-                const dates = JSON.parse(text);
-                setUnavailableDates(dates.map(date => new Date(date).toISOString().split('T')[0])); // Zet de data in de juiste indeling
-            } catch (parseError) {
-                console.error('JSON parse error:', parseError);
-                alert('Error parsing the unavailable dates response.');
+            if (!response.ok) {
+                throw new Error(`API returned status ${response.status}`);
+            }
+
+            if (text) {
+                try {
+                    const dates = JSON.parse(text);
+                    setUnavailableDates(dates.map(date => new Date(date).toISOString().split('T')[0]));
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    alert('Error parsing the unavailable dates response.');
+                }
+            } else {
+                console.warn('Received empty response for unavailable dates.');
+                setUnavailableDates([]);
             }
         } catch (error) {
             console.error('Error fetching unavailable dates:', error);
@@ -105,6 +116,11 @@ export default function Vehicles() {
     };
 
     const openModal = (vehicle) => {
+        if (!vehicle?.id) {
+            console.error('Vehicle ID is missing or invalid:', vehicle);
+            alert('Invalid vehicle selected.');
+            return;
+        }
         setSelectedVehicle(vehicle);
         fetchUnavailableDates(vehicle.id);
         setIsModalOpen(true);
@@ -113,6 +129,7 @@ export default function Vehicles() {
     const closeModal = () => {
         setIsModalOpen(false);
     };
+    
     const checkVehicleAvailability = async () => {
         const startDate = new Date(rentalDate.start).toISOString().split('T')[0];
         const endDate = new Date(rentalDate.end).toISOString().split('T')[0];
