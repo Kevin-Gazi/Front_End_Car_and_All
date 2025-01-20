@@ -24,7 +24,8 @@ function MedewerkerLogin({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                 const data = await response.json();
                 console.log("Successfully logged in:", data);
                 localStorage.setItem('authToken', data.token);
-                localStorage.setItem('functie', data.functie); // Sla de functie op
+                localStorage.setItem("functie", data.functie);
+
                 setIsLoggedIn(true);
                 setIsEmployee(true); // Zorg ervoor dat isEmployee op true staat
                 setFunctie(data.functie); // Sla de functie op in de state
