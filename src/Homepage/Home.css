@@ -1,59 +1,287 @@
-.home-hero {
+/* General Styling */
+body {
     font-family: 'Arial, sans-serif';
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.home {
     text-align: center;
     color: #003366;
-    padding: 10px;
-    max-width: 800px;
-    margin: 0 auto;
+}
+
+/* Hero Section */
+.hero-section {
+    display: flex; 
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f5f5f5;
+    padding: 50px 10px;
+    margin-left: 18px;
+    height: auto;
+    flex-wrap: wrap;
+}
+
+.hero-text-container {
+    flex: 1; 
+    max-width: 50%;
+    text-align: left;
+    padding: 20px;
+}
+
+.home-hero {
+    font-size: 36px;
+    margin-bottom: 10px;
 }
 
 .home-hero-text {
     font-size: 18px;
     line-height: 1.5;
-    text-align: center;
+    margin-bottom: 20px;
 }
 
-.about {
-    font-family: 'Arial, sans-serif';
-    text-align: center;
+.buttons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+.vehicles-button, .contact-button {
+    padding: 10px 125px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.vehicles-button {
+    background-color: #b8860b;
+    color: white;
+}
+
+.contact-button {
+    background-color: white;
+    border: 1px solid #003366;
     color: #003366;
-    padding: 10px;
-    max-width: 800px;
-    margin: 10px auto 0 auto;
 }
 
-.about-text {
+.vehicles-button:hover {
+    background-color: #d4a017;
+}
+
+.contact-button:hover {
+    background-color: #003366;
+    color: white;
+}
+
+/* Image Section */
+.image-happy {
+    flex: 1;
+    max-width: 35%;
+    border-radius: 20px;
+    margin-right: 40px;
+    object-fit: cover;
+}
+
+.image-keys {
+    max-width: 100px;
+    border-radius: 20px;
+    margin: 20px 0;
+}
+
+.image-experience {
+    max-width: 45%;
+    border-radius: 20px;
+    margin-right: 20px;
+}
+
+/* About Section */
+.about_image {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin: 20px 0 0 50px;
+    flex-wrap: wrap; 
+}
+
+.about-section {
+    background-color: #f5f5f5;
+    padding: 20px;
+    max-width: 50%; 
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.7);
+    margin-right: 16px;
+}
+
+.about_image > .about-section {
+    order: 1;
+}
+
+.about_image > .image-experience {
+    order: 0;
+}
+
+/* CTA Section */
+.footer-section {
+    background-color: #003366;
+    color: white;
+    padding: 20px 10px;
+    margin-top: 20px;
+}
+
+.footer-section h2 {
+    font-family: "Century Schoolbook", serif;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.footer-section p {
     font-size: 18px;
-    line-height: 1.5;
-    text-align: center;
+    line-height: 1.6;
 }
 
-.benefit-item {
-    font-family: 'Arial, sans-serif';
-    text-align: center;
-    color: #003366;
-    padding: 10px;
-    max-width: 800px;
-    margin: 10px auto 0 auto;
+
+/* On screens smaller than 1024px*/
+@media (max-width: 1024px) {
+    .hero-section {
+        flex-direction: column; 
+        align-items: center;
+        padding: 30px 10px;
+    }
+
+    .hero-text-container {
+        max-width: 80%; 
+        text-align: center;
+    }
+
+    .image-happy {
+        max-width: 70%; 
+        margin: 20px 0;
+    }
+
+    .about_image {
+        flex-direction: column; 
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .about-section {
+        max-width: 80%;
+        margin-bottom: 20px;
+    }
+
+    .image-experience {
+        max-width: 80%; 
+    }
+
+    .footer-section h2 {
+        font-size: 24px; 
+    }
+
+    .footer-section p {
+        font-size: 16px; 
+    }
 }
 
-.benefit-text {
-    font-size: 18px;
-    line-height: 1.5;
-    text-align: center;
+/* On screens smaller than 768px (mobile devices) */
+@media (max-width: 768px) {
+    .home-hero {
+        font-size: 28px;
+        margin-left: 0;
+    }
+
+    .home-hero-text {
+        font-size: 16px;
+    }
+
+    .hero-text-container {
+        max-width: 90%; 
+    }
+
+    .buttons {
+        flex-direction: column; 
+        gap: 15px;
+    }
+
+    .vehicles-button, .contact-button {
+        font-size: 14px;
+        padding: 12px 25px;
+    }
+
+    .image-happy {
+        max-width: 90%; 
+    }
+
+    .image-keys {
+        max-width: 80%; 
+    }
+
+    .about_image {
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    .about-section {
+        max-width: 90%; 
+    }
+
+    .image-experience {
+        max-width: 90%;
+    }
+
+    .footer-section h2 {
+        font-size: 22px;
+    }
+
+    .footer-section p {
+        font-size: 14px;
+    }
 }
 
-.cta {
-    font-family: 'Arial, sans-serif';
-    text-align: center;
-    color: #003366;
-    padding: 10px;
-    max-width: 800px;
-    margin: 10px auto 0 auto;
-}
+/* On screens smaller than 480px (small mobile devices) */
+@media (max-width: 480px) {
+    .home-hero {
+        font-size: 24px;
+        margin-left: 0;
+    }
 
-.cta-text {
-    font-size: 18px;
-    line-height: 1.5;
-    text-align: center;
+    .home-hero-text {
+        font-size: 14px;
+    }
+
+    .buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .vehicles-button, .contact-button {
+        font-size: 12px;
+        padding: 10px 20px;
+    }
+
+    .image-happy {
+        max-width: 100%; 
+    }
+
+    .image-keys {
+        max-width: 100%; 
+    }
+
+    .about-section {
+        max-width: 100%; 
+        margin-bottom: 15px;
+    }
+
+    .image-experience {
+        max-width: 100%; 
+    }
+
+    .footer-section h2 {
+        font-size: 20px;
+    }
+
+    .footer-section p {
+        font-size: 12px;
+    }
 }
