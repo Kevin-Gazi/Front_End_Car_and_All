@@ -24,11 +24,11 @@ function MedewerkerLogin({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                 const data = await response.json();
                 console.log("Successfully logged in:", data);
                 localStorage.setItem('authToken', data.token);
-                localStorage.setItem("functie", data.functie);
+                localStorage.setItem("functie", response.functie);
+                localStorage.setItem("userType", data.functie); // Stel functie in als "FrontOffice" of "BackOffice"
 
                 setIsLoggedIn(true);
-                setIsEmployee(true); // Zorg ervoor dat isEmployee op true staat
-                setFunctie(data.functie); // Sla de functie op in de state
+                 // Zorg ervoor dat isEmployee op true staat
                 navigate("/"); // Redirect naar de homepagina
             } else {
                 const errorMsg = await response.text();

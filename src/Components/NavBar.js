@@ -1,23 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';  // Zorg ervoor dat je deze bibliotheek installeert met 'npm install jwt-decode'
 import './NavBar.css';
 
 export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
-    const [typeKlant, setTypeKlant] = useState('');
-    const [functie, setFunctie] = useState('');
+    const [userType, setUserType] = useState('');
 
     useEffect(() => {
-        // Haal typeKlant en functie op uit localStorage
-        const klantType = localStorage.getItem('Typeklant');
-        const medewerkerFunctie = localStorage.getItem('functie');
-        setTypeKlant(klantType);
-        setFunctie(medewerkerFunctie);
-    }, []);
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            // Decodeer de token
+            const decodedToken = jwt_decode(token);
+            setUserType(decodedToken.userType); // Verkrijg de userType uit de token
+        }
+    }, [isLoggedIn]);
 
     const handleLogout = () => {
         localStorage.removeItem('authToken');
-        localStorage.removeItem('Typeklant');
-        localStorage.removeItem('functie');
         setIsLoggedIn(false);
     };
 
@@ -32,29 +31,42 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
                     <li className="navbar-item"><Link to="/Contact" className="navbar-links">Contact</Link></li>
 
                     {isLoggedIn ? (
-                        typeKlant === 'Werknemer' ? (
+                        userType === 'Medewerker' ? (
                             <>
-                                {/* Verwijder de dropdown voor medewerkers, totdat je beslist welke pagina's te tonen */}
+                                {/* Navbar voor medewerkers */}
                                 <li className="navbar-item"><Link to="/Profile" className="navbar-links">Profile</Link></li>
+                                <li className="navbar-item"><Link to="/Rentals" className="navbar-links">Rentals</Link></li>
+                                <li className="navbar-item"><Link to="/Notifications" className="navbar-links">Notifications</Link></li>
+                                <li className="navbar-item">
+                                    <button onClick={handleLogout} className="navbar-links logout-button">Logout</button>
+                                </li>
+                            </>
+                        ) : userType === 'Zakelijk' ? (
+                            <>
+                                {/* Navbar voor zakelijke klanten */}
+                                <li className="navbar-dropdown">
+                                    <span className="navbar-links">Account</span>
+                                    <div className="navbar-dropdown-menu">
+                                        <Link to="/Profile">Profile</Link>
+                                        <Link to="/Rentals">Rentals</Link>
+                                        <Link to="/Notifications">Notifications</Link>
+                                        <Link to="/Employees">Employees</Link>
+                                        <Link to="/Subscriptions">Subscriptions</Link>
+                                    </div>
+                                </li>
                                 <li className="navbar-item">
                                     <button onClick={handleLogout} className="navbar-links logout-button">Logout</button>
                                 </li>
                             </>
                         ) : (
                             <>
-                                {/* Navbar voor klanten */}
+                                {/* Navbar voor particuliere klanten */}
                                 <li className="navbar-dropdown">
                                     <span className="navbar-links">Account</span>
                                     <div className="navbar-dropdown-menu">
-                                        <Link to="/Account">Profile</Link>
+                                        <Link to="/Profile">Profile</Link>
                                         <Link to="/Rentals">Rentals</Link>
                                         <Link to="/Notifications">Notifications</Link>
-                                        {typeKlant === "Zakelijk" && (
-                                            <>
-                                                <Link to="/Employees">Employees</Link>
-                                                <Link to="/Subscriptions">Subscriptions</Link>
-                                            </>
-                                        )}
                                     </div>
                                 </li>
                                 <li className="navbar-item">
@@ -71,3 +83,5 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
         </nav>
     );
 };
+
+export default NavBar;
