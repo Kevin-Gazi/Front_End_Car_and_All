@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import './Vehicles.css';
 import vehicleImage from './IMG_8180.JPG';
 import { useNavigate } from 'react-router-dom';
+import CorollaImage from './Corolla.jpg';
+import FocusImage from './Focus.jpg';
+import GolfImage from './Golf.jpg';
+import CivicImage from './Civic.jpg';
+import Serie3Image from './3Series.jpg';
 
 export default function Vehicles() {
     const [vehicles, setVehicles] = useState([]);
@@ -140,23 +145,7 @@ export default function Vehicles() {
     const closeConfirmModal = () => {
         setIsConfirmModalOpen(false);
     };
-
-    /*const checkVehicleAvailability = async () => {
-        const startDate = new Date(rentalDate.start).toISOString().split('T')[0];
-        const endDate = new Date(rentalDate.end).toISOString().split('T')[0];
-
-        try {
-            const response = await fetch(
-                `https://localhost:7017/api/vehicles/availability?voertuigId=${selectedVehicle.id}&startDate=${startDate}&endDate=${endDate}`
-            );
-            const data = await response.json();
-            return data.isAvailable;
-        } catch (error) {
-            console.error('Error checking vehicle availability:', error);
-            return false;
-        }
-    };*/
-
+    
     const handleConfirmRent = async () => {
         if (!rentalDate.start || !rentalDate.end) {
             alert('Please select both start and end dates.');
@@ -215,16 +204,8 @@ export default function Vehicles() {
         }
     };
 
-    const customImages = [
-        require('./Images/Corolla.jpg').default,
-        require('./Images/Focus.jpg').default,
-        require('./Images/Golf.jpg').default,
-        require('./Images/Civic.jpg').default,
-        require('./Images/3Serie.jpg').default
-    ];
-
-
-
+    const customImages = [CorollaImage, FocusImage, GolfImage, CivicImage, Serie3Image];
+    
     const handleRentClick = (vehicle) => {
         const user = JSON.parse(localStorage.getItem('user'));
         console.log('Gebruiker uit localStorage:', user);
