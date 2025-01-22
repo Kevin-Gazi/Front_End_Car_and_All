@@ -12,7 +12,6 @@ import MedewerkerLogin from "./CarMedewerker/MedewerkerLogin/MedewerkerLogin";
 import MedewerkerDashboard from './CarMedewerker/MedewerkerDashboard/MedewerkerDashboard';
 import DamageClaims from "./Backofficemedewerker/Schadeclaims";
 import Subscriptions from "./Abonnement/Subscriptions";
-//import Profile from "./Account/Profile";
 import DamageReport from "./Frontofficemedewerker/Schadeformulier";
 
 function App() {
