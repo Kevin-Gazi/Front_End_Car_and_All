@@ -15,7 +15,8 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
         const loginDetails = { email, password };
 
         try {
-            const response = await fetch(`https://localhost:7017/api/gebruiker/login`, {
+            // Aangepaste URL voor login, bijvoorbeeld voor gebruikerslogin
+            const response = await fetch('https://localhost:7017/api/users/login', {  // Aangepast endpoint
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(loginDetails),
@@ -26,28 +27,22 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                 console.log("Successfully logged in:", data);
 
                 // Sla het token op in localStorage
-                localStorage.setItem('authToken', data.token);
-                setIsLoggedIn(true); // Update de inlogstatus
+                localStorage.setItem("authToken", data.token);
+                localStorage.setItem("Typeklant", data.typeKlant);
 
-                // Als de gebruiker een medewerker is, sla de functie op
-                if (data.functie) {
-                    setIsEmployee(true); // Stel in dat de gebruiker een medewerker is
-                    setFunctie(data.functie); // Sla de functie van de medewerker op (bijv. 'BackOfficeMedewerker')
-                    localStorage.setItem('functie', data.functie); // Sla de functie van de medewerker op
-                } else {
-                    setIsEmployee(false); // De gebruiker is geen medewerker
-                }
-
+                setIsLoggedIn(true);
+                
                 navigate("/"); // Redirect naar de homepagina
             } else {
                 const errorMsg = await response.text();
-                setError(errorMsg); // Toon foutmelding als login mislukt
+                setError(errorMsg);
             }
         } catch (err) {
             console.error("Login error:", err);
             setError("Er is een fout opgetreden bij het inloggen.");
         }
     };
+
 
 
     return (

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Contact from "./Contact/Contact";
 import Home from "./Homepage/Home";
 import Vehicles from "./Vehicles/Vehicles";
-import { NavBar } from "./Components/NavBar";
+import NavBar from "./Components/NavBar";
 import Login from "./Login/LoginScherm";
 import SignUp from "./Login/SignUpScherm";
 import Account from "./Account/AccountScherm";
@@ -17,20 +17,19 @@ import DamageReport from "./Frontofficemedewerker/Schadeformulier";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isEmployee, setIsEmployee] = useState(false);
-    const [functie, setFunctie] = useState(null);
+    const [typeKlant, setTypeKlant] = useState(''); // Dit is de state voor het klanttype
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
-        const storedFunctie = localStorage.getItem('functie');
         setIsLoggedIn(!!token); // Zet true als er een token is
-        setIsEmployee(!!storedFunctie); // Controleer of de gebruiker een medewerker is
-        setFunctie(storedFunctie); // Sla de functie op uit localStorage
+        const storedTypeKlant = localStorage.getItem('typeklant');
+        setTypeKlant(storedTypeKlant || ''); // Haal het type klant op uit localStorage
+        
     }, []);
 
     return (
         <Router>
-            <NavBar isLoggedIn={isLoggedIn} isEmployee={isEmployee} functie={functie} setIsLoggedIn={setIsLoggedIn} />
+            <NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} typeKlant={typeKlant} />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/Contact" element={<Contact />} />
@@ -45,6 +44,9 @@ function App() {
                 {/*<Route path="/Profile" element={<Profile />} />*/}
                 <Route path="/DamageReport" element={<DamageReport />} />
                 
+                <Route path="/Login" element={<Login setIsLoggedIn={setIsLoggedIn} setTypeklant={setTypeKlant} />} />
+                <Route path="/SignUp" element={<SignUp/>}/>
+                <Route path="/CarMedewerkerLogin" element={<MedewerkerLogin/>}/>
             </Routes>
         </Router>
     );

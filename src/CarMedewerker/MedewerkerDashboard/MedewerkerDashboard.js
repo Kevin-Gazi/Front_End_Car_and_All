@@ -5,10 +5,11 @@ function MedewerkerDashboard() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Check of er een geldig token is opgeslagen in localStorage
         const token = localStorage.getItem('authToken');
-        if (!token) {
-            navigate("/login"); // Als geen token, ga naar login pagina
+        const functie = localStorage.getItem('functie');
+
+        if (!token || !functie) {
+            navigate("/login"); // Redirect naar login als er geen token of functie is
         }
     }, [navigate]);
 
