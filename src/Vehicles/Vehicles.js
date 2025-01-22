@@ -40,8 +40,7 @@ export default function Vehicles() {
 
         fetchVehicles();
     }, []);
-
-    // Filter vehicles based on selected filters
+    
     useEffect(() => {
         let filtered = vehicles;
 
@@ -100,7 +99,13 @@ export default function Vehicles() {
         }
     };
 
-
+    const vehicleImages = {
+        1: CorollaImage,
+        2: FocusImage,
+        3: GolfImage,
+        4: CivicImage,
+        5: Serie3Image,
+    };
 
     const getUniqueColors = () => {
         const colors = filteredVehicles.map(vehicle => vehicle.kleur);
@@ -203,8 +208,7 @@ export default function Vehicles() {
             alert('An error occurred while processing your rental.');
         }
     };
-
-    const customImages = [CorollaImage, FocusImage, GolfImage, CivicImage, Serie3Image];
+    
     
     const handleRentClick = (vehicle) => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -308,12 +312,12 @@ export default function Vehicles() {
                         <div className="vehicle-card" key={vehicle.id}>
                             <div className="vehicle-image">
                                 <img
-                                    src={index < 5 ? customImages[index] : vehicle.image || vehicleImage}
+                                    src={vehicleImages[vehicle.id] || vehicle.image || vehicleImage}
                                     alt={`picture of ${vehicle.model}`}
                                 />
                             </div>
                             <div className="vehicle-start">
-                                <h2>{vehicle.model}</h2>
+                            <h2>{vehicle.model}</h2>
                                 <p>Brand: {vehicle.merk}</p>
                                 <p>Type: {vehicle.type}</p>
                                 <p>Color: {vehicle.kleur}</p>
