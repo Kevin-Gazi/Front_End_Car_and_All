@@ -33,8 +33,8 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/Contact" element={<Contact />} />
                 <Route path="/vehicles" element={<Vehicles />} />
-                <Route path="/Login" element={<Login setIsLoggedIn={setIsLoggedIn} setIsEmployee={setIsEmployee} setFunctie={setFunctie} />} />
-                <Route path="/CarMedewerkerLogin" element={<MedewerkerLogin setIsLoggedIn={setIsLoggedIn} setIsEmployee={setIsEmployee} setFunctie={setFunctie} />} />
+                <Route path="/Login" element={<Login setIsLoggedIn={setIsLoggedIn}   />} />
+                <Route path="/CarMedewerkerLogin" element={<MedewerkerLogin setIsLoggedIn={setIsLoggedIn}/>} />
                 <Route path="/SignUp" element={<SignUp />} />
                 <Route path="/Account" element={<Account setIsLoggedIn={setIsLoggedIn} />} />
                 <Route path="/MedewerkerDashboard" element={<MedewerkerDashboard />} />
