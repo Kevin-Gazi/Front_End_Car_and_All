@@ -5,6 +5,7 @@ import './NavBar.css';
 
 export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
     const [userType, setUserType] = useState('');
+    const [functie, setFunctie] = useState('');
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
@@ -12,11 +13,13 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
             // Decodeer de token
             const decodedToken = jwt_decode(token);
             setUserType(decodedToken.userType); // Verkrijg de userType uit de token
+            setFunctie(localStorage.getItem('functie')); // Verkrijg de functie van de medewerker uit localStorage
         }
     }, [isLoggedIn]);
 
     const handleLogout = () => {
         localStorage.removeItem('authToken');
+        localStorage.removeItem('functie');
         setIsLoggedIn(false);
     };
 
@@ -37,6 +40,43 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
                                 <li className="navbar-item"><Link to="/Profile" className="navbar-links">Profile</Link></li>
                                 <li className="navbar-item"><Link to="/Rentals" className="navbar-links">Rentals</Link></li>
                                 <li className="navbar-item"><Link to="/Notifications" className="navbar-links">Notifications</Link></li>
+
+                                {/* Dropdown voor BackOffice-medewerkers */}
+                                {functie === "BackOffice" && (
+                                    <>
+                                        <li className="navbar-dropdown">
+                                            <span className="navbar-links">Requests</span>
+                                            <div className="navbar-dropdown-menu">
+                                                <Link to="/DamageClaims">Damage Claims</Link>
+                                                <Link to="/RentalRequests">Rental Requests</Link>
+                                                <Link to="/BusinessAccounts">Business Accounts</Link>
+                                                <Link to="/Subscriptions">Subscriptions</Link>
+                                            </div>
+                                        </li>
+                                        <li className="navbar-dropdown">
+                                            <span className="navbar-links">Carandall</span>
+                                            <div className="navbar-dropdown-menu">
+                                                <Link to="/Employees">Employees</Link>
+                                                <Link to="/Vehicles">Vehicles</Link>
+                                                <Link to="/Logs">Logs</Link>
+                                            </div>
+                                        </li>
+                                    </>
+                                )}
+
+                                {/* Dropdown voor FrontOffice-medewerkers */}
+                                {functie === "FrontOffice" && (
+                                    <li className="navbar-dropdown">
+                                        <span className="navbar-links">Carandall</span>
+                                        <div className="navbar-dropdown-menu">
+                                            <Link to="/IntakeVehicles">Intake Vehicles</Link>
+                                            <Link to="/SentOutVehicles">Sent-out Vehicles</Link>
+                                            <Link to="/DamageClaims">Damage Claims</Link>
+                                            <Link to="/Users">Users</Link>
+                                        </div>
+                                    </li>
+                                )}
+
                                 <li className="navbar-item">
                                     <button onClick={handleLogout} className="navbar-links logout-button">Logout</button>
                                 </li>

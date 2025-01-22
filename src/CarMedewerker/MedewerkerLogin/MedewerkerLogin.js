@@ -29,6 +29,7 @@ function MedewerkerLogin({ setIsLoggedIn, setIsEmployee, setFunctie }) {
 
                 setIsLoggedIn(true);
                  // Zorg ervoor dat isEmployee op true staat
+                setFunctie(data.functie); // Sla de functie op in de state
                 navigate("/"); // Redirect naar de homepagina
             } else {
                 const errorMsg = await response.text();

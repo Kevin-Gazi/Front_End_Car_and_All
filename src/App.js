@@ -6,7 +6,8 @@ import Home from "./Homepage/Home";
 import Vehicles from "./Vehicles/Vehicles";
 import NavBar from "./Components/NavBar";
 import Login from "./Login/LoginScherm";
-
+import SignUp from "./Login/SignUpScherm";
+import MedewerkerLogin from "./CarMedewerker/MedewerkerLogin/MedewerkerLogin";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [typeKlant, setTypeKlant] = useState(''); // Dit is de state voor het klanttype
@@ -16,6 +17,7 @@ function App() {
         setIsLoggedIn(!!token); // Zet true als er een token is
         const storedTypeKlant = localStorage.getItem('typeklant');
         setTypeKlant(storedTypeKlant || ''); // Haal het type klant op uit localStorage
+        
     }, []);
 
     return (
@@ -26,7 +28,8 @@ function App() {
                 <Route path="/Contact" element={<Contact />} />
                 <Route path="/vehicles" element={<Vehicles />} />
                 <Route path="/Login" element={<Login setIsLoggedIn={setIsLoggedIn} setTypeklant={setTypeKlant} />} />
-                {/* Andere routes */}
+                <Route path="/SignUp" element={<SignUp/>}/>
+                <Route path="/CarMedewerkerLogin" element={<MedewerkerLogin/>}/>
             </Routes>
         </Router>
     );
