@@ -33,13 +33,18 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
                     <li className="navbar-item"><Link to="/Vehicles" className="navbar-links">Vehicles</Link></li>
                     <li className="navbar-item"><Link to="/Contact" className="navbar-links">Contact</Link></li>
 
+
                     {isLoggedIn ? (
                         userType === 'Medewerker' ? (
                             <>
                                 {/* Navbar voor medewerkers */}
-                                <li className="navbar-item"><Link to="/Profile" className="navbar-links">Profile</Link></li>
-                                <li className="navbar-item"><Link to="/Rentals" className="navbar-links">Rentals</Link></li>
-                                <li className="navbar-item"><Link to="/Notifications" className="navbar-links">Notifications</Link></li>
+                                <li className="navbar-item"><Link to="/Profile" className="navbar-links">Profile</Link>
+                                </li>
+                                <li className="navbar-item"><Link to="/Rentals" className="navbar-links">Rentals</Link>
+                                </li>
+                                <li className="navbar-item"><Link to="/Notifications"
+                                                                  className="navbar-links">Notifications</Link></li>
+
 
                                 {/* Dropdown voor BackOffice-medewerkers */}
                                 {functie === "BackOffice" && (
@@ -47,10 +52,10 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
                                         <li className="navbar-dropdown">
                                             <span className="navbar-links">Requests</span>
                                             <div className="navbar-dropdown-menu">
+                                                <Link to="/AlleAbonnementen" className="navbar-links">Subscription Requests</Link>
                                                 <Link to="/DamageClaims">Damage Claims</Link>
                                                 <Link to="/RentalRequests">Rental Requests</Link>
                                                 <Link to="/BusinessAccounts">Business Accounts</Link>
-                                                <Link to="/Subscriptions">Subscriptions</Link>
                                             </div>
                                         </li>
                                         <li className="navbar-dropdown">
@@ -78,7 +83,8 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
                                 )}
 
                                 <li className="navbar-item">
-                                    <button onClick={handleLogout} className="navbar-links logout-button">Logout</button>
+                                    <button onClick={handleLogout} className="navbar-links logout-button">Logout
+                                    </button>
                                 </li>
                             </>
                         ) : userType === 'Zakelijk' ? (
@@ -88,14 +94,15 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
                                     <span className="navbar-links">Account</span>
                                     <div className="navbar-dropdown-menu">
                                         <Link to="/Profile">Profile</Link>
+                                        <Link to="/Subscriptions">Subscriptions</Link>
                                         <Link to="/Rentals">Rentals</Link>
                                         <Link to="/Notifications">Notifications</Link>
                                         <Link to="/Employees">Employees</Link>
-                                        <Link to="/Subscriptions">Subscriptions</Link>
                                     </div>
                                 </li>
                                 <li className="navbar-item">
-                                    <button onClick={handleLogout} className="navbar-links logout-button">Logout</button>
+                                    <button onClick={handleLogout} className="navbar-links logout-button">Logout
+                                    </button>
                                 </li>
                             </>
                         ) : (
@@ -110,13 +117,16 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
                                     </div>
                                 </li>
                                 <li className="navbar-item">
-                                    <button onClick={handleLogout} className="navbar-links logout-button">Logout</button>
+                                    <button onClick={handleLogout} className="navbar-links logout-button">Logout
+                                    </button>
                                 </li>
                             </>
                         )
                     ) : (
                         // Alleen zichtbaar voor niet-ingelogde gebruikers
                         <li className="navbar-item"><Link to="/Login" className="navbar-links">Login</Link></li>
+
+
                     )}
                 </ul>
             </div>

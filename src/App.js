@@ -10,8 +10,9 @@ import SignUp from "./Login/SignUpScherm";
 import Account from "./Account/AccountScherm";
 import MedewerkerLogin from "./CarMedewerker/MedewerkerLogin/MedewerkerLogin";
 import MedewerkerDashboard from './CarMedewerker/MedewerkerDashboard/MedewerkerDashboard';
-import DamageClaims from "./Backofficemedewerker/Schadeclaims";
+import DamageClaims from "./Backofficemedewerker/Schadeclaim/Schadeclaims";
 import Subscriptions from "./Abonnement/Subscriptions";
+import AlleAbonnementen from "./Backofficemedewerker/AbonnementBackoffice/AlleAbonnementen";
 import DamageReport from "./Frontofficemedewerker/Schadeformulier";
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/Subscriptions" element={<Subscriptions />} />
                 {/*<Route path="/Profile" element={<Profile />} />*/}
                 <Route path="/DamageReport" element={<DamageReport />} />
+                <Route path="/AlleAbonnementen" element={<AlleAbonnementen />} />
                 
                 <Route path="/Login" element={<Login setIsLoggedIn={setIsLoggedIn} setTypeklant={setTypeKlant} />} />
                 <Route path="/SignUp" element={<SignUp/>}/>
