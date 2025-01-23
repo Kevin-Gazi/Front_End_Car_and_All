@@ -15,7 +15,7 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
         const loginDetails = { email, password };
 
         try {
-            const response = await fetch(`https://localhost:7017/api/gebruiker/login`, {
+            const response = await fetch(`https://localhost:7017/api/users/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(loginDetails),

@@ -12,8 +12,10 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
         if (token) {
             // Decodeer de token
             const decodedToken = jwt_decode(token);
-            setUserType(decodedToken.userType); // Verkrijg de userType uit de token
-            setFunctie(localStorage.getItem('functie')); // Verkrijg de functie van de medewerker uit localStorage
+            setUserType(decodedToken.userType ?? decodedToken.functie); // Verkrijg de userType uit de token
+            console.log("usertype: " , decodedToken.userType);
+            setFunctie(decodedToken.functie); // Verkrijg de functie van de medewerker uit localStorage
+            console.log("functie: ", functie);
         }
     }, [isLoggedIn]);
 
@@ -24,6 +26,8 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
         localStorage.removeItem('postcode');
         localStorage.removeItem('telefoonNummer');
         localStorage.removeItem('userId');
+        localStorage.removeItem('functie');
+        localStorage.removeItem('userType');
         setIsLoggedIn(false);
     };
 
@@ -32,51 +36,60 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
             <div className="navbar-container">
                 <Link to="/" className="navbar-logo">CarAndAll</Link>
                 <ul className="navbar-menu">
-                    {/* Altijd zichtbare opties */}
                     <li className="navbar-item"><Link to="/" className="navbar-links">Home</Link></li>
                     <li className="navbar-item"><Link to="/Vehicles" className="navbar-links">Vehicles</Link></li>
                     <li className="navbar-item"><Link to="/Contact" className="navbar-links">Contact</Link></li>
 
-
                     {isLoggedIn ? (
-                        userType === 'Medewerker' ? (
-                            <>
-                                {/* Navbar voor medewerkers */}
-                                <li className="navbar-item"><Link to="/Profile" className="navbar-links">Profile</Link>
-                                </li>
-                                <li className="navbar-item"><Link to="/Rentals" className="navbar-links">Rentals</Link>
-                                </li>
-                                <li className="navbar-item"><Link to="/Notifications"
-                                                                  className="navbar-links">Notifications</Link></li>
-
-
-                                {/* Dropdown voor BackOffice-medewerkers */}
-                                {functie === "BackOffice" && (
-                                    <>
-                                        <li className="navbar-dropdown">
-                                            <span className="navbar-links">Requests</span>
-                                            <div className="navbar-dropdown-menu">
-                                                <Link to="/AlleAbonnementen" className="navbar-links">Subscription Requests</Link>
-                                                <Link to="/DamageClaims">Damage Claims</Link>
-                                                <Link to="/RentalRequests">Rental Requests</Link>
-                                                <Link to="/BusinessAccounts">Business Accounts</Link>
-                                            </div>
-                                        </li>
-                                        <li className="navbar-dropdown">
-                                            <span className="navbar-links">Carandall</span>
-                                            <div className="navbar-dropdown-menu">
-                                                <Link to="/Employees">Employees</Link>
-                                                <Link to="/Vehicles">Vehicles</Link>
-                                                <Link to="/Logs">Logs</Link>
-                                            </div>
-                                        </li>
-                                    </>
-                                )}
-
-                                {/* Dropdown voor FrontOffice-medewerkers */}
-                                {functie === "FrontOffice" && (
+                        <>
+                            {userType === 'Particulier' ? (
+                                <>
                                     <li className="navbar-dropdown">
-                                        <span className="navbar-links">Carandall</span>
+                                        <span className="navbar-links">Account</span>
+                                        <div className="navbar-dropdown-menu">
+                                            <Link to="/Profile">Profile</Link>
+                                            <Link to="/Rentals">Rentals</Link>
+                                            <Link to="/Notifications">Notifications</Link>
+                                        </div>
+                                    </li>
+                                </>
+                            ) : userType === 'Zakelijk' ? (
+                                <>
+                                    <li className="navbar-dropdown">
+                                        <span className="navbar-links">Account</span>
+                                        <div className="navbar-dropdown-menu">
+                                            <Link to="/Profile">Profile</Link>
+                                            <Link to="/Subscriptions">Subscriptions</Link>
+                                            <Link to="/Rentals">Rentals</Link>
+                                            <Link to="/Notifications">Notifications</Link>
+                                            <Link to="/Employees">Employees</Link>
+                                        </div>
+                                    </li>
+                                </>
+                            ) : userType === "BackOffice" ? (
+                                <>
+                                    <li className="navbar-dropdown">
+                                        <span className="navbar-links">Requests</span>
+                                        <div className="navbar-dropdown-menu">
+                                            <Link to="/AlleAbonnementen">Subscription Requests</Link>
+                                            <Link to="/DamageClaims">Damage Claims</Link>
+                                            <Link to="/RentalRequests">Rental Requests</Link>
+                                            <Link to="/BusinessAccounts">Business Accounts</Link>
+                                        </div>
+                                    </li>
+                                    <li className="navbar-dropdown">
+                                        <span className="navbar-links">CarAndAll</span>
+                                        <div className="navbar-dropdown-menu">
+                                            <Link to="/Employees">Employees</Link>
+                                            <Link to="/Vehicles">Vehicles</Link>
+                                            <Link to="/Logs">Logs</Link>
+                                        </div>
+                                    </li>
+                                </>
+                            ) : userType === "FrontOffice" ? (
+                                <>
+                                    <li className="navbar-dropdown">
+                                        <span className="navbar-links">CarAndAll</span>
                                         <div className="navbar-dropdown-menu">
                                             <Link to="/IntakeVehicles">Intake Vehicles</Link>
                                             <Link to="/SentOutVehicles">Sent-out Vehicles</Link>
@@ -84,54 +97,18 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
                                             <Link to="/Users">Users</Link>
                                         </div>
                                     </li>
-                                )}
+                                </>
+                            ) : null}
 
-                                <li className="navbar-item">
-                                    <button onClick={handleLogout} className="navbar-links logout-button">Logout
-                                    </button>
-                                </li>
-                            </>
-                        ) : userType === 'Zakelijk' ? (
-                            <>
-                                {/* Navbar voor zakelijke klanten */}
-                                <li className="navbar-dropdown">
-                                    <span className="navbar-links">Account</span>
-                                    <div className="navbar-dropdown-menu">
-                                        <Link to="/Profile">Profile</Link>
-                                        <Link to="/Subscriptions">Subscriptions</Link>
-                                        <Link to="/Rentals">Rentals</Link>
-                                        <Link to="/Notifications">Notifications</Link>
-                                        <Link to="/Employees">Employees</Link>
-                                    </div>
-                                </li>
-                                <li className="navbar-item">
-                                    <button onClick={handleLogout} className="navbar-links logout-button">Logout
-                                    </button>
-                                </li>
-                            </>
-                        ) : (
-                            <>
-                                {/* Navbar voor particuliere klanten */}
-                                <li className="navbar-dropdown">
-                                    <span className="navbar-links">Account</span>
-                                    <div className="navbar-dropdown-menu">
-                                        <Link to="/Profile">Profile</Link>
-                                        <Link to="/Rentals">Rentals</Link>
-                                        <Link to="/Notifications">Notifications</Link>
-                                    </div>
-                                </li>
-                                <li className="navbar-item">
-                                    <button onClick={handleLogout} className="navbar-links logout-button">Logout
-                                    </button>
-                                </li>
-                            </>
-                        )
+                            {/* Logout button for all user */}
+                            <li className="navbar-item">
+                                <button onClick={handleLogout} className="navbar-links logout-button">Logout</button>
+                            </li>
+                        </>
                     ) : (
-                        // Alleen zichtbaar voor niet-ingelogde gebruikers
                         <li className="navbar-item"><Link to="/Login" className="navbar-links">Login</Link></li>
-
-
                     )}
+
                 </ul>
             </div>
         </nav>
