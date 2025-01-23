@@ -19,7 +19,11 @@ export const NavBar = ({ isLoggedIn, setIsLoggedIn }) => {
 
     const handleLogout = () => {
         localStorage.removeItem('authToken');
-        localStorage.removeItem('functie');
+        localStorage.removeItem('Typeklant');
+        localStorage.removeItem('adres');
+        localStorage.removeItem('postcode');
+        localStorage.removeItem('telefoonNummer');
+        localStorage.removeItem('userId');
         setIsLoggedIn(false);
     };
 

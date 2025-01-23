@@ -15,8 +15,7 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
         const loginDetails = { email, password };
 
         try {
-            // Aangepaste URL voor login, bijvoorbeeld voor gebruikerslogin
-            const response = await fetch('https://localhost:7017/api/users/login', {  // Aangepast endpoint
+            const response = await fetch(`https://localhost:7017/api/gebruiker/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(loginDetails),
@@ -26,13 +25,28 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                 const data = await response.json();
                 console.log("Successfully logged in:", data);
 
-                // Sla het token op in localStorage
-                localStorage.setItem("authToken", data.token);
-                localStorage.setItem("Typeklant", data.typeKlant);
+                localStorage.removeItem("authToken");
+                localStorage.removeItem("functie");
+
+                localStorage.setItem('authToken', data.token);
+
+                const userData = {
+                    token: data.token,
+                    userId: data.userId,
+                    userNaam: data.userNaam,
+                    userEmail: data.userEmail,
+                    userType: data.userType,
+                };
+                localStorage.setItem("user", JSON.stringify(userData));
 
                 setIsLoggedIn(true);
-                
-                navigate("/"); // Redirect naar de homepagina
+
+                if (data.functie) {
+                    setFunctie(data.functie);
+                    localStorage.setItem('functie', data.functie);
+                }
+
+                navigate("/");
             } else {
                 const errorMsg = await response.text();
                 setError(errorMsg);
@@ -42,8 +56,6 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
             setError("Er is een fout opgetreden bij het inloggen.");
         }
     };
-
-
 
     return (
         <div className="login-container">

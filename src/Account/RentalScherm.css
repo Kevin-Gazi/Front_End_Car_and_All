@@ -1,0 +1,67 @@
+/* Header styling */
+.rental-header {
+    text-align: center;
+    padding: 20px;
+    background-color: #005f73;
+    color: white;
+}
+
+.rental-header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.rental-header p {
+    font-size: 1.1rem;
+}
+
+/* Main container for rentals */
+.rental-container {
+    display: flex;
+    gap: 20px;
+    padding: 3rem 10rem;
+}
+
+.vehicle-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Altijd één kolom */
+    gap: 20px;
+    width: 100%;
+    min-height: 80vh;
+    align-content: start;
+}
+
+/* Rental card styling */
+.vehicle-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.vehicle-card .status {
+    font-weight: bold;
+    color: #005f73; /* default kleur */
+}
+
+.vehicle-card .status.approved {
+    color: green;
+}
+
+.vehicle-card .status.rejected {
+    color: red;
+}
+
+.vehicle-card .status.pending {
+    color: orange;
+}
+
+.vehicle-card .status.cancelled {
+    color: grey;
+}
+
