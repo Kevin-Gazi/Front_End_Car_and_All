@@ -10,7 +10,7 @@ const App = () => {
     // Fetch subscriptions
     useEffect(() => {
         axios
-            .get('https://localhost:7017/api/gebruiker/pending') // Update with your API endpoint
+            .get('https://localhost:7017/api/gebruiker/pending') 
             .then((response) => {
                 setSubscriptions(response.data);
                 setLoading(false);
@@ -22,27 +22,41 @@ const App = () => {
     }, []);
 
     // Approve subscription
-    const handleApprove = () => {
+    const handleApprove = (sub) => {
         axios
-            .post('https://localhost:7017/api/gebruiker/approve')
+            .post(
+                'https://localhost:7017/api/gebruiker/approve',
+                sub.id, 
+                { headers: { 'Content-Type': 'application/json' } }
+            )
             .then(() => {
-                setSubscriptions((prev) => prev.filter((sub) => sub.abonnement.startsWith('PENDING/')));
+                setSubscriptions((prev) => prev.filter((s) => s.id !== sub.id));
             })
-            .catch(() => alert('Failed to approve subscription.'));
+            .catch((error) => {
+                console.error('Failed to approve subscription:', error.response?.data || error.message);
+                alert('Failed to approve subscription.');
+            });
     };
 
 // Reject subscription
-    const handleReject = () => {
+    const handleReject = (sub) => {
         axios
-            .post('https://localhost:7017/api/gebruiker/reject')
+            .post(
+                'https://localhost:7017/api/gebruiker/reject',
+                sub.id, 
+                { headers: { 'Content-Type': 'application/json' } }
+            )
             .then(() => {
-                setSubscriptions((prev) => prev.filter((sub) => sub.abonnement.startsWith('PENDING/')));
+                setSubscriptions((prev) => prev.filter((s) => s.id !== sub.id));
             })
-            .catch(() => alert('Failed to reject subscription.'));
+            .catch((error) => {
+                console.error('Failed to reject subscription:', error.response?.data || error.message);
+                alert('Failed to reject subscription.');
+            });
     };
 
 
-
+    
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
 
