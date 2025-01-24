@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-function MedewerkerLogin({ setIsLoggedIn, setIsEmployee, setFunctie }) {
+function MedewerkerLogin({ setIsLoggedIn }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -24,12 +24,10 @@ function MedewerkerLogin({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                 const data = await response.json();
                 console.log("Successfully logged in:", data);
                 localStorage.setItem('authToken', data.token);
-                localStorage.setItem("functie", response.functie);
-                localStorage.setItem("userType", data.functie); // Stel functie in als "FrontOffice" of "BackOffice"
+                localStorage.setItem('userType', data.functie);
 
                 setIsLoggedIn(true);
                  // Zorg ervoor dat isEmployee op true staat
-                setFunctie(data.functie); // Sla de functie op in de state
                 navigate("/"); // Redirect naar de homepagina
             } else {
                 const errorMsg = await response.text();
@@ -40,7 +38,6 @@ function MedewerkerLogin({ setIsLoggedIn, setIsEmployee, setFunctie }) {
             setError("Er is een fout opgetreden bij het inloggen.");
         }
     };
-
 
     return (
         <div className="login-container">
@@ -56,7 +53,7 @@ function MedewerkerLogin({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
-                        <FaUserAlt className="icon"/>
+                        <FaUserAlt className="icon" />
                     </div>
                     <div className="input-box">
                         <input
@@ -66,7 +63,7 @@ function MedewerkerLogin({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
-                        <FaLock className="icon"/>
+                        <FaLock className="icon" />
                     </div>
                     <button type="submit">Login</button>
                     <div className="register-link">
