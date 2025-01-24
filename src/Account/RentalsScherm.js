@@ -5,35 +5,41 @@ const RentalScherm = () => {
     const [rentals, setRentals] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const token = localStorage.getItem("authToken");
 
     useEffect(() => {
         const fetchRentals = async () => {
-            try {
-                // Haal de token op uit de localStorage
-                const token = localStorage.getItem("token");
-                if (!token) {
-                    throw new Error("You are not logged in. Please log in to view your rentals.");
-                }
+            if (!token) {
+                console.error("[Frontend] Geen token gevonden.");
+                setError("U bent niet ingelogd. Log in om uw huurgeschiedenis te bekijken.");
+                return;
+            }
 
-                // Stuur een fetch-aanroep naar de backend
+            console.log("[Frontend] Token verzonden in fetch:", token);
+
+            try {
                 const response = await fetch("https://localhost:7017/api/rentals/user", {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
+                        "Content-Type": "application/json",
+                    },
                 });
 
+                console.log("[Frontend] Response status:", response.status);
+
                 if (!response.ok) {
-                    // Haal foutmeldingen uit de serverrespons
-                    const errorMessage = await response.text();
-                    throw new Error(errorMessage || `Error: ${response.status} ${response.statusText}`);
+                    const errorMessage = await response.json().catch(() => ({
+                        message: "Onverwachte fout zonder JSON-body.",
+                    }));
+                    throw new Error(errorMessage.message || "Fout tijdens ophalen van rentals.");
                 }
 
-                // Parseer de JSON-respons
                 const data = await response.json();
+                console.log("[Frontend] Rentals succesvol opgehaald:", data);
                 setRentals(data);
             } catch (err) {
+                console.error("[Frontend] Fout tijdens ophalen rentals:", err.message);
                 setError(err.message);
             } finally {
                 setLoading(false);
@@ -41,18 +47,18 @@ const RentalScherm = () => {
         };
 
         fetchRentals();
-    }, []);
+    }, [token]);
 
     return (
         <div>
             <header className="rental-header">
-                <h1>Your Rentals</h1>
-                <p>Overview of all the cars you've rented</p>
+                <h1>Uw Huurgeschiedenis</h1>
+                <p>Overzicht van alle auto's die u heeft gehuurd</p>
             </header>
 
             <main className="rental-container">
                 {loading ? (
-                    <p>Loading rentals...</p>
+                    <p>Rentals laden...</p>
                 ) : error ? (
                     <p className="error-message">{error}</p>
                 ) : rentals.length > 0 ? (
@@ -61,19 +67,19 @@ const RentalScherm = () => {
                             <div key={rental.rentalId} className="vehicle-card">
                                 <div className="vehicle-start">
                                     <h2>{rental.vehicleBrand} {rental.vehicleModel}</h2>
-                                    <p>Renter: {rental.userName} {rental.userLastName}</p>
-                                    <p>From: {new Date(rental.startDate).toLocaleDateString()}</p>
-                                    <p>To: {new Date(rental.endDate).toLocaleDateString()}</p>
+                                    <p>Gehuurd door: {rental.userName} {rental.userLastName}</p>
+                                    <p>Van: {new Date(rental.startDate).toLocaleDateString()}</p>
+                                    <p>Tot: {new Date(rental.endDate).toLocaleDateString()}</p>
                                 </div>
                                 <div className="vehicle-end">
-                                    <p>Price: €{rental.price}</p>
+                                    <p>Prijs: €{rental.price}</p>
                                     <p>Status: {rental.status}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
                 ) : (
-                    <p>No rentals found.</p>
+                    <p>Geen huurgeschiedenis gevonden.</p>
                 )}
             </main>
         </div>
