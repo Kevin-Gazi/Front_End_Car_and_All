@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Subscriptions.css";
+import jwtDecode from "jwt-decode";
 
 const Subscriptions = () => {
     const [selectedSubscription, setSelectedSubscription] = useState(null);
@@ -7,18 +8,22 @@ const Subscriptions = () => {
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const gebruikerId = 46;
-
+   
+    const token = localStorage.getItem("authToken");
+    const decoded = token ? jwtDecode(token) : null; // Controleer of token bestaat
+    const gebruikerId = decoded?.sub; // Haal `sub` op uit het gedecodeerde token
+    
     const subscriptions = [
         { id: 1, name: "Pay-as-you-go", description: "Fixed monthly fee with a discount on rentals.", price: 29.99 },
         { id: 2, name: "Prepaid", description: "Covers a specific number of rental days.", price: 99.99 },
     ];
 
+    // Functie om abonnement te bevestigen
     const confirmSubscription = async () => {
         if (!pendingSubscription) return;
 
         setSelectedSubscription(pendingSubscription);
-        setPendingSubscription(null); // Clear the warning
+        setPendingSubscription(null); // Waarschuwing wissen
         setMessage("");
         setLoading(true);
 
@@ -30,7 +35,7 @@ const Subscriptions = () => {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(pendingSubscription.name),
+                    body: JSON.stringify(pendingSubscription.name), // Stuur alleen de string
                 }
             );
 
@@ -48,13 +53,15 @@ const Subscriptions = () => {
         }
     };
 
+    // Functie om keuze te annuleren
     const cancelSubscription = () => {
-        setPendingSubscription(null); // Clear the warning
+        setPendingSubscription(null); // Waarschuwing wissen
     };
 
+    // Functie om een abonnement te selecteren
     const handleSubscriptionClick = (subscription) => {
-        setPendingSubscription(subscription); // Set the warning for the selected subscription
-        setMessage(""); // Clear any previous messages
+        setPendingSubscription(subscription); // Waarschuwing instellen
+        setMessage(""); // Vorige berichten wissen
     };
 
     return (
@@ -82,8 +89,9 @@ const Subscriptions = () => {
                 <div className="warning-box">
                     <p>
                         You have chosen <strong>{pendingSubscription.name}</strong> with a price of{" "}
-                        <strong>€{pendingSubscription.price.toFixed(2)}</strong> per month.</p>
-                        <p> Are you sure you want to proceed?</p>
+                        <strong>€{pendingSubscription.price.toFixed(2)}</strong> per month.
+                    </p>
+                    <p>Are you sure you want to proceed?</p>
                     <div className="warning-actions">
                         <button onClick={confirmSubscription} className="confirm-button">
                             Confirm
