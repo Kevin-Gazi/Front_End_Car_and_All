@@ -8,13 +8,14 @@ import GolfImage from './Golf.jpg';
 import CivicImage from './Civic.jpg';
 import Serie3Image from './3Series.jpg';
 import jwtDecode from "jwt-decode";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function Vehicles() {
     const [vehicles, setVehicles] = useState([]);
     const [filteredVehicles, setFilteredVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedVehicle, setSelectedVehicle] = useState(null);
-    const [unavailableDates, setUnavailableDates] = useState([]);
     const navigate = useNavigate();
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     //IK GA NU VEEL AANPASSEN!!!!!!!!!!!!!!!!!!!!!!!
@@ -30,7 +31,9 @@ export default function Vehicles() {
     const [selectedColor, setSelectedColor] = useState([]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [rentalDate, setRentalDate] = useState({ start: '', end: '' });
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [unavailableDates, setUnavailableDates] = useState([]);
         
     const authToken = localStorage.getItem('authToken');
     const safeJwtDecode = (authToken) => {
@@ -94,30 +97,14 @@ export default function Vehicles() {
     const fetchUnavailableDates = async (vehicleId) => {
         try {
             const response = await fetch(`https://localhost:7017/api/vehicles/${vehicleId}/unavailable-dates`);
-            console.log('Status code:', response.status);
-            const text = await response.text();
-            console.log('Response text:', text);
-
-
-            if (!response.ok) {
-                throw new Error(`API returned status ${response.status}`);
-            }
-
-            if (text) {
-                try {
-                    const dates = JSON.parse(text);
-                    setUnavailableDates(dates.map(date => new Date(date).toISOString().split('T')[0]));
-                } catch (parseError) {
-                    console.error('JSON parse error:', parseError);
-                    alert('Error parsing the unavailable dates response.');
-                }
+            if (response.ok) {
+                const dates = await response.json();
+                setUnavailableDates(dates.map((date) => new Date(date).toISOString().split('T')[0]));
             } else {
-                console.warn('Received empty response for unavailable dates.');
-                setUnavailableDates([]);
+                console.error('Error fetching unavailable dates:', response.statusText);
             }
         } catch (error) {
             console.error('Error fetching unavailable dates:', error);
-            alert('An error occurred while fetching unavailable dates.');
         }
     };
 
@@ -205,7 +192,7 @@ export default function Vehicles() {
         fetchUnavailableDates(vehicle.id);
         setIsModalOpen(true);
         console.log('Modal state set to open:', true);
-        console.log(authToken); // Debug
+        //console.log(authToken);
     };
 
 
@@ -218,18 +205,17 @@ export default function Vehicles() {
     };
 
     const handleConfirmRent = async () => {
-        if (!rentalDate.start || !rentalDate.end) {
+        if (!startDate || !endDate) {
             alert('Please select both start and end dates.');
             return;
         }
 
-        if (new Date(rentalDate.end) < new Date(rentalDate.start)) {
+
+        if (new Date(endDate) < new Date(startDate)) {
             alert('End date cannot be earlier than start date.');
             return;
         }
-
-        const startDate = new Date(rentalDate.start).toISOString().split('T')[0];
-        const endDate = new Date(rentalDate.end).toISOString().split('T')[0];
+        
 
         if (unavailableDates.includes(startDate) || unavailableDates.includes(endDate)) {
             alert('The selected dates are unavailable for rent.');
@@ -422,22 +408,32 @@ export default function Vehicles() {
                 <div className="modal">
                     <div className="modal-content">
                         <h2>Select Rental Dates</h2>
+
                         <label>
                             Start Date:
-                            <input
-                                type="date"
-                                value={rentalDate.start}
-                                min={new Date().toISOString().split('T')[0]}
-                                onChange={(e) => setRentalDate({...rentalDate, start: e.target.value})}
+                            <DatePicker
+                                selected={startDate}
+                                onChange={(date) => setStartDate(date)}
+                                selectsStart
+                                startDate={startDate}
+                                endDate={endDate}
+                                minDate={new Date()}
+                                excludeDates={unavailableDates.map((date) => new Date(date))}
+                                placeholderText="Select start date"
                             />
                         </label>
+
                         <label>
                             End Date:
-                            <input
-                                type="date"
-                                value={rentalDate.end}
-                                min={rentalDate.start || new Date().toISOString().split('T')[0]}
-                                onChange={(e) => setRentalDate({...rentalDate, end: e.target.value})}
+                            <DatePicker
+                                selected={endDate}
+                                onChange={(date) => setEndDate(date)}
+                                selectsEnd
+                                startDate={startDate}
+                                endDate={endDate}
+                                minDate={startDate || new Date()}
+                                excludeDates={unavailableDates.map((date) => new Date(date))}
+                                placeholderText="Select end date"
                             />
                         </label>
 
@@ -451,9 +447,12 @@ export default function Vehicles() {
                     <div className="modal-content">
                         <h2>You are about to rent:</h2>
                         <p><strong>Vehicle:</strong> {selectedVehicle.model}</p>
-                        <p><strong>From:</strong> {rentalDate.start}</p>
-                        <p><strong>Until:</strong> {rentalDate.end}</p>
-                        <p><strong>Total price:</strong> €{selectedVehicle.prijsPerDag * (new Date(rentalDate.end) - new Date(rentalDate.start)) / (1000 * 60 * 60 * 24)}</p>
+                        <p><strong>From:</strong> {startDate?.toLocaleDateString()}</p>
+                        <p><strong>Until:</strong> {endDate?.toLocaleDateString()}</p>
+                        <p><strong>Total
+                            price:</strong> €{selectedVehicle.prijsPerDag * (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)}
+                        </p>
+
 
                         <button onClick={handleConfirmRent}>Confirm</button>
                         <button onClick={() => setIsConfirmModalOpen(false)}>Cancel</button>
@@ -464,8 +463,9 @@ export default function Vehicles() {
                 <div className="modal">
                     <div className="modal-content">
                         <h2>Complete Your Information</h2>
+                        <p>You need to fill in this form before you can rent a vehicle.</p>
                         <label>
-                            Phone Number:
+                        Phone Number:
                             <input
                                 type="text"
                                 value={missingUserInfo.telefoonNummer}

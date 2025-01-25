@@ -201,6 +201,16 @@ h2 {
 .vehicle-image img {
     width: 322px;
     height: 156px;
-    object-fit: cover; /* Zorgt ervoor dat de afbeelding wordt bijgesneden als de verhouding niet klopt */
-    border-radius: 8px; /* Optioneel: voor afgeronde hoeken */
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.custom-datepicker {
+    border: 1px solid #ccc;
+    padding: 5px;
+    font-size: 16px;
+}
+.react-datepicker__day--disabled {
+    color: #ccc;
+    cursor: not-allowed;
 }
