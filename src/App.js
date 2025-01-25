@@ -17,7 +17,7 @@ import DamageReport from "./Frontofficemedewerker/Schadeformulier";
 import Profile from "./Account/Profile";
 import Rentals from "./Account/RentalsScherm";
 import EmployeeScherm from './Account/EmployeeScherm';
-
+import NotificationScherm from "./Account/NotificationScherm";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [typeKlant, setTypeKlant] = useState(''); // Dit is de state voor het klanttype
@@ -52,6 +52,7 @@ function App() {
                 <Route path="/CarMedewerkerLogin" element={<MedewerkerLogin/>}/>
                 <Route path="/Rentals" element={<Rentals/>} />
                 <Route path="/Employees" element={<EmployeeScherm/>} />
+                <Route path="/Notifications" element={<NotificationScherm/>} />
             </Routes>
         </Router>
     );
