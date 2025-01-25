@@ -16,6 +16,7 @@ import AlleAbonnementen from "./Backofficemedewerker/AbonnementBackoffice/AlleAb
 import DamageReport from "./Frontofficemedewerker/Schadeformulier";
 import Profile from "./Account/Profile";
 import Rentals from "./Account/RentalsScherm";
+import EmployeeScherm from './Account/EmployeeScherm';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -50,6 +51,7 @@ function App() {
                 <Route path="/SignUp" element={<SignUp/>}/>
                 <Route path="/CarMedewerkerLogin" element={<MedewerkerLogin/>}/>
                 <Route path="/Rentals" element={<Rentals/>} />
+                <Route path="/Employees" element={<EmployeeScherm/>} />
             </Routes>
         </Router>
     );

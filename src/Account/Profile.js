@@ -91,12 +91,35 @@ const Profile = () => {
         }
     };
 
+    const handleDelete = async () => {
+        if (!window.confirm("Weet u zeker dat u uw account wilt verwijderen? Dit kan niet ongedaan worden gemaakt.")) {
+            return;
+        }
 
+        try {
+            const response = await fetch("https://localhost:7017/api/gebruiker/DeleteAccount", {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
 
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("[Frontend] Fout bij verwijderen van account:", errorData.message);
+                throw new Error(errorData.message || "Fout tijdens verwijderen van account.");
+            }
 
-
-
-
+            console.log("[Frontend] Account succesvol verwijderd");
+            alert("Uw account is succesvol verwijderd.");
+            // Redirect of logout de gebruiker
+            localStorage.removeItem("authToken");
+            window.location.href = "/login";
+        } catch (err) {
+            console.error("[Frontend] Fout bij verwijderen van account:", err.message);
+            setError(err.message);
+        }
+    };
 
     if (error) {
         return <div className="error-container">Fout: {error}</div>;
@@ -202,29 +225,10 @@ const Profile = () => {
                 </div>
 
                 {userData.typeKlant === "Zakelijk" && (
-                    <>
-                        <div className="profile-row">
-                            <div className="profile-label">KVK Nummer:</div>
-                            <div className="profile-value">
-                                {editMode ? (
-                                    <input
-                                        type="text"
-                                        name="kvkNumber"
-                                        value={formData.kvkNumber || ""}
-                                        onChange={handleInputChange}
-                                    />
-                                ) : (
-                                    userData.kvkNumber
-                                )}
-                            </div>
-                        </div>
-                        <div className="profile-row">
-                            <div className="profile-label">Abonnement:</div>
-                            <div className="profile-value">
-                                {userData.subscription}
-                            </div>
-                        </div>
-                    </>
+                    <div className="profile-row">
+                        <div className="profile-label">KVK Nummer:</div>
+                        <div className="profile-value">{userData.kvkNumber}</div>
+                    </div>
                 )}
 
                 <div className="profile-actions">
@@ -234,7 +238,12 @@ const Profile = () => {
                             <button onClick={() => setEditMode(false)}>Annuleren</button>
                         </>
                     ) : (
-                        <button onClick={() => setEditMode(true)}>Bewerken</button>
+                        <>
+                            <button onClick={() => setEditMode(true)}>Bewerken</button>
+                            <button onClick={handleDelete} style={{ backgroundColor: "red", color: "white" }}>
+                                Verwijder Account
+                            </button>
+                        </>
                     )}
                 </div>
             </div>
