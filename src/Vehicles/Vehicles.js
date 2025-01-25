@@ -7,6 +7,7 @@ import FocusImage from './Focus.jpg';
 import GolfImage from './Golf.jpg';
 import CivicImage from './Civic.jpg';
 import Serie3Image from './3Series.jpg';
+import jwtDecode from "jwt-decode";
 
 export default function Vehicles() {
     const [vehicles, setVehicles] = useState([]);
@@ -16,13 +17,35 @@ export default function Vehicles() {
     const [unavailableDates, setUnavailableDates] = useState([]);
     const navigate = useNavigate();
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-
+    //IK GA NU VEEL AANPASSEN!!!!!!!!!!!!!!!!!!!!!!!
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    const [missingUserInfo, setMissingUserInfo] = useState({
+        telefoonNummer: "",
+        adres: "",
+        postcode: "",
+    });
+    const [isUserInfoModalOpen, setIsUserInfoModalOpen] = useState(false);
     const [selectedType, setSelectedType] = useState('All');
     const [selectedBrand, setSelectedBrand] = useState([]);
     const [selectedColor, setSelectedColor] = useState([]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [rentalDate, setRentalDate] = useState({ start: '', end: '' });
+        
+    const authToken = localStorage.getItem('authToken');
+    const safeJwtDecode = (authToken) => {
+        if (!authToken) {
+            console.error("Token is undefined or null");
+            return null;
+        }
+        try {
+            return jwtDecode(authToken);
+        } catch (error) {
+            console.error("Failed to decode token:", error.message);
+            return null;
+        }
+    };
+    const decodedToken = safeJwtDecode(authToken);
 
     useEffect(() => {
         const fetchVehicles = async () => {
@@ -40,7 +63,7 @@ export default function Vehicles() {
 
         fetchVehicles();
     }, []);
-    
+
     useEffect(() => {
         let filtered = vehicles;
 
@@ -58,13 +81,12 @@ export default function Vehicles() {
 
         setFilteredVehicles(filtered);
     }, [selectedType, selectedBrand, selectedColor, vehicles]);
-
-    // Get unique values for brands and colors based on filtered vehicles
+    
     const getUniqueBrands = () => {
         const brands = filteredVehicles.map(vehicle => vehicle.merk);
         return [...new Set(brands)];
     };
-    
+
     const isConfirmModelOpen = () => {
         setIsConfirmModalOpen(true);
     }
@@ -106,12 +128,10 @@ export default function Vehicles() {
         4: CivicImage,
         5: Serie3Image,
     };
-
     const getUniqueColors = () => {
         const colors = filteredVehicles.map(vehicle => vehicle.kleur);
         return [...new Set(colors)];
     };
-
     const handleBrandChange = (e) => {
         const brand = e.target.value;
         setSelectedBrand(prevState =>
@@ -120,6 +140,51 @@ export default function Vehicles() {
                 : [...prevState, brand]
         );
     };
+    const handleSaveUserInfo = async () => {
+        if (!authToken) {
+            alert('User is not logged in.');
+            return;
+        }
+        const userId = decodedToken.sub;
+        
+        const userInfoToUpdate = {
+            telefoonNummer: missingUserInfo.telefoonNummer?.trim() || null,
+            adres: missingUserInfo.adres?.trim() || null,
+            postcode: missingUserInfo.postcode?.trim() || null,
+        };
+
+        try {
+            const response = await fetch(`https://localhost:7017/api/gebruiker/gegevens/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`,
+                },
+                body: JSON.stringify(userInfoToUpdate),
+            });
+
+            if (response.ok) {
+                alert('Information updated successfully.');
+                
+                localStorage.setItem('telefoonNummer', userInfoToUpdate.telefoonNummer || "");
+                localStorage.setItem('adres', userInfoToUpdate.adres || "");
+                localStorage.setItem('postcode', userInfoToUpdate.postcode || "");
+                
+                setIsUserInfoModalOpen(false);
+                setMissingUserInfo(null);
+            } else {
+                const errorText = await response.text();
+                console.error('Failed to update information:', errorText);
+                alert('Failed to update information.');
+            }
+        } catch (error) {
+            console.error('Error updating user information:', error);
+            alert('An error occurred while updating your information.');
+        }
+    };
+
+
+
 
     const handleColorChange = (e) => {
         const color = e.target.value;
@@ -140,6 +205,7 @@ export default function Vehicles() {
         fetchUnavailableDates(vehicle.id);
         setIsModalOpen(true);
         console.log('Modal state set to open:', true);
+        console.log(authToken); // Debug
     };
 
 
@@ -150,7 +216,7 @@ export default function Vehicles() {
     const closeConfirmModal = () => {
         setIsConfirmModalOpen(false);
     };
-    
+
     const handleConfirmRent = async () => {
         if (!rentalDate.start || !rentalDate.end) {
             alert('Please select both start and end dates.');
@@ -176,22 +242,22 @@ export default function Vehicles() {
         }
 
         try {
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) {
+            if (!authToken) {
                 alert('User is not logged in.');
                 return;
             }
+
             const response = await fetch('https://localhost:7017/api/rentals', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`,
+                    'Authorization': `Bearer ${authToken}`,  
                 },
                 body: JSON.stringify({
-                    gebruikerId: user.userId,
+                    gebruikerId: decodedToken?.sub,
                     voertuigId: selectedVehicle.id,
                     startDate: startDate,
-                    endDate: endDate
+                    endDate: endDate,
                 }),
             });
 
@@ -208,18 +274,38 @@ export default function Vehicles() {
             alert('An error occurred while processing your rental.');
         }
     };
-    
-    
+
+
     const handleRentClick = (vehicle) => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        console.log('Gebruiker uit localStorage:', user);
-        if (!user) {
+        if (!authToken) {
             alert('Please log in to rent a vehicle.');
             navigate('/login');
-        } else {
-            openModal(vehicle);
+            return;
         }
+
+        const telefoonNummer = localStorage.getItem('telefoonNummer') || null;
+        const adres = localStorage.getItem('adres') || null;
+        const postcode = localStorage.getItem('postcode') || null;
+
+        const isMissingInfo =
+            !telefoonNummer?.trim() ||
+            !adres?.trim() ||
+            !postcode?.trim();
+
+        if (isMissingInfo) {
+            setMissingUserInfo({
+                telefoonNummer: telefoonNummer || "",
+                adres: adres || "",
+                postcode: postcode || "",
+            });
+            setIsUserInfoModalOpen(true);
+            return;
+        }
+
+        openModal(vehicle);
     };
+
+
     if (loading) {
         return <div>Loading vehicles...</div>;
     }
@@ -317,7 +403,7 @@ export default function Vehicles() {
                                 />
                             </div>
                             <div className="vehicle-start">
-                            <h2>{vehicle.model}</h2>
+                                <h2>{vehicle.model}</h2>
                                 <p>Brand: {vehicle.merk}</p>
                                 <p>Type: {vehicle.type}</p>
                                 <p>Color: {vehicle.kleur}</p>
@@ -350,7 +436,7 @@ export default function Vehicles() {
                             <input
                                 type="date"
                                 value={rentalDate.end}
-                                min={rentalDate.start || new Date().toISOString().split('T')[0]} 
+                                min={rentalDate.start || new Date().toISOString().split('T')[0]}
                                 onChange={(e) => setRentalDate({...rentalDate, end: e.target.value})}
                             />
                         </label>
@@ -371,6 +457,39 @@ export default function Vehicles() {
 
                         <button onClick={handleConfirmRent}>Confirm</button>
                         <button onClick={() => setIsConfirmModalOpen(false)}>Cancel</button>
+                    </div>
+                </div>
+            )}
+            {isUserInfoModalOpen && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>Complete Your Information</h2>
+                        <label>
+                            Phone Number:
+                            <input
+                                type="text"
+                                value={missingUserInfo.telefoonNummer}
+                                onChange={(e) => setMissingUserInfo({...missingUserInfo, telefoonNummer: e.target.value})}
+                            />
+                        </label>
+                        <label>
+                            Address:
+                            <input
+                                type="text"
+                                value={missingUserInfo.adres}
+                                onChange={(e) => setMissingUserInfo({...missingUserInfo, adres: e.target.value})}
+                            />
+                        </label>
+                        <label>
+                            Postal Code:
+                            <input
+                                type="text"
+                                value={missingUserInfo.postcode}
+                                onChange={(e) => setMissingUserInfo({...missingUserInfo, postcode: e.target.value})}
+                            />
+                        </label>
+                        <button onClick={handleSaveUserInfo}>Save</button>
+                        <button onClick={() => setIsUserInfoModalOpen(false)}>Cancel</button>
                     </div>
                 </div>
             )}

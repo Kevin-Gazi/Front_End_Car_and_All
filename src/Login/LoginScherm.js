@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./LoginScherm.css";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
 function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
     const [email, setEmail] = useState("");
@@ -15,8 +16,7 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
         const loginDetails = { email, password };
 
         try {
-            // Aangepaste URL voor login, bijvoorbeeld voor gebruikerslogin
-            const response = await fetch('https://localhost:7017/api/users/login', {  // Aangepast endpoint
+            const response = await fetch('https://localhost:7017/api/gebruiker/login', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(loginDetails),
@@ -24,25 +24,32 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("Successfully logged in:", data);
+                console.log("Response data:", data);
 
-                // Sla het token op in localStorage
-                localStorage.setItem("authToken", data.token);
-                localStorage.setItem("Typeklant", data.typeKlant);
+                const token = data.token;
+                localStorage.setItem("authToken", token);
+
+                const decodedToken = jwtDecode(token);
+                const telefoonNummer = decodedToken.userPhone || "";
+                const adres = decodedToken.userAddress || "";
+                const postcode = decodedToken.userPostalCode || "";
+
+                localStorage.setItem("telefoonNummer", telefoonNummer);
+                localStorage.setItem("adres", adres);
+                localStorage.setItem("postcode", postcode);
 
                 setIsLoggedIn(true);
-                
-                navigate("/"); // Redirect naar de homepagina
+                navigate("/");
             } else {
                 const errorMsg = await response.text();
-                setError(errorMsg);
+                console.error("Login error (server response):", errorMsg);
+                setError(errorMsg || "Login failed. Please try again.");
             }
         } catch (err) {
-            console.error("Login error:", err);
-            setError("Er is een fout opgetreden bij het inloggen.");
+            console.error("Login error (catch):", err);
+            setError("Er is een fout opgetreden bij het inloggen. Controleer je verbinding en probeer opnieuw.");
         }
     };
-
 
 
     return (
