@@ -13,10 +13,12 @@ import MedewerkerDashboard from './CarMedewerker/MedewerkerDashboard/MedewerkerD
 import DamageClaims from "./Backofficemedewerker/Schadeclaim/Schadeclaims";
 import Subscriptions from "./Abonnement/Subscriptions";
 import AlleAbonnementen from "./Backofficemedewerker/AbonnementBackoffice/AlleAbonnementen";
-import DamageReport from "./Frontofficemedewerker/Schadeformulier";
+import DamageReport from "./Frontofficemedewerker/Schadeformulier/Schadeformulier";
 import Profile from "./Account/Profile";
 import Rentals from "./Account/RentalsScherm";
 import EmployeeScherm from './Account/EmployeeScherm';
+import AllVehicles from "./Frontofficemedewerker/AllVehicles/AllVehicles"
+import Verhuuraanvraag from "./Backofficemedewerker/Verhuuraanvragen/Verhuuraanvraag";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -52,6 +54,8 @@ function App() {
                 <Route path="/CarMedewerkerLogin" element={<MedewerkerLogin/>}/>
                 <Route path="/Rentals" element={<Rentals/>} />
                 <Route path="/Employees" element={<EmployeeScherm/>} />
+                <Route path="/AllVehicles" element={<AllVehicles />} />
+                <Route path="/Verhuuraanvraag" element={<Verhuuraanvraag />} />
             </Routes>
         </Router>
     );

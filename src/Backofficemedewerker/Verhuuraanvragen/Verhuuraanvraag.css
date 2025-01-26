@@ -1,0 +1,83 @@
+.rental-requests {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.requests-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.request-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.request-details {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.request-details p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.request-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.approve-btn {
+    background: #4caf50;
+    color: white;
+}
+
+.approve-btn:hover {
+    background: #45a049;
+}
+
+.approve-btn:disabled {
+    background: #a5d6a7;
+    cursor: not-allowed;
+}
+
+.reject-btn {
+    background: #f44336;
+    color: white;
+}
+
+.reject-btn:hover {
+    background: #d32f2f;
+}
+
+.reject-btn:disabled {
+    background: #ef9a9a;
+    cursor: not-allowed;
+}
