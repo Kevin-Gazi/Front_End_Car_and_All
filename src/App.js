@@ -17,6 +17,8 @@ import DamageReport from "./Frontofficemedewerker/Schadeformulier";
 import Profile from "./Account/Profile";
 import Rentals from "./Account/RentalsScherm";
 import EmployeeScherm from './Account/EmployeeScherm';
+import AllVehicles from "./Frontofficemedewerker/AllVehicles/AllVehicles"
+import Verhuuraanvraag from "./Backofficemedewerker/Verhuuraanvragen/Verhuuraanvraag";
 import NotificationScherm from "./Account/NotificationScherm";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -52,6 +54,8 @@ function App() {
                 <Route path="/CarMedewerkerLogin" element={<MedewerkerLogin/>}/>
                 <Route path="/Rentals" element={<Rentals/>} />
                 <Route path="/Employees" element={<EmployeeScherm/>} />
+                <Route path="/AllVehicles" element={<AllVehicles />} />
+                <Route path="/Verhuuraanvraag" element={<Verhuuraanvraag />} />
                 <Route path="/Notifications" element={<NotificationScherm/>} />
             </Routes>
         </Router>

@@ -75,8 +75,8 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
                                         <span className="navbar-links">Requests</span>
                                         <div className="navbar-dropdown-menu">
                                             <Link to="/AlleAbonnementen">Subscription Requests</Link>
+                                            <Link to="/Verhuuraanvraag">Rental Requests</Link>
                                             <Link to="/DamageClaims">Damage Claims</Link>
-                                            <Link to="/RentalRequests">Rental Requests</Link>
                                             <Link to="/BusinessAccounts">Business Accounts</Link>
                                         </div>
                                     </li>
@@ -96,6 +96,7 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
                                         <div className="navbar-dropdown-menu">
                                             <Link to="/IntakeVehicles">Intake Vehicles</Link>
                                             <Link to="/SentOutVehicles">Sent-out Vehicles</Link>
+                                            <Link to="/AllVehicles">All Vehicles</Link>
                                             <Link to="/DamageClaims">Damage Claims</Link>
                                             <Link to="/Users">Users</Link>
                                         </div>
