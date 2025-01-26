@@ -13,13 +13,13 @@ import MedewerkerDashboard from './CarMedewerker/MedewerkerDashboard/MedewerkerD
 import DamageClaims from "./Backofficemedewerker/Schadeclaim/Schadeclaims";
 import Subscriptions from "./Abonnement/Subscriptions";
 import AlleAbonnementen from "./Backofficemedewerker/AbonnementBackoffice/AlleAbonnementen";
-import DamageReport from "./Frontofficemedewerker/Schadeformulier/Schadeformulier";
+import DamageReport from "./Frontofficemedewerker/Schadeformulier";
 import Profile from "./Account/Profile";
 import Rentals from "./Account/RentalsScherm";
 import EmployeeScherm from './Account/EmployeeScherm';
 import AllVehicles from "./Frontofficemedewerker/AllVehicles/AllVehicles"
 import Verhuuraanvraag from "./Backofficemedewerker/Verhuuraanvragen/Verhuuraanvraag";
-
+import NotificationScherm from "./Account/NotificationScherm";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [typeKlant, setTypeKlant] = useState(''); // Dit is de state voor het klanttype
@@ -56,6 +56,7 @@ function App() {
                 <Route path="/Employees" element={<EmployeeScherm/>} />
                 <Route path="/AllVehicles" element={<AllVehicles />} />
                 <Route path="/Verhuuraanvraag" element={<Verhuuraanvraag />} />
+                <Route path="/Notifications" element={<NotificationScherm/>} />
             </Routes>
         </Router>
     );

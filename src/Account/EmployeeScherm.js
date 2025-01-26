@@ -19,23 +19,20 @@ const EmployeeScherm = () => {
             const response = await fetch("https://localhost:7017/api/employee/GetEmployees", {
                 method: "GET",
                 headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
                 },
             });
-
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Fout tijdens ophalen van werknemers.");
+                const errorData = await response.json().catch(() => ({ message: "Serverfout." }));
+                throw new Error(errorData.message || "Fout bij het ophalen van werknemers.");
             }
-
             const data = await response.json();
-            console.log("[Frontend] Opgehaalde werknemers:", data);
             setEmployees(data);
-        } catch (err) {
-            console.error("[Frontend] Fout bij ophalen van werknemers:", err.message);
-            setError(err.message);
+        } catch (error) {
+            console.error("[Frontend] Fout bij ophalen van werknemers:", error.message);
+            setError(error.message);
         }
+
     };
 
     useEffect(() => {
