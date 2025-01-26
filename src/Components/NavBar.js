@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';  // Zorg ervoor dat je deze bibliotheek installeert met 'npm install jwt-decode'
 import './NavBar.css';
-
 
 export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
     const navigate = useNavigate();
+    const [userType, setUserType] = useState('');
+    const [functie, setFunctie] = useState('');
+
+    useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            const decodedToken = jwt_decode(token);
+            setUserType(decodedToken.userType ?? decodedToken.functie); // Verkrijg de userType uit de token
+            console.log("usertype: " , decodedToken.userType);
+            setFunctie(decodedToken.functie); // Verkrijg de functie van de medewerker uit localStorage
+            console.log("functie: ", functie); // Verkrijg de functie van de medewerker uit localStorage
+        }
+    }, [isLoggedIn]);
+
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('Typeklant');
@@ -13,7 +27,8 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
         localStorage.removeItem('telefoonNummer');
         localStorage.removeItem('userId');
         localStorage.removeItem('userKvkNumber');
-        //localStorage.clear();
+        localStorage.removeItem("user");
+        localStorage.clear();
         setIsLoggedIn(false);
         navigate('/');
     };
@@ -23,50 +38,83 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
             <div className="navbar-container">
                 <Link to="/" className="navbar-logo">CarAndAll</Link>
                 <ul className="navbar-menu">
-                    {/* Altijd zichtbaar: Home */}
+                    {/* Altijd zichtbare opties */}
                     <li className="navbar-item"><Link to="/" className="navbar-links">Home</Link></li>
+                    <li className="navbar-item"><Link to="/Vehicles" className="navbar-links">Vehicles</Link></li>
+                    <li className="navbar-item"><Link to="/Contact" className="navbar-links">Contact</Link></li>
 
-                    {/* Indien ingelogd */}
                     {isLoggedIn ? (
-                        isEmployee ? (
-                            <>
-                                <li className="navbar-item"><Link to="/DamageClaims"
-                                                                  className="navbar-links">DamageClaims</Link></li>
-                                <li className="navbar-item"><Link to="/DamageReport"
-                                                                  className="navbar-links">DamageReport</Link></li>
-                                <li className="navbar-item"><Link to="/RentalRequests"
-                                                                  className="navbar-links">RentalRequests</Link></li>
-                                <li className="navbar-item"><Link to="/UserData"
-                                                                  className="navbar-links">UserData</Link></li>
-                                <li className="navbar-item">
-                                    <button onClick={handleLogout} className="navbar-links logout-button">Logout
-                                    </button>
-                                </li>
-                            </>
-                        ) : (
-                            <>
-                                <li className="navbar-item"><Link to="/Vehicles"
-                                                                  className="navbar-links">Vehicles</Link></li>
-                                <li className="navbar-item"><Link to="/Contact" className="navbar-links">Contact</Link></li>
-                                <li className="navbar-item"><Link to="/Subscriptions" className="navbar-links">Subscriptions</Link></li>
-                                <li className="navbar-item"><Link to="/Account" className="navbar-links">Account</Link></li>
-                                <li className="navbar-item"><Link to="/Profile" className="navbar-links">Profile</Link></li>
-                                <li className="navbar-item"><button onClick={handleLogout} className="navbar-links logout-button">Logout</button></li>
-                            </>
-                        )
-                    ) : (
-                        // Niet ingelogd
                         <>
-                            <li className="navbar-item"><Link to="/Contact" className="navbar-links">Contact</Link></li>
-                            <li className="navbar-item"><Link to="/Vehicles" className="navbar-links">Vehicles</Link>
-                            </li>
-                            <li className="navbar-item"><Link to="/Login" className="navbar-links">Login</Link></li>
+                            {userType === 'Particulier' ? (
+                                <>
+                                    <li className="navbar-dropdown">
+                                        <span className="navbar-links">Account</span>
+                                        <div className="navbar-dropdown-menu">
+                                            <Link to="/Profile">Profile</Link>
+                                            <Link to="/Rentals">Rentals</Link>
+                                            <Link to="/Notifications">Notifications</Link>
+                                        </div>
+                                    </li>
+                                </>
+                            ) : userType === 'Zakelijk' ? (
+                                <>
+                                    <li className="navbar-dropdown">
+                                        <span className="navbar-links">Account</span>
+                                        <div className="navbar-dropdown-menu">
+                                            <Link to="/Profile">Profile</Link>
+                                            <Link to="/Subscriptions">Subscriptions</Link>
+                                            <Link to="/Rentals">Rentals</Link>
+                                            <Link to="/Notifications">Notifications</Link>
+                                            <Link to="/Employees">Employees</Link>
+                                        </div>
+                                    </li>
+                                </>
+                            ) : userType === "BackOffice" ? (
+                                <>
+                                    <li className="navbar-dropdown">
+                                        <span className="navbar-links">Requests</span>
+                                        <div className="navbar-dropdown-menu">
+                                            <Link to="/AlleAbonnementen">Subscription Requests</Link>
+                                            <Link to="/DamageClaims">Damage Claims</Link>
+                                            <Link to="/RentalRequests">Rental Requests</Link>
+                                            <Link to="/BusinessAccounts">Business Accounts</Link>
+                                        </div>
+                                    </li>
+                                    <li className="navbar-dropdown">
+                                        <span className="navbar-links">CarAndAll</span>
+                                        <div className="navbar-dropdown-menu">
+                                            <Link to="/Employees">Employees</Link>
+                                            <Link to="/Vehicles">Vehicles</Link>
+                                            <Link to="/Logs">Logs</Link>
+                                        </div>
+                                    </li>
+                                </>
+                            ) : userType === "FrontOffice" ? (
+                                <>
+                                    <li className="navbar-dropdown">
+                                        <span className="navbar-links">CarAndAll</span>
+                                        <div className="navbar-dropdown-menu">
+                                            <Link to="/IntakeVehicles">Intake Vehicles</Link>
+                                            <Link to="/SentOutVehicles">Sent-out Vehicles</Link>
+                                            <Link to="/DamageClaims">Damage Claims</Link>
+                                            <Link to="/Users">Users</Link>
+                                        </div>
+                                    </li>
+                                </>
+                            ) : null}
 
+                            {/* Logout button for all user */}
+                            <li className="navbar-item">
+                                <button onClick={handleLogout} className="navbar-links logout-button">Logout</button>
+                            </li>
                         </>
+                    ) : (
+                        <li className="navbar-item"><Link to="/Login" className="navbar-links">Login</Link></li>
                     )}
                 </ul>
             </div>
         </nav>
     );
 };
+
 export default NavBar;

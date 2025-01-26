@@ -24,11 +24,11 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("Response data:", data);
-
+                console.log("Successfully logged in:", data);
+                
                 const token = data.token;
                 localStorage.setItem("authToken", token);
-
+                
                 const decodedToken = jwtDecode(token);
                 const telefoonNummer = decodedToken.userPhone || "";
                 const adres = decodedToken.userAddress || "";
@@ -37,8 +37,24 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                 localStorage.setItem("telefoonNummer", telefoonNummer);
                 localStorage.setItem("adres", adres);
                 localStorage.setItem("postcode", postcode);
-
+                localStorage.setItem("authToken", data.token);
+                localStorage.setItem("Typeklant", data.typeKlant);
+                
+                const userData = {
+                    token: data.token,
+                    userId: data.userId,
+                    userNaam: data.userNaam,
+                    userEmail: data.userEmail,
+                    userType: data.userType,
+                };
+                localStorage.setItem("user", JSON.stringify(userData));
                 setIsLoggedIn(true);
+
+                if (data.functie) {
+                    setFunctie(data.functie);
+                    localStorage.setItem('functie', data.functie);
+                }
+
                 navigate("/");
             } else {
                 const errorMsg = await response.text();
@@ -50,7 +66,6 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
             setError("Er is een fout opgetreden bij het inloggen. Controleer je verbinding en probeer opnieuw.");
         }
     };
-
 
     return (
         <div className="login-container">

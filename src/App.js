@@ -10,10 +10,14 @@ import SignUp from "./Login/SignUpScherm";
 import Account from "./Account/AccountScherm";
 import MedewerkerLogin from "./CarMedewerker/MedewerkerLogin/MedewerkerLogin";
 import MedewerkerDashboard from './CarMedewerker/MedewerkerDashboard/MedewerkerDashboard';
-import DamageClaims from "./Backofficemedewerker/Schadeclaims";
+import DamageClaims from "./Backofficemedewerker/Schadeclaim/Schadeclaims";
 import Subscriptions from "./Abonnement/Subscriptions";
+import AlleAbonnementen from "./Backofficemedewerker/AbonnementBackoffice/AlleAbonnementen";
 import DamageReport from "./Frontofficemedewerker/Schadeformulier";
-
+import Profile from "./Account/Profile";
+import Rentals from "./Account/RentalsScherm";
+import EmployeeScherm from './Account/EmployeeScherm';
+import NotificationScherm from "./Account/NotificationScherm";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [typeKlant, setTypeKlant] = useState(''); // Dit is de state voor het klanttype
@@ -40,12 +44,15 @@ function App() {
                 <Route path="/MedewerkerDashboard" element={<MedewerkerDashboard />} />
                 <Route path="/DamageClaims" element={<DamageClaims />} />
                 <Route path="/Subscriptions" element={<Subscriptions />} />
-                {/*<Route path="/Profile" element={<Profile />} />*/}
                 <Route path="/DamageReport" element={<DamageReport />} />
-                
+                <Route path="/AlleAbonnementen" element={<AlleAbonnementen />} />
+                <Route path="/Profile" element={<Profile />} />
                 <Route path="/Login" element={<Login setIsLoggedIn={setIsLoggedIn} setTypeklant={setTypeKlant} />} />
                 <Route path="/SignUp" element={<SignUp/>}/>
                 <Route path="/CarMedewerkerLogin" element={<MedewerkerLogin/>}/>
+                <Route path="/Rentals" element={<Rentals/>} />
+                <Route path="/Employees" element={<EmployeeScherm/>} />
+                <Route path="/Notifications" element={<NotificationScherm/>} />
             </Routes>
         </Router>
     );

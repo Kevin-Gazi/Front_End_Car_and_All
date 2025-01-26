@@ -1,0 +1,40 @@
+.notification-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.notification-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.notification-header h3 {
+    margin: 1;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.notification-body p {
+    margin: 8px 0 0;
+    color: #555;
+    text-align: left;
+}
+
+.notification-date p {
+    margin: 0;
+    font-size: 1rem;
+    color: black;
+    text-align: right;
+    font-weight: lighter;
+    
+}
