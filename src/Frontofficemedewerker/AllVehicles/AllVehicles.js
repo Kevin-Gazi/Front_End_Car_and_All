@@ -5,7 +5,7 @@ import CorollaImage from './Corolla.jpg';
 import FocusImage from './Focus.jpg';
 import GolfImage from './Golf.jpg';
 import CivicImage from './Civic.jpg';
-import Serie3Image from './3Series.jpg';
+//import Serie3Image from './3Series.jpg';
 
 export default function VehicleList() {
     const [vehicles, setVehicles] = useState([]);
@@ -83,8 +83,8 @@ export default function VehicleList() {
         1: CorollaImage,
         2: FocusImage,
         3: GolfImage,
-        4: CivicImage,
-        5: Serie3Image,
+        4: CivicImage
+       // 5: Serie3Image,
     };
 
     if (loading) {
