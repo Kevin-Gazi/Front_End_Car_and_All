@@ -233,7 +233,7 @@ export default function Vehicles() {
                 return;
             }
 
-            const response = await fetch('https://localhost:7017/api/rentals', {
+            const response = await fetch('https://localhost:7017/api/rentals/RentVehicle', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
