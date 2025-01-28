@@ -18,8 +18,6 @@ export default function Vehicles() {
     const [selectedVehicle, setSelectedVehicle] = useState(null);
     const navigate = useNavigate();
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-    //IK GA NU VEEL AANPASSEN!!!!!!!!!!!!!!!!!!!!!!!
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     const [missingUserInfo, setMissingUserInfo] = useState({
         telefoonNummer: "",
         adres: "",
@@ -260,8 +258,7 @@ export default function Vehicles() {
             alert('An error occurred while processing your rental.');
         }
     };
-
-
+    
     const handleRentClick = (vehicle) => {
         if (!authToken) {
             alert('Please log in to rent a vehicle.');

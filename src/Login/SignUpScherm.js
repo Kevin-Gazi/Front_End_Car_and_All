@@ -23,6 +23,12 @@ function SignUpScherm() {
         e.preventDefault();
         setError("");
 
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*\d).{8,}$/;
+        if (!passwordRegex.test(formData.password)) {
+            setError("The password must be at least 8 characters long and include an uppercase letter, a number, and a special character.");
+            return;
+        }
+
         try {
             const response = await fetch("https://localhost:7017/api/gebruiker/register", {
                 method: "POST",
@@ -31,7 +37,7 @@ function SignUpScherm() {
             });
 
             if (response.ok) {
-                alert("Account succesvol aangemaakt!");
+                alert("Account created successfully!");
                 navigate("/login");
             } else {
                 const errorMessage = await response.text();
@@ -39,9 +45,10 @@ function SignUpScherm() {
             }
         } catch (err) {
             console.error("Error during registration:", err);
-            setError("Er is een fout opgetreden tijdens het registreren.");
+            setError("An error occurred during registration.");
         }
     };
+
 
     return (
         <div className="login-container">
