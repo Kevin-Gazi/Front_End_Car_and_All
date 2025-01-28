@@ -22,6 +22,7 @@ import Verhuuraanvraag from "./Backofficemedewerker/Verhuuraanvragen/Verhuuraanv
 import NotificationScherm from "./Account/NotificationScherm";
 import TermsAndConditions from "./Privacy-en-Terms/TermsOfService";
 import PrivacyPolicy from "./Privacy-en-Terms/PrivacyPolicy";
+import InnameVoertuig from "./Frontofficemedewerker/InnameVoertuigen/InnameVoertuigen"
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [typeKlant, setTypeKlant] = useState(''); // Dit is de state voor het klanttype
@@ -31,6 +32,7 @@ function App() {
         setIsLoggedIn(!!token); // Zet true als er een token is
         const storedTypeKlant = localStorage.getItem('typeklant');
         setTypeKlant(storedTypeKlant || ''); // Haal het type klant op uit localStorage
+        
     }, []);
 
     return (
@@ -56,6 +58,8 @@ function App() {
                 <Route path="/Notifications" element={<NotificationScherm />} />
                 <Route path="/Terms" element={<TermsAndConditions />} />
                 <Route path="/Privacy" element={<PrivacyPolicy/>} />
+                <Route path="/Notifications" element={<NotificationScherm/>} />
+                <Route path="/IntakeVehicles" element = {<InnameVoertuig />} />
             </Routes>
             <Footer /> {/* Footer hier toegevoegd */}
         </Router>

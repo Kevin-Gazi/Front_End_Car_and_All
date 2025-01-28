@@ -74,7 +74,6 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
                                     <li className="navbar-dropdown">
                                         <span className="navbar-links">Requests</span>
                                         <div className="navbar-dropdown-menu">
-                                            <Link to="/AlleAbonnementen">Subscription Requests</Link>
                                             <Link to="/Verhuuraanvraag">Rental Requests</Link>
                                             <Link to="/DamageClaims">Damage Claims</Link>
                                             <Link to="/BusinessAccounts">Business Accounts</Link>
