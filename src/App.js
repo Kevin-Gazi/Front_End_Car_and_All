@@ -32,7 +32,6 @@ function App() {
         setIsLoggedIn(!!token); // Zet true als er een token is
         const storedTypeKlant = localStorage.getItem('typeklant');
         setTypeKlant(storedTypeKlant || ''); // Haal het type klant op uit localStorage
-        
     }, []);
 
     return (
@@ -60,6 +59,7 @@ function App() {
                 <Route path="/Privacy" element={<PrivacyPolicy/>} />
                 <Route path="/Notifications" element={<NotificationScherm/>} />
                 <Route path="/IntakeVehicles" element = {<InnameVoertuig />} />
+                <Route path="/SentOutVehicles" element={<Verhuuraanvraag/>} />
             </Routes>
             <Footer /> {/* Footer hier toegevoegd */}
         </Router>

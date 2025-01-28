@@ -131,7 +131,7 @@ export default function Vehicles() {
             return;
         }
         const userId = decodedToken.sub;
-        
+
         const userInfoToUpdate = {
             telefoonNummer: missingUserInfo.telefoonNummer?.trim() || null,
             adres: missingUserInfo.adres?.trim() || null,
@@ -139,7 +139,7 @@ export default function Vehicles() {
         };
 
         try {
-            const response = await fetch(`https://localhost:7017/api/gebruiker/gegevens/${userId}`, {
+            const response = await fetch(`https://localhost:7017/api/gebruiker/Gegevens/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -150,11 +150,9 @@ export default function Vehicles() {
 
             if (response.ok) {
                 alert('Information updated successfully.');
-                
                 localStorage.setItem('telefoonNummer', userInfoToUpdate.telefoonNummer || "");
                 localStorage.setItem('adres', userInfoToUpdate.adres || "");
                 localStorage.setItem('postcode', userInfoToUpdate.postcode || "");
-                
                 setIsUserInfoModalOpen(false);
                 setMissingUserInfo(null);
             } else {
@@ -190,11 +188,8 @@ export default function Vehicles() {
         fetchUnavailableDates(vehicle.id);
         setIsModalOpen(true);
         console.log('Modal state set to open:', true);
-        //console.log(authToken);
     };
-
-
-
+    
     const closeModal = () => {
         setIsModalOpen(false);
     };

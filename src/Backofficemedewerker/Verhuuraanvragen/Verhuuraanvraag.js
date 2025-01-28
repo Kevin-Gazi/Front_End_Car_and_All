@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './Verhuuraanvraag.css';
 
 export default function RentalRequests() {
-    const [requests, setRequests] = useState([]); // Store rental requests
-    const [loading, setLoading] = useState(true); // Loading state
-    const [error, setError] = useState(null); // Error state for better debugging
+    const [requests, setRequests] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchRequests = async () => {
@@ -12,8 +12,7 @@ export default function RentalRequests() {
                 const response = await fetch('https://localhost:7017/api/rentals/GetRentals');
                 if (!response.ok) throw new Error(`Error: ${response.statusText}`);
                 const data = await response.json();
-
-                // Map backend fields to frontend state
+                
                 const mappedRequests = data.map((r) => ({
                     id: r.id,
                     vehicleId: r.voertuigId,
@@ -22,7 +21,7 @@ export default function RentalRequests() {
                     status: r.status,
                     isGoedgekeurd: r.isGoedgekeurd,
                 }));
-                setRequests(mappedRequests); // Update state
+                setRequests(mappedRequests);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching rental requests:', error);
@@ -32,10 +31,7 @@ export default function RentalRequests() {
 
         fetchRequests();
     }, []);
-
-
-
-    // Approve a rental request
+    
     const handleApprove = async (id) => {
         try {
             const response = await fetch(
@@ -56,8 +52,7 @@ export default function RentalRequests() {
             console.error('Error approving request:', error);
         }
     };
-
-    // Reject a rental request
+    
     const handleReject = async (id) => {
         try {
             const response = await fetch(
@@ -78,13 +73,11 @@ export default function RentalRequests() {
             console.error('Error rejecting request:', error);
         }
     };
-
-    // Loading state
+    
     if (loading) {
         return <div className="loading">Loading rental requests...</div>;
     }
-
-    // Error state
+    
     if (error) {
         return <div className="error">{error}</div>;
     }
