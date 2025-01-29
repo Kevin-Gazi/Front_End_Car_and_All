@@ -27,7 +27,7 @@ export default function EditVehicleScherm() {
         prijsPerDag: '',
         isBeschikbaar: false,
     });
-    const [isAddPopupOpen, setIsAddPopupOpen] = useState(false); // Staat voor het openen van de 'Add' popup
+    const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
 
     useEffect(() => {
         const fetchVehicles = async () => {
@@ -48,16 +48,18 @@ export default function EditVehicleScherm() {
 
     const openEditPopup = (vehicle) => {
         setEditingVehicle(vehicle);
-        setFormData({
+
+        setFormData((prev) => ({
+            ...prev,
             merk: vehicle.merk,
             model: vehicle.model,
             type: vehicle.type,
             kenteken: vehicle.kenteken,
             kleur: vehicle.kleur,
-            Aanschafjaar: vehicle.aanschafjaar || '',
+            Aanschafjaar: vehicle.aanschafjaar || new Date().getFullYear(),
             prijsPerDag: vehicle.prijsPerDag,
             isBeschikbaar: vehicle.isBeschikbaar,
-        });
+        }));
     };
 
     const closeEditPopup = () => {
@@ -65,11 +67,11 @@ export default function EditVehicleScherm() {
     };
 
     const openAddPopup = () => {
-        setIsAddPopupOpen(true); // Open de "Add Vehicle" popup
+        setIsAddPopupOpen(true); 
     };
 
     const closeAddPopup = () => {
-        setIsAddPopupOpen(false); // Sluit de "Add Vehicle" popup
+        setIsAddPopupOpen(false); 
     };
 
     const handleChange = (e) => {
@@ -91,6 +93,13 @@ export default function EditVehicleScherm() {
     };
 
     const handleSave = async () => {
+        if (!editingVehicle || !editingVehicle.id) {
+            console.error("Error: Vehicle ID is missing.");
+            return;
+        }
+
+        console.log("FormData being sent:", formData); // Log de formData
+
         const token = localStorage.getItem("authToken");
         try {
             const response = await fetch(`https://localhost:7017/api/carmedewerker/voertuigen/${editingVehicle.id}`, {
@@ -99,12 +108,18 @@ export default function EditVehicleScherm() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    id: editingVehicle.id,
+                    ...formData,
+                }),
             });
 
             if (response.ok) {
+                // Update de vehicles state met de nieuwe gegevens
                 setVehicles((prev) =>
-                    prev.map((v) => (v.id === editingVehicle.id ? { ...formData } : v))
+                    prev.map((v) =>
+                        v.id === editingVehicle.id ? { ...v, ...formData } : v
+                    )
                 );
                 closeEditPopup();
             } else {
@@ -114,6 +129,7 @@ export default function EditVehicleScherm() {
             console.error("Error updating vehicle:", error);
         }
     };
+
 
     const handleBlockVehicle = async (id) => {
         if (!window.confirm("Are you sure you want to block this vehicle?")) return;
@@ -177,7 +193,7 @@ export default function EditVehicleScherm() {
     return (
         <div className="edit-vehicles-container">
             <h1>Vehicle Management</h1>
-            <button className="add-vehicle-btn" onClick={openAddPopup}>Add New Vehicle</button> {/* Button to open the popup */}
+            <button className="add-vehicle-btn" onClick={openAddPopup}>Add New Vehicle</button> 
 
             <input
                 type="text"
@@ -188,9 +204,9 @@ export default function EditVehicleScherm() {
             />
 
             <div className="edit-vehicles-list" style={{ maxHeight: '500px', overflowY: 'auto' }}>
-                {filteredVehicles.map((vehicle) => (
+                {vehicles.map((vehicle) => (
                     <div key={vehicle.id} className="edit-vehicle-card">
-                        <div className="edit-vehicle-details">
+                    <div className="edit-vehicle-details">
                             <p><strong>Brand:</strong> {vehicle.merk}</p>
                             <p><strong>Model:</strong> {vehicle.model}</p>
                             <p><strong>Type:</strong> {vehicle.type}</p>
@@ -202,7 +218,7 @@ export default function EditVehicleScherm() {
                         </div>
                         <div className="edit-vehicle-actions">
                             <button className="edit-vehicle-btn" onClick={() => openEditPopup(vehicle)}>Edit</button>
-                            <button className="block-vehicle-btn" onClick={() => handleBlockVehicle(vehicle.id)}>Block</button>
+                            {/*<button className="block-vehicle-btn" onClick={() => handleBlockVehicle(vehicle.id)}>Block</button>*/}
                         </div>
                     </div>
                 ))}
@@ -217,7 +233,8 @@ export default function EditVehicleScherm() {
                         <label>Type: <input name="type" value={formData.type} onChange={handleChange}/></label>
                         <label>License Plate: <input name="kenteken" value={formData.kenteken} onChange={handleChange}/></label>
                         <label>Color: <input name="kleur" value={formData.kleur} onChange={handleChange}/></label>
-                        <label>Year of Purchase: <input name="Aanschafjaar" value={formData.Aanschafjaar || ''} onChange={handleChange}/></label>
+                        <label>Year of Purchase: <input name="Aanschafjaar" value={formData.Aanschafjaar || ''}
+                                                        onChange={handleChange}/></label>
                         <label>Daily Rate: <input name="prijsPerDag" value={formData.prijsPerDag} onChange={handleChange}/></label>
                         <label>Availability:<input type="checkbox" name="isBeschikbaar" checked={formData.isBeschikbaar || false} onChange={handleChange}/></label>
                         <div className="edit-vehicle-popup-actions">
