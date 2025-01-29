@@ -22,9 +22,10 @@ import Verhuuraanvraag from "./Backofficemedewerker/Verhuuraanvragen/Verhuuraanv
 import NotificationScherm from "./Account/NotificationScherm";
 import TermsAndConditions from "./Privacy-en-Terms/TermsOfService";
 import PrivacyPolicy from "./Privacy-en-Terms/PrivacyPolicy";
-import InnameVoertuig from "./Frontofficemedewerker/InnameVoertuigen/InnameVoertuigen"
+import VehicleIntake from "./Frontofficemedewerker/VehicleIntake";
 import BusinessRequests from "./Backofficemedewerker/BusinessRequests";
 import CarEmployeeScherm from "./Backofficemedewerker/CarEmployeeScherm";
+import UitgifteScherm from "./Frontofficemedewerker/UitgifteScherm";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [typeKlant, setTypeKlant] = useState(''); // Dit is de state voor het klanttype
@@ -60,10 +61,11 @@ function App() {
                 <Route path="/Terms" element={<TermsAndConditions />} />
                 <Route path="/Privacy" element={<PrivacyPolicy/>} />
                 <Route path="/Notifications" element={<NotificationScherm/>} />
-                <Route path="/IntakeVehicles" element = {<InnameVoertuig />} />
+                <Route path="/IntakeVehicles" element = {<VehicleIntake />} />
                 <Route path="/SentOutVehicles" element={<Verhuuraanvraag/>} />
                 <Route path="/BusinessRequests" element = {<BusinessRequests />} />
                 <Route path="/CarEmployees" element = {<CarEmployeeScherm />} />
+                <Route path="/Uitgifte" element={<UitgifteScherm />} />
             </Routes>
             <Footer /> {/* Footer hier toegevoegd */}
         </Router>

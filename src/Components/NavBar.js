@@ -95,7 +95,7 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
                                         <span className="navbar-links">CarAndAll</span>
                                         <div className="navbar-dropdown-menu">
                                             <Link to="/IntakeVehicles">Intake Vehicles</Link>
-                                            <Link to="/SentOutVehicles">Sent-out Vehicles</Link>
+                                            <Link to="/Uitgifte">Sent-out Vehicles</Link>
                                             <Link to="/AllVehicles">All Vehicles</Link>
                                             <Link to="/DamageClaims">Damage Claims</Link>
                                             <Link to="/Users">Users</Link>

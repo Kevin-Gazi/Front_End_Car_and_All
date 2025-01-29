@@ -38,8 +38,6 @@ function MedewerkerLogin({ setIsLoggedIn }) {
             setError("Er is een fout opgetreden bij het inloggen.");
         }
     };
-    
-    
 
     return (
         <div className="login-container">
