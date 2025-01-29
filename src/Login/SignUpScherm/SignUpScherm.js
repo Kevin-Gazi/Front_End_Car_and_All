@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./SignUpScherm.css";
+import "./SignUpScreen.css";
 
-function SignUpScherm() {
+function SignUpScreen() {
     const [formData, setFormData] = useState({
-        naam: "",
-        achternaam: "",
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
-        typeKlant: "Particulier",
-        kvkNummer: "",
+        customerType: "Individual",
+        companyNumber: "",
     });
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -30,7 +30,7 @@ function SignUpScherm() {
         }
 
         try {
-            const response = await fetch("https://localhost:7017/api/gebruiker/register", {
+            const response = await fetch("https://localhost:7017/api/user/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
@@ -49,19 +49,18 @@ function SignUpScherm() {
         }
     };
 
-
     return (
         <div className="login-container">
             <div className="wrapper">
                 <form onSubmit={handleSubmit}>
-                    <h1>Maak een Account</h1>
+                    <h1>Create an Account</h1>
                     {error && <p className="error-message">{error}</p>}
                     <div className="input-box">
                         <input
                             type="text"
-                            name="naam"
-                            placeholder="Voornaam"
-                            value={formData.naam}
+                            name="firstName"
+                            placeholder="First Name"
+                            value={formData.firstName}
                             onChange={handleChange}
                             required
                         />
@@ -69,9 +68,9 @@ function SignUpScherm() {
                     <div className="input-box">
                         <input
                             type="text"
-                            name="achternaam"
-                            placeholder="Achternaam"
-                            value={formData.achternaam}
+                            name="lastName"
+                            placeholder="Last Name"
+                            value={formData.lastName}
                             onChange={handleChange}
                             required
                         />
@@ -80,7 +79,7 @@ function SignUpScherm() {
                         <input
                             type="email"
                             name="email"
-                            placeholder="E-mailadres"
+                            placeholder="Email Address"
                             value={formData.email}
                             onChange={handleChange}
                             required
@@ -90,7 +89,7 @@ function SignUpScherm() {
                         <input
                             type="password"
                             name="password"
-                            placeholder="Wachtwoord"
+                            placeholder="Password"
                             value={formData.password}
                             onChange={handleChange}
                             required
@@ -98,31 +97,31 @@ function SignUpScherm() {
                     </div>
                     <div className="input-box">
                         <select
-                            name="typeKlant"
-                            value={formData.typeKlant}
+                            name="customerType"
+                            value={formData.customerType}
                             onChange={handleChange}
                             required
                         >
-                            <option value="Particulier">Particulier</option>
-                            <option value="Zakelijk">Zakelijk</option>
+                            <option value="Individual">Individual</option>
+                            <option value="Business">Business</option>
                         </select>
                     </div>
-                    {formData.typeKlant === "Zakelijk" && (
+                    {formData.customerType === "Business" && (
                         <div className="input-box">
                             <input
                                 type="text"
-                                name="kvkNummer"
-                                placeholder="KvK-nummer"
-                                value={formData.kvkNummer}
+                                name="companyNumber"
+                                placeholder="Company Number (KvK)"
+                                value={formData.companyNumber}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
                     )}
-                    <button type="submit">Account aanmaken</button>
+                    <button type="submit">Create Account</button>
                     <div className="register-link">
                         <p>
-                            Heb je al een account? <a href="/login">Log in</a>
+                            Already have an account? <a href="/login">Log in</a>
                         </p>
                     </div>
                 </form>
@@ -131,4 +130,4 @@ function SignUpScherm() {
     );
 }
 
-export default SignUpScherm;
+export default SignUpScreen;

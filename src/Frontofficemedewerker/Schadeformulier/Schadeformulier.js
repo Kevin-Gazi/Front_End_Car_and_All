@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import "./Schadeformulier.css";
+import "./DamageClaimForm.css";
 import axios from "axios";
 
-const SchadeclaimForm = () => {
+const DamageClaimForm = () => {
     const [formData, setFormData] = useState({
-        beschrijving: "",
-        datum: "",
-        gebruikerId: "",
-        voertuigId: "",
+        description: "",
+        date: "",
+        userId: "",
+        vehicleId: "",
     });
 
     const [responseMessage, setResponseMessage] = useState("");
@@ -27,74 +27,74 @@ const SchadeclaimForm = () => {
         setErrorMessage("");
 
         // Format the date to remove the time portion
-        const formattedDatum = formData.datum.split("T")[0];
+        const formattedDate = formData.date.split("T")[0];
 
         // Update formData with the formatted date
-        const updatedFormData = { ...formData, datum: formattedDatum };
+        const updatedFormData = { ...formData, date: formattedDate };
 
         try {
-            await axios.post("https://localhost:7017/api/Damagereport", formData);
+            await axios.post("https://localhost:7017/api/Damagereport", updatedFormData);
             setResponseMessage("Damage claim successfully created!");
             setFormData({
-                beschrijving: "",
-                datum: "",
-                gebruikerId: "",
-                voertuigId: "",
+                description: "",
+                date: "",
+                userId: "",
+                vehicleId: "",
             });
         } catch (error) {
             setErrorMessage(
-                "An error occurred while submitting the claim. Please ensure you are using an existing GebruikerId or VehicleId."
+                "An error occurred while submitting the claim. Please ensure you are using an existing UserId or VehicleId."
             );
         }
     };
 
     return (
-        <div className="schadeclaim-form-container">
+        <div className="damageclaim-form-container">
             <h1>Report a Damage Claim</h1>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="beschrijving">Description:</label>
+                    <label htmlFor="description">Description:</label>
                     <textarea
-                        id="beschrijving"
-                        name="beschrijving"
-                        value={formData.beschrijving}
+                        id="description"
+                        name="description"
+                        value={formData.description}
                         onChange={handleChange}
                         placeholder="Describe the damage here..."
                         required
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="datum">Date:</label>
+                    <label htmlFor="date">Date:</label>
                     <input
                         type="date"
-                        id="datum"
-                        name="datum"
-                        value={formData.datum}
+                        id="date"
+                        name="date"
+                        value={formData.date}
                         onChange={handleChange}
                         required
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="gebruikerId">Gebruiker ID:</label>
+                    <label htmlFor="userId">User ID:</label>
                     <input
                         type="number"
-                        id="gebruikerId"
-                        name="gebruikerId"
-                        value={formData.gebruikerId}
+                        id="userId"
+                        name="userId"
+                        value={formData.userId}
                         onChange={handleChange}
-                        placeholder="Bijv. 43"
-                        required 
+                        placeholder="e.g., 43"
+                        required
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="voertuigId">Voertuig ID:</label>
+                    <label htmlFor="vehicleId">Vehicle ID:</label>
                     <input
                         type="number"
-                        id="voertuigId"
-                        name="voertuigId"
-                        value={formData.voertuigId}
+                        id="vehicleId"
+                        name="vehicleId"
+                        value={formData.vehicleId}
                         onChange={handleChange}
-                        placeholder="Bijv. 50"
+                        placeholder="e.g., 50"
                         required
                     />
                 </div>
@@ -107,4 +107,4 @@ const SchadeclaimForm = () => {
     );
 };
 
-export default SchadeclaimForm;
+export default DamageClaimForm;

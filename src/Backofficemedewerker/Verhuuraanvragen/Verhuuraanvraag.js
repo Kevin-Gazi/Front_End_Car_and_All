@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Verhuuraanvraag.css';
+import './RentalRequests.css';
 
 export default function RentalRequests() {
     const [requests, setRequests] = useState([]);
@@ -12,14 +12,14 @@ export default function RentalRequests() {
                 const response = await fetch('https://localhost:7017/api/rentals/GetRentals');
                 if (!response.ok) throw new Error(`Error: ${response.statusText}`);
                 const data = await response.json();
-                
+
                 const mappedRequests = data.map((r) => ({
                     id: r.id,
                     vehicleId: r.voertuigId,
                     userId: r.gebruikerId,
                     price: r.prijs,
                     status: r.status,
-                    isGoedgekeurd: r.isGoedgekeurd,
+                    isApproved: r.isGoedgekeurd,
                 }));
                 setRequests(mappedRequests);
                 setLoading(false);
@@ -31,7 +31,7 @@ export default function RentalRequests() {
 
         fetchRequests();
     }, []);
-    
+
     const handleApprove = async (id) => {
         try {
             const response = await fetch(
@@ -42,7 +42,7 @@ export default function RentalRequests() {
             if (response.ok) {
                 setRequests((prevRequests) =>
                     prevRequests.map((request) =>
-                        request.id === id ? { ...request, status: 'Accepted', isGoedgekeurd: true } : request
+                        request.id === id ? { ...request, status: 'Accepted', isApproved: true } : request
                     )
                 );
             } else {
@@ -52,7 +52,7 @@ export default function RentalRequests() {
             console.error('Error approving request:', error);
         }
     };
-    
+
     const handleReject = async (id) => {
         try {
             const response = await fetch(
@@ -63,7 +63,7 @@ export default function RentalRequests() {
             if (response.ok) {
                 setRequests((prevRequests) =>
                     prevRequests.map((request) =>
-                        request.id === id ? { ...request, status: 'Rejected', isGoedgekeurd: false } : request
+                        request.id === id ? { ...request, status: 'Rejected', isApproved: false } : request
                     )
                 );
             } else {
@@ -73,11 +73,11 @@ export default function RentalRequests() {
             console.error('Error rejecting request:', error);
         }
     };
-    
+
     if (loading) {
         return <div className="loading">Loading rental requests...</div>;
     }
-    
+
     if (error) {
         return <div className="error">{error}</div>;
     }
@@ -115,5 +115,4 @@ export default function RentalRequests() {
             </div>
         </div>
     );
-
 }

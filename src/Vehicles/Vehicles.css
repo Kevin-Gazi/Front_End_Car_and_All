@@ -214,3 +214,16 @@ h2 {
     color: #ccc;
     cursor: not-allowed;
 }
+
+@media (max-width: 768px) {
+    .vehicle-image img {
+        width: 100%; /* Past zich aan aan de breedte van de container */
+        height: auto; /* Behoudt de verhouding */
+    }
+}
+.vehicle-image img {
+    width: 322px;
+    height: 156px;
+    object-fit: cover; /* Zorgt ervoor dat de afbeelding wordt bijgesneden als de verhouding niet klopt */
+    border-radius: 8px; /* Optioneel: voor afgeronde hoeken */
+}

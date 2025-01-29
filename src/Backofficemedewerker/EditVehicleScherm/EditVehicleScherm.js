@@ -1,33 +1,33 @@
 import React, { useState, useEffect } from "react";
 import "./EditVehicleScherm.css";
 
-export default function EditVehicleScherm() {
+export default function EditVehicleScreen() {
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [editingVehicle, setEditingVehicle] = useState(null);
     const [formData, setFormData] = useState({
-        merk: '',
+        brand: '',
         model: '',
         type: '',
-        kenteken: '',
-        kleur: '',
-        Aanschafjaar: '',
-        prijsPerDag: '',
-        isBeschikbaar: false,
+        licensePlate: '',
+        color: '',
+        purchaseYear: '',
+        dailyRate: '',
+        isAvailable: false,
     });
     const [searchQuery, setSearchQuery] = useState('');
     const [newVehicleFormData, setNewVehicleFormData] = useState({
-        merk: '',
+        brand: '',
         model: '',
         type: '',
-        kenteken: '',
-        kleur: '',
-        Aanschafjaar: '',
-        prijsPerDag: '',
-        isBeschikbaar: false,
+        licensePlate: '',
+        color: '',
+        purchaseYear: '',
+        dailyRate: '',
+        isAvailable: false,
     });
-    const [isAddPopupOpen, setIsAddPopupOpen] = useState(false); // Staat voor het openen van de 'Add' popup
+    const [isAddPopupOpen, setIsAddPopupOpen] = useState(false); // Stands for opening the 'Add' popup
 
     useEffect(() => {
         const fetchVehicles = async () => {
@@ -49,14 +49,14 @@ export default function EditVehicleScherm() {
     const openEditPopup = (vehicle) => {
         setEditingVehicle(vehicle);
         setFormData({
-            merk: vehicle.merk,
+            brand: vehicle.brand,
             model: vehicle.model,
             type: vehicle.type,
-            kenteken: vehicle.kenteken,
-            kleur: vehicle.kleur,
-            Aanschafjaar: vehicle.aanschafjaar || '',
-            prijsPerDag: vehicle.prijsPerDag,
-            isBeschikbaar: vehicle.isBeschikbaar,
+            licensePlate: vehicle.licensePlate,
+            color: vehicle.color,
+            purchaseYear: vehicle.purchaseYear || '',
+            dailyRate: vehicle.dailyRate,
+            isAvailable: vehicle.isAvailable,
         });
     };
 
@@ -65,11 +65,11 @@ export default function EditVehicleScherm() {
     };
 
     const openAddPopup = () => {
-        setIsAddPopupOpen(true); // Open de "Add Vehicle" popup
+        setIsAddPopupOpen(true); // Open the "Add Vehicle" popup
     };
 
     const closeAddPopup = () => {
-        setIsAddPopupOpen(false); // Sluit de "Add Vehicle" popup
+        setIsAddPopupOpen(false); // Close the "Add Vehicle" popup
     };
 
     const handleChange = (e) => {
@@ -93,7 +93,7 @@ export default function EditVehicleScherm() {
     const handleSave = async () => {
         const token = localStorage.getItem("authToken");
         try {
-            const response = await fetch(`https://localhost:7017/api/carmedewerker/voertuigen/${editingVehicle.id}`, {
+            const response = await fetch(`https://localhost:7017/api/carmedewerker/vehicles/${editingVehicle.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -121,7 +121,7 @@ export default function EditVehicleScherm() {
         const token = localStorage.getItem("authToken");
 
         try {
-            const response = await fetch(`https://localhost:7017/api/carmedewerker/blokkeer-voertuig/${id}`, {
+            const response = await fetch(`https://localhost:7017/api/carmedewerker/block-vehicle/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ export default function EditVehicleScherm() {
             if (response.ok) {
                 setVehicles((prevVehicles) =>
                     prevVehicles.map((vehicle) =>
-                        vehicle.id === id ? { ...vehicle, isBeschikbaar: false } : vehicle
+                        vehicle.id === id ? { ...vehicle, isAvailable: false } : vehicle
                     )
                 );
             } else {
@@ -146,7 +146,7 @@ export default function EditVehicleScherm() {
     const handleAddVehicle = async () => {
         const token = localStorage.getItem("authToken");
         try {
-            const response = await fetch("https://localhost:7017/api/carmedewerker/voertuigenToevoegen", {
+            const response = await fetch("https://localhost:7017/api/carmedewerker/add-vehicle", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -168,7 +168,7 @@ export default function EditVehicleScherm() {
     };
 
     const filteredVehicles = vehicles.filter(vehicle =>
-        vehicle.merk.toLowerCase().includes(searchQuery.toLowerCase())
+        vehicle.brand.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     if (loading) return <div className="edit-vehicles-loading">Loading vehicles...</div>;
@@ -191,14 +191,14 @@ export default function EditVehicleScherm() {
                 {filteredVehicles.map((vehicle) => (
                     <div key={vehicle.id} className="edit-vehicle-card">
                         <div className="edit-vehicle-details">
-                            <p><strong>Brand:</strong> {vehicle.merk}</p>
+                            <p><strong>Brand:</strong> {vehicle.brand}</p>
                             <p><strong>Model:</strong> {vehicle.model}</p>
                             <p><strong>Type:</strong> {vehicle.type}</p>
-                            <p><strong>License plate:</strong> {vehicle.kenteken}</p>
-                            <p><strong>Color:</strong> {vehicle.kleur}</p>
-                            <p><strong>Year of purchase:</strong> {vehicle.aanschafjaar}</p>
-                            <p><strong>Daily rate:</strong> €{vehicle.prijsPerDag}</p>
-                            <p><strong>Availability:</strong> {vehicle.isBeschikbaar ? "Available" : "Not available"}</p>
+                            <p><strong>License plate:</strong> {vehicle.licensePlate}</p>
+                            <p><strong>Color:</strong> {vehicle.color}</p>
+                            <p><strong>Year of purchase:</strong> {vehicle.purchaseYear}</p>
+                            <p><strong>Daily rate:</strong> €{vehicle.dailyRate}</p>
+                            <p><strong>Availability:</strong> {vehicle.isAvailable ? "Available" : "Not available"}</p>
                         </div>
                         <div className="edit-vehicle-actions">
                             <button className="edit-vehicle-btn" onClick={() => openEditPopup(vehicle)}>Edit</button>
@@ -212,14 +212,14 @@ export default function EditVehicleScherm() {
                 <div className="edit-vehicle-popup">
                     <div className="edit-vehicle-popup-content">
                         <h2>Edit Vehicle</h2>
-                        <label>Brand: <input name="merk" value={formData.merk} onChange={handleChange}/></label>
+                        <label>Brand: <input name="brand" value={formData.brand} onChange={handleChange}/></label>
                         <label>Model: <input name="model" value={formData.model} onChange={handleChange}/></label>
                         <label>Type: <input name="type" value={formData.type} onChange={handleChange}/></label>
-                        <label>License Plate: <input name="kenteken" value={formData.kenteken} onChange={handleChange}/></label>
-                        <label>Color: <input name="kleur" value={formData.kleur} onChange={handleChange}/></label>
-                        <label>Year of Purchase: <input name="Aanschafjaar" value={formData.Aanschafjaar || ''} onChange={handleChange}/></label>
-                        <label>Daily Rate: <input name="prijsPerDag" value={formData.prijsPerDag} onChange={handleChange}/></label>
-                        <label>Availability:<input type="checkbox" name="isBeschikbaar" checked={formData.isBeschikbaar || false} onChange={handleChange}/></label>
+                        <label>License Plate: <input name="licensePlate" value={formData.licensePlate} onChange={handleChange}/></label>
+                        <label>Color: <input name="color" value={formData.color} onChange={handleChange}/></label>
+                        <label>Year of Purchase: <input name="purchaseYear" value={formData.purchaseYear || ''} onChange={handleChange}/></label>
+                        <label>Daily Rate: <input name="dailyRate" value={formData.dailyRate} onChange={handleChange}/></label>
+                        <label>Availability:<input type="checkbox" name="isAvailable" checked={formData.isAvailable || false} onChange={handleChange}/></label>
                         <div className="edit-vehicle-popup-actions">
                             <button className="save-vehicle-btn" onClick={handleSave}>Save</button>
                             <button className="cancel-vehicle-btn" onClick={closeEditPopup}>Cancel</button>
@@ -233,14 +233,14 @@ export default function EditVehicleScherm() {
                 <div className="edit-vehicle-popup">
                     <div className="edit-vehicle-popup-content">
                         <h2>Add Vehicle</h2>
-                        <label>Brand: <input name="merk" value={newVehicleFormData.merk} onChange={handleNewVehicleChange}/></label>
+                        <label>Brand: <input name="brand" value={newVehicleFormData.brand} onChange={handleNewVehicleChange}/></label>
                         <label>Model: <input name="model" value={newVehicleFormData.model} onChange={handleNewVehicleChange}/></label>
                         <label>Type: <input name="type" value={newVehicleFormData.type} onChange={handleNewVehicleChange}/></label>
-                        <label>License Plate: <input name="kenteken" value={newVehicleFormData.kenteken} onChange={handleNewVehicleChange}/></label>
-                        <label>Color: <input name="kleur" value={newVehicleFormData.kleur} onChange={handleNewVehicleChange}/></label>
-                        <label>Year of Purchase: <input name="Aanschafjaar" value={newVehicleFormData.Aanschafjaar || ''} onChange={handleNewVehicleChange}/></label>
-                        <label>Daily Rate: <input name="prijsPerDag" value={newVehicleFormData.prijsPerDag} onChange={handleNewVehicleChange}/></label>
-                        <label>Availability:<input type="checkbox" name="isBeschikbaar" checked={newVehicleFormData.isBeschikbaar || false} onChange={handleNewVehicleChange}/></label>
+                        <label>License Plate: <input name="licensePlate" value={newVehicleFormData.licensePlate} onChange={handleNewVehicleChange}/></label>
+                        <label>Color: <input name="color" value={newVehicleFormData.color} onChange={handleNewVehicleChange}/></label>
+                        <label>Year of Purchase: <input name="purchaseYear" value={newVehicleFormData.purchaseYear || ''} onChange={handleNewVehicleChange}/></label>
+                        <label>Daily Rate: <input name="dailyRate" value={newVehicleFormData.dailyRate} onChange={handleNewVehicleChange}/></label>
+                        <label>Availability:<input type="checkbox" name="isAvailable" checked={newVehicleFormData.isAvailable || false} onChange={handleNewVehicleChange}/></label>
                         <div className="edit-vehicle-popup-actions">
                             <button className="save-vehicle-btn" onClick={handleAddVehicle}>Save</button>
                             <button className="cancel-vehicle-btn" onClick={closeAddPopup}>Cancel</button>

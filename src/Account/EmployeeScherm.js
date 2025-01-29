@@ -23,13 +23,13 @@ const EmployeeScherm = () => {
                 },
             });
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ message: "Serverfout." }));
-                throw new Error(errorData.message || "Fout bij het ophalen van werknemers.");
+                const errorData = await response.json().catch(() => ({ message: "Server error." }));
+                throw new Error(errorData.message || "Error retrieving employees.");
             }
             const data = await response.json();
             setEmployees(data);
         } catch (error) {
-            console.error("[Frontend] Fout bij ophalen van werknemers:", error.message);
+            console.error("[Frontend] Error retrieving employees:", error.message);
             setError(error.message);
         }
 
@@ -54,7 +54,7 @@ const EmployeeScherm = () => {
             Password: formData.Password,
         };
 
-        console.log("[Frontend] Verzonden payload:", payload);
+        console.log("[Frontend] Sent payload:", payload);
 
         try {
             const response = await fetch("https://localhost:7017/api/employee/CreateEmployee", {
@@ -68,22 +68,22 @@ const EmployeeScherm = () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error("[Frontend] Fout ontvangen van backend:", errorData);
-                throw new Error(errorData.message || "Fout tijdens aanmaken van werknemer.");
+                console.error("[Frontend] Error received from backend:", errorData);
+                throw new Error(errorData.message || "Error while creating employee.");
             }
 
-            alert("Werknemer succesvol aangemaakt.");
+            alert("Employee successfully created.");
             setFormData({ Naam: "", Achternaam: "", Email: "", Password: "" });
             fetchEmployees();
         } catch (err) {
-            console.error("[Frontend] Fout bij aanmaken werknemer:", err.message);
+            console.error("[Frontend] Error creating employee:", err.message);
             setError(err.message);
         }
     };
 
     // Verwijderen van een werknemer
     const handleDeleteEmployee = async (id) => {
-        if (!window.confirm("Weet u zeker dat u deze werknemer wilt verwijderen?")) {
+        if (!window.confirm("Are you sure you want to delete this employee?")) {
             return;
         }
 
@@ -97,13 +97,13 @@ const EmployeeScherm = () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || "Fout tijdens verwijderen van werknemer.");
+                throw new Error(errorData.message || "Error while deleting employee.");
             }
 
-            alert("Werknemer succesvol verwijderd.");
+            alert("Employee successfully deleted.");
             fetchEmployees();
         } catch (err) {
-            console.error("[Frontend] Fout bij verwijderen werknemer:", err.message);
+            console.error("[Frontend] Error deleting employee:", err.message);
             setError(err.message);
         }
     };
@@ -135,30 +135,30 @@ const EmployeeScherm = () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || "Fout tijdens bijwerken van werknemer.");
+                throw new Error(errorData.message || "Error updating employee.");
             }
 
-            alert("Werknemer succesvol bijgewerkt.");
+            alert("Employee successfully updated.");
             setEditMode(null); // Sluit de edit-modus
             fetchEmployees(); // Update de lijst
         } catch (err) {
-            console.error("[Frontend] Fout bij bijwerken werknemer:", err.message);
+            console.error("[Frontend] Error updating employee:", err.message);
             setError(err.message);
         }
     };
 
     return (
         <div className="employees-container">
-            <h2>Werknemers Beheren</h2>
+            <h2>Manage Employees</h2>
             {error && <p className="error">{error}</p>}
             <div className="employee-form">
-                <h3>Nieuwe werknemer toevoegen</h3>
+                <h3>Add new employee</h3>
                 <input
                     type="text"
                     name="Naam"
                     value={formData.Naam}
                     onChange={handleInputChange}
-                    placeholder="Voornaam"
+                    placeholder="First name"
                     required
                 />
                 <input
@@ -166,7 +166,7 @@ const EmployeeScherm = () => {
                     name="Achternaam"
                     value={formData.Achternaam}
                     onChange={handleInputChange}
-                    placeholder="Achternaam"
+                    placeholder="Surname"
                     required
                 />
                 <input
@@ -182,14 +182,14 @@ const EmployeeScherm = () => {
                     name="Password"
                     value={formData.Password}
                     onChange={handleInputChange}
-                    placeholder="Wachtwoord"
+                    placeholder="Password"
                     required
                 />
-                <button onClick={handleCreateEmployee}>Toevoegen</button>
+                <button onClick={handleCreateEmployee}>Add</button>
             </div>
 
             <div className="employee-list">
-                <h3>Huidige werknemers</h3>
+                <h3>Current employees</h3>
                 {employees.map((employee) => (
                     <div key={employee.id} className="employee-card">
                         {editMode === employee.id ? (
@@ -199,14 +199,14 @@ const EmployeeScherm = () => {
                                     name="naam"
                                     value={formData.naam || ""}
                                     onChange={handleInputChange}
-                                    placeholder="Voornaam"
+                                    placeholder="First name"
                                 />
                                 <input
                                     type="text"
                                     name="achternaam"
                                     value={formData.achternaam || ""}
                                     onChange={handleInputChange}
-                                    placeholder="Achternaam"
+                                    placeholder="Surname"
                                 />
                                 <input
                                     type="email"
@@ -220,25 +220,25 @@ const EmployeeScherm = () => {
                                     name="password"
                                     value={formData.password || ""}
                                     onChange={handleInputChange}
-                                    placeholder="Nieuw wachtwoord (optioneel)"
+                                    placeholder="New password (optional)"
                                 />
-                                <button onClick={handleSave}>Opslaan</button>
-                                <button onClick={() => setEditMode(null)}>Annuleren</button>
+                                <button onClick={handleSave}>Save</button>
+                                <button onClick={() => setEditMode(null)}>Cancel</button>
                             </>
                         ) : (
                             <>
                                 <p>
-                                    <strong>Naam:</strong> {employee.naam} {employee.achternaam}
+                                    <strong>Name:</strong> {employee.naam} {employee.achternaam}
                                 </p>
                                 <p>
                                     <strong>E-mail:</strong> {employee.email}
                                 </p>
-                                <button onClick={() => handleEdit(employee)}>Bewerken</button>
+                                <button onClick={() => handleEdit(employee)}>Edit</button>
                                 <button
                                     onClick={() => handleDeleteEmployee(employee.id)}
                                     style={{ backgroundColor: "red", color: "white" }}
                                 >
-                                    Verwijder Werknemer
+                                    Remove Employee
                                 </button>
                             </>
                         )}

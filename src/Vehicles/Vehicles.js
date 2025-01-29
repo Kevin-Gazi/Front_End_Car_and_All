@@ -19,9 +19,9 @@ export default function Vehicles() {
     const navigate = useNavigate();
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [missingUserInfo, setMissingUserInfo] = useState({
-        telefoonNummer: "",
-        adres: "",
-        postcode: "",
+        phoneNumber: "",
+        address: "",
+        postalCode: "",
     });
     const [isUserInfoModalOpen, setIsUserInfoModalOpen] = useState(false);
     const [selectedType, setSelectedType] = useState('All');
@@ -32,7 +32,7 @@ export default function Vehicles() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [unavailableDates, setUnavailableDates] = useState([]);
-        
+
     const authToken = localStorage.getItem('authToken');
     const safeJwtDecode = (authToken) => {
         if (!authToken) {
@@ -82,7 +82,7 @@ export default function Vehicles() {
 
         setFilteredVehicles(filtered);
     }, [selectedType, selectedBrand, selectedColor, vehicles]);
-    
+
     const getUniqueBrands = () => {
         const brands = filteredVehicles.map(vehicle => vehicle.merk);
         return [...new Set(brands)];
@@ -133,9 +133,9 @@ export default function Vehicles() {
         const userId = decodedToken.sub;
 
         const userInfoToUpdate = {
-            telefoonNummer: missingUserInfo.telefoonNummer?.trim() || null,
-            adres: missingUserInfo.adres?.trim() || null,
-            postcode: missingUserInfo.postcode?.trim() || null,
+            telefoonNummer: missingUserInfo.phoneNumber?.trim() || null,
+            adres: missingUserInfo.address?.trim() || null,
+            postcode: missingUserInfo.postalCode?.trim() || null,
         };
 
         try {
@@ -150,9 +150,9 @@ export default function Vehicles() {
 
             if (response.ok) {
                 alert('Information updated successfully.');
-                localStorage.setItem('telefoonNummer', userInfoToUpdate.telefoonNummer || "");
-                localStorage.setItem('adres', userInfoToUpdate.adres || "");
-                localStorage.setItem('postcode', userInfoToUpdate.postcode || "");
+                localStorage.setItem('phoneNumber', userInfoToUpdate.telefoonNummer || "");
+                localStorage.setItem('address', userInfoToUpdate.adres || "");
+                localStorage.setItem('postalCode', userInfoToUpdate.postcode || "");
                 setIsUserInfoModalOpen(false);
                 setMissingUserInfo(null);
             } else {
@@ -189,7 +189,7 @@ export default function Vehicles() {
         setIsModalOpen(true);
         console.log('Modal state set to open:', true);
     };
-    
+
     const closeModal = () => {
         setIsModalOpen(false);
     };
@@ -208,7 +208,7 @@ export default function Vehicles() {
             alert('End date cannot be earlier than start date.');
             return;
         }
-        
+
 
         if (unavailableDates.includes(startDate) || unavailableDates.includes(endDate)) {
             alert('The selected dates are unavailable for rent.');
@@ -230,7 +230,7 @@ export default function Vehicles() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${authToken}`,  
+                    'Authorization': `Bearer ${authToken}`,
                 },
                 body: JSON.stringify({
                     gebruikerId: decodedToken?.sub,
@@ -253,7 +253,7 @@ export default function Vehicles() {
             alert('An error occurred while processing your rental.');
         }
     };
-    
+
     const handleRentClick = (vehicle) => {
         if (!authToken) {
             alert('Please log in to rent a vehicle.');
@@ -261,20 +261,20 @@ export default function Vehicles() {
             return;
         }
 
-        const telefoonNummer = localStorage.getItem('telefoonNummer') || null;
-        const adres = localStorage.getItem('adres') || null;
-        const postcode = localStorage.getItem('postcode') || null;
+        const phoneNumber = localStorage.getItem('phoneNumber') || null;
+        const address = localStorage.getItem('address') || null;
+        const postalCode = localStorage.getItem('postalCode') || null;
 
         const isMissingInfo =
-            !telefoonNummer?.trim() ||
-            !adres?.trim() ||
-            !postcode?.trim();
+            !phoneNumber?.trim() ||
+            !address?.trim() ||
+            !postalCode?.trim();
 
         if (isMissingInfo) {
             setMissingUserInfo({
-                telefoonNummer: telefoonNummer || "",
-                adres: adres || "",
-                postcode: postcode || "",
+                phoneNumber: phoneNumber || "",
+                address: address || "",
+                postalCode: postalCode || "",
             });
             setIsUserInfoModalOpen(true);
             return;
@@ -316,7 +316,7 @@ export default function Vehicles() {
                                 checked={selectedType === 'Auto'}
                                 onChange={(e) => setSelectedType(e.target.value)}
                             />
-                            Auto
+                            Car
                         </label>
                         <label>
                             <input
@@ -383,108 +383,18 @@ export default function Vehicles() {
                             <div className="vehicle-start">
                                 <h2>{vehicle.model}</h2>
                                 <p>Brand: {vehicle.merk}</p>
-                                <p>Type: {vehicle.type}</p>
                                 <p>Color: {vehicle.kleur}</p>
-                            </div>
-                            <div className="vehicle-end">
-                                <p><strong>€ {vehicle.prijsPerDag}</strong> / day</p>
-                                <button onClick={() => handleRentClick(vehicle)}>Rent</button>
+                                <button
+                                    className="btn-rent"
+                                    onClick={() => handleRentClick(vehicle)}>
+                                    Rent Now
+                                </button>
                             </div>
                         </div>
                     ))}
                 </section>
-
             </div>
-
-            {isModalOpen && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h2>Select Rental Dates</h2>
-
-                        <label>
-                            Start Date:
-                            <DatePicker
-                                selected={startDate}
-                                onChange={(date) => setStartDate(date)}
-                                selectsStart
-                                startDate={startDate}
-                                endDate={endDate}
-                                minDate={new Date()}
-                                excludeDates={unavailableDates.map((date) => new Date(date))}
-                                placeholderText="Select start date"
-                            />
-                        </label>
-
-                        <label>
-                            End Date:
-                            <DatePicker
-                                selected={endDate}
-                                onChange={(date) => setEndDate(date)}
-                                selectsEnd
-                                startDate={startDate}
-                                endDate={endDate}
-                                minDate={startDate || new Date()}
-                                excludeDates={unavailableDates.map((date) => new Date(date))}
-                                placeholderText="Select end date"
-                            />
-                        </label>
-
-                        <button onClick={isConfirmModelOpen}>Confirm Rent</button>
-                        <button onClick={closeModal}>Cancel</button>
-                    </div>
-                </div>
-            )}
-            {isConfirmModalOpen && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h2>You are about to rent:</h2>
-                        <p><strong>Vehicle:</strong> {selectedVehicle.model}</p>
-                        <p><strong>From:</strong> {startDate?.toLocaleDateString()}</p>
-                        <p><strong>Until:</strong> {endDate?.toLocaleDateString()}</p>
-                        <p><strong>Total
-                            price:</strong> €{selectedVehicle.prijsPerDag * (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)}
-                        </p>
-
-
-                        <button onClick={handleConfirmRent}>Confirm</button>
-                        <button onClick={() => setIsConfirmModalOpen(false)}>Cancel</button>
-                    </div>
-                </div>
-            )}
-            {isUserInfoModalOpen && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h2>Complete Your Information</h2>
-                        <p>You need to fill in this form before you can rent a vehicle.</p>
-                        <label>
-                        Phone Number:
-                            <input
-                                type="text"
-                                value={missingUserInfo.telefoonNummer}
-                                onChange={(e) => setMissingUserInfo({...missingUserInfo, telefoonNummer: e.target.value})}
-                            />
-                        </label>
-                        <label>
-                            Address:
-                            <input
-                                type="text"
-                                value={missingUserInfo.adres}
-                                onChange={(e) => setMissingUserInfo({...missingUserInfo, adres: e.target.value})}
-                            />
-                        </label>
-                        <label>
-                            Postal Code:
-                            <input
-                                type="text"
-                                value={missingUserInfo.postcode}
-                                onChange={(e) => setMissingUserInfo({...missingUserInfo, postcode: e.target.value})}
-                            />
-                        </label>
-                        <button onClick={handleSaveUserInfo}>Save</button>
-                        <button onClick={() => setIsUserInfoModalOpen(false)}>Cancel</button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
+

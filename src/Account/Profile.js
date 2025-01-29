@@ -10,10 +10,10 @@ const Profile = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log("[Frontend] Start ophalen profiel");
+            console.log("[Frontend] Start retrieving profile");
             if (!token) {
-                console.error("[Frontend] Geen token gevonden.");
-                setError("U bent niet ingelogd. Log in om door te gaan.");
+                console.error("[Frontend] No token found.");
+                setError("You are not logged in. Please log in to continue.");
                 return;
             }
 
@@ -28,14 +28,14 @@ const Profile = () => {
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.message || "Fout tijdens ophalen van profiel.");
+                    throw new Error(errorData.message || "Error while retrieving profile.");
                 }
 
                 const data = await response.json();
                 setUserData(data);
                 setFormData(data); // Voor initialisatie van bewerkbare velden
             } catch (err) {
-                console.error("[Frontend] Fout:", err.message);
+                console.error("[Frontend] Error:", err.message);
                 setError(err.message);
             }
         };
@@ -64,7 +64,7 @@ const Profile = () => {
             payload.KvkNummer = userData.kvkNumber;
         }
 
-        console.log("[Frontend] Payload naar backend (opslaan):", payload);
+        console.log("[Frontend] Payload to backend (save):", payload);
 
         try {
             const response = await fetch("https://localhost:7017/api/gebruiker/UpdateProfile", {
@@ -78,21 +78,21 @@ const Profile = () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error("[Frontend] Validatiefouten ontvangen van backend:", errorData.errors);
-                throw new Error(errorData.title || "Fout tijdens opslaan van profiel.");
+                console.error("[Frontend] Received validation errors from backend:", errorData.errors);
+                throw new Error(errorData.title || "Error while saving profile.");
             }
 
-            console.log("[Frontend] Profiel succesvol bijgewerkt");
+            console.log("[Frontend] Profile updated successfully");
             setUserData({ ...userData, ...formData }); // Werk profielgegevens bij in de UI
             setEditMode(false); // Sluit de edit-modus
         } catch (err) {
-            console.error("[Frontend] Fout bij opslaan:", err.message);
+            console.error("[Frontend] Error saving:", err.message);
             setError(err.message);
         }
     };
 
     const handleDelete = async () => {
-        if (!window.confirm("Weet u zeker dat u uw account wilt verwijderen? Dit kan niet ongedaan worden gemaakt.")) {
+        if (!window.confirm("Are you sure you want to delete your account? This cannot be undone.")) {
             return;
         }
 
@@ -106,12 +106,12 @@ const Profile = () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error("[Frontend] Fout bij verwijderen van account:", errorData.message);
-                throw new Error(errorData.message || "Fout tijdens verwijderen van account.");
+                console.error("[Frontend] Error deleting account:", errorData.message);
+                throw new Error(errorData.message ||"Error while deleting account.");
             }
 
-            console.log("[Frontend] Account succesvol verwijderd");
-            alert("Uw account is succesvol verwijderd.");
+            console.log("[Frontend] Account successfully deleted");
+            alert("Your account has been successfully deleted.");
             localStorage.removeItem("authToken");
             localStorage.removeItem('Typeklant');
             localStorage.removeItem('adres');
@@ -123,26 +123,26 @@ const Profile = () => {
             localStorage.clear();
             window.location.href = "/";
         } catch (err) {
-            console.error("[Frontend] Fout bij verwijderen van account:", err.message);
+            console.error("[Frontend] Error deleting account:", err.message);
             setError(err.message);
         }
     };
 
     if (error) {
-        return <div className="error-container">Fout: {error}</div>;
+        return <div className="error-container">Error: {error}</div>;
     }
 
     if (!userData) {
-        return <div className="loading-container">Profiel wordt geladen...</div>;
+        return <div className="loading-container">Profile is loading...</div>;
     }
 
     return (
         <div className="profile-container">
             <div className="profile-card">
-                <h2>Profieloverzicht</h2>
+                <h2>Profile overview</h2>
 
                 <div className="profile-row">
-                    <div className="profile-label">Volledige Naam:</div>
+                    <div className="profile-label">Full Name:</div>
                     <div className="profile-value">
                         {editMode ? (
                             <>
@@ -151,14 +151,14 @@ const Profile = () => {
                                     name="firstName"
                                     value={formData.firstName || ""}
                                     onChange={handleInputChange}
-                                    placeholder="Voornaam"
+                                    placeholder="First name"
                                 />
                                 <input
                                     type="text"
                                     name="lastName"
                                     value={formData.lastName || ""}
                                     onChange={handleInputChange}
-                                    placeholder="Achternaam"
+                                    placeholder="Surname"
                                 />
                             </>
                         ) : (
@@ -184,7 +184,7 @@ const Profile = () => {
                 </div>
 
                 <div className="profile-row">
-                    <div className="profile-label">Telefoonnummer:</div>
+                    <div className="profile-label">Phone number:</div>
                     <div className="profile-value">
                         {editMode ? (
                             <input
@@ -200,7 +200,7 @@ const Profile = () => {
                 </div>
 
                 <div className="profile-row">
-                    <div className="profile-label">Adres:</div>
+                    <div className="profile-label">Address:</div>
                     <div className="profile-value">
                         {editMode ? (
                             <input
@@ -234,11 +234,11 @@ const Profile = () => {
                 {userData.typeKlant === "Zakelijk" && (
                     <>
                         <div className="profile-row">
-                            <div className="profile-label">KVK Nummer:</div>
+                            <div className="profile-label">KVK Number:</div>
                             <div className="profile-value">{userData.kvkNumber}</div>
                         </div>
                         <div className="profile-row">
-                            <div className="profile-label">Abonnement:</div>
+                            <div className="profile-label">Subscription:</div>
                             <div className="profile-value">{userData.subscription || "None"}</div>
                         </div>
                     </>
@@ -247,14 +247,14 @@ const Profile = () => {
                 <div className="profile-actions">
                     {editMode ? (
                         <>
-                            <button onClick={handleSave}>Opslaan</button>
-                            <button onClick={() => setEditMode(false)}>Annuleren</button>
+                            <button onClick={handleSave}>Save</button>
+                            <button onClick={() => setEditMode(false)}>Cancel</button>
                         </>
                     ) : (
                         <>
-                            <button onClick={() => setEditMode(true)}>Bewerken</button>
+                            <button onClick={() => setEditMode(true)}>Edit</button>
                             <button onClick={handleDelete} style={{ backgroundColor: "red", color: "white" }}>
-                                Verwijder Account
+                                Delete Account
                             </button>
                         </>
                     )}

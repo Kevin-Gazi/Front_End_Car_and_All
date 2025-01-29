@@ -218,3 +218,16 @@ h2 {
     object-fit: cover; /* Ensures the image is cropped to fit */
     border-radius: 8px; /* Optional: for rounded corners */
 }
+
+.block-message {
+    background-color: #4CAF50; /* Green for success */
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    margin: 10px auto;
+    border-radius: 5px;
+    width: 80%;
+}
+
+

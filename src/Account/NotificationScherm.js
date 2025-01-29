@@ -9,7 +9,7 @@ const NotificationScherm = () => {
             try {
                 const token = localStorage.getItem("authToken");
                 if (!token) {
-                    console.error("Token niet gevonden in localStorage.");
+                    console.error("Token not found in localStorage.");
                     return;
                 }
 

@@ -1,25 +1,25 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function MedewerkerDashboard() {
+function EmployeeDashboard() {
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
-        const functie = localStorage.getItem('functie');
+        const role = localStorage.getItem('functie');
 
-        if (!token || !functie) {
-            navigate("/login"); // Redirect naar login als er geen token of functie is
+        if (!token || !role) {
+            navigate("/login"); // Redirect to login if no token or role
         }
     }, [navigate]);
 
     return (
         <div>
-            <h1>Welkom in het Medewerker Dashboard</h1>
-            <p>Dit is de omgeving voor de medewerker.</p>
-            {/* Voeg hier extra content toe die specifiek is voor medewerkers */}
+            <h1>Welcome to the Employee Dashboard</h1>
+            <p>This is the environment for the employee.</p>
+            {/* Add more content here specific to employees */}
         </div>
     );
 }
 
-export default MedewerkerDashboard;
+export default EmployeeDashboard;

@@ -27,16 +27,6 @@ const Contact = () => {
                     <strong>Sunday:</strong> Closed
                 </p>
             </div>
-
-            <div className="contact-section">
-                <h2 className="contact-heading">Send us a message</h2>
-                <form className="contact-form">
-                    <input type="text" placeholder="Your name" required />
-                    <input type="email" placeholder="Your e-mail" required />
-                    <textarea placeholder="Your message" rows="5" required></textarea>
-                    <button type="submit">Send Message</button>
-                </form>
-            </div>
         </div>
     );
 };

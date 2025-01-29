@@ -56,7 +56,7 @@ body {
 }
 
 .vehicles-button {
-    background-color: #b8860b;
+    background-color: #333;
     color: white;
 }
 
@@ -124,21 +124,24 @@ body {
 
 /* CTA Section */
 .footer-section {
-    background-color: #003366;
+    background-color: #333;
     color: white;
-    padding: 20px 10px;
-    margin-top: 20px;
+    padding: 35px 20px;
+    margin-top: 13px;
 }
 
 .footer-section h2 {
     font-family: "Century Schoolbook", serif;
     font-size: 28px;
     margin-bottom: 10px;
+    color: white;
 }
 
 .footer-section p {
     font-size: 18px;
     line-height: 1.6;
+    color: ghostwhite;
+    margin-top: 0px;
 }
 
 
