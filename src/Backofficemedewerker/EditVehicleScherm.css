@@ -45,12 +45,18 @@ button {
 }
 
 .edit-vehicle-btn {
-    background: #4caf50; /* Groene knop voor bewerken */
+    background-color: blue;
     color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
 .edit-vehicle-btn:hover {
-    background: #45a049;
+    background: darkblue;
 }
 
 .edit-vehicle-btn:disabled {
@@ -119,4 +125,19 @@ button {
 .cancel-vehicle-btn {
     background: gray;
     color: white;
+}
+
+.search-input-brand {
+    width: 200px;
+    margin-left: 0;
+    display: block;
+    margin-bottom: 20px;
+    padding: 5px;
+    font-size: 14px;
+    margin-top: 10px; 
+}
+
+.edit-vehicles-container {
+    width: 100%;
+    margin: 0 auto;
 }

@@ -16,7 +16,18 @@ export default function EditVehicleScherm() {
         prijsPerDag: '',
         isBeschikbaar: false,
     });
-
+    const [searchQuery, setSearchQuery] = useState('');
+    const [newVehicleFormData, setNewVehicleFormData] = useState({
+        merk: '',
+        model: '',
+        type: '',
+        kenteken: '',
+        kleur: '',
+        Aanschafjaar: '',
+        prijsPerDag: '',
+        isBeschikbaar: false,
+    });
+    const [isAddPopupOpen, setIsAddPopupOpen] = useState(false); // Staat voor het openen van de 'Add' popup
 
     useEffect(() => {
         const fetchVehicles = async () => {
@@ -24,7 +35,6 @@ export default function EditVehicleScherm() {
                 const response = await fetch("https://localhost:7017/api/vehicles/GetAllVehicles");
                 if (!response.ok) throw new Error(`Error: ${response.statusText}`);
                 const data = await response.json();
-                /*console.log(data); //debug*/
                 setVehicles(data);
                 setLoading(false);
             } catch (error) {
@@ -44,7 +54,7 @@ export default function EditVehicleScherm() {
             type: vehicle.type,
             kenteken: vehicle.kenteken,
             kleur: vehicle.kleur,
-            Aanschafjaar: vehicle.aanschafjaar || '', 
+            Aanschafjaar: vehicle.aanschafjaar || '',
             prijsPerDag: vehicle.prijsPerDag,
             isBeschikbaar: vehicle.isBeschikbaar,
         });
@@ -54,10 +64,16 @@ export default function EditVehicleScherm() {
         setEditingVehicle(null);
     };
 
+    const openAddPopup = () => {
+        setIsAddPopupOpen(true); // Open de "Add Vehicle" popup
+    };
+
+    const closeAddPopup = () => {
+        setIsAddPopupOpen(false); // Sluit de "Add Vehicle" popup
+    };
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-
-        console.log(`Changing field: ${name} to ${value}`);
 
         setFormData((prev) => ({
             ...prev,
@@ -65,7 +81,14 @@ export default function EditVehicleScherm() {
         }));
     };
 
+    const handleNewVehicleChange = (e) => {
+        const { name, value, type, checked } = e.target;
 
+        setNewVehicleFormData((prev) => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value,
+        }));
+    };
 
     const handleSave = async () => {
         const token = localStorage.getItem("authToken");
@@ -80,7 +103,6 @@ export default function EditVehicleScherm() {
             });
 
             if (response.ok) {
-                console.log(formData)
                 setVehicles((prev) =>
                     prev.map((v) => (v.id === editingVehicle.id ? { ...formData } : v))
                 );
@@ -121,14 +143,52 @@ export default function EditVehicleScherm() {
         }
     };
 
+    const handleAddVehicle = async () => {
+        const token = localStorage.getItem("authToken");
+        try {
+            const response = await fetch("https://localhost:7017/api/carmedewerker/voertuigenToevoegen", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify(newVehicleFormData),
+            });
+
+            if (response.ok) {
+                const addedVehicle = await response.json();
+                setVehicles((prev) => [...prev, addedVehicle]);
+                closeAddPopup();
+            } else {
+                console.error("Failed to add vehicle:", response.status);
+            }
+        } catch (error) {
+            console.error("Error adding vehicle:", error);
+        }
+    };
+
+    const filteredVehicles = vehicles.filter(vehicle =>
+        vehicle.merk.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     if (loading) return <div className="edit-vehicles-loading">Loading vehicles...</div>;
     if (error) return <div className="edit-vehicles-error">{error}</div>;
 
     return (
         <div className="edit-vehicles-container">
             <h1>Vehicle Management</h1>
-            <div className="edit-vehicles-list">
-                {vehicles.map((vehicle) => (
+            <button className="add-vehicle-btn" onClick={openAddPopup}>Add New Vehicle</button> {/* Button to open the popup */}
+
+            <input
+                type="text"
+                placeholder="Search by brand..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input-brand"
+            />
+
+            <div className="edit-vehicles-list" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                {filteredVehicles.map((vehicle) => (
                     <div key={vehicle.id} className="edit-vehicle-card">
                         <div className="edit-vehicle-details">
                             <p><strong>Brand:</strong> {vehicle.merk}</p>
@@ -163,6 +223,27 @@ export default function EditVehicleScherm() {
                         <div className="edit-vehicle-popup-actions">
                             <button className="save-vehicle-btn" onClick={handleSave}>Save</button>
                             <button className="cancel-vehicle-btn" onClick={closeEditPopup}>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Add Vehicle Popup */}
+            {isAddPopupOpen && (
+                <div className="edit-vehicle-popup">
+                    <div className="edit-vehicle-popup-content">
+                        <h2>Add Vehicle</h2>
+                        <label>Brand: <input name="merk" value={newVehicleFormData.merk} onChange={handleNewVehicleChange}/></label>
+                        <label>Model: <input name="model" value={newVehicleFormData.model} onChange={handleNewVehicleChange}/></label>
+                        <label>Type: <input name="type" value={newVehicleFormData.type} onChange={handleNewVehicleChange}/></label>
+                        <label>License Plate: <input name="kenteken" value={newVehicleFormData.kenteken} onChange={handleNewVehicleChange}/></label>
+                        <label>Color: <input name="kleur" value={newVehicleFormData.kleur} onChange={handleNewVehicleChange}/></label>
+                        <label>Year of Purchase: <input name="Aanschafjaar" value={newVehicleFormData.Aanschafjaar || ''} onChange={handleNewVehicleChange}/></label>
+                        <label>Daily Rate: <input name="prijsPerDag" value={newVehicleFormData.prijsPerDag} onChange={handleNewVehicleChange}/></label>
+                        <label>Availability:<input type="checkbox" name="isBeschikbaar" checked={newVehicleFormData.isBeschikbaar || false} onChange={handleNewVehicleChange}/></label>
+                        <div className="edit-vehicle-popup-actions">
+                            <button className="save-vehicle-btn" onClick={handleAddVehicle}>Save</button>
+                            <button className="cancel-vehicle-btn" onClick={closeAddPopup}>Cancel</button>
                         </div>
                     </div>
                 </div>
