@@ -23,6 +23,8 @@ import NotificationScherm from "./Account/NotificationScherm";
 import TermsAndConditions from "./Privacy-en-Terms/TermsOfService";
 import PrivacyPolicy from "./Privacy-en-Terms/PrivacyPolicy";
 import InnameVoertuig from "./Frontofficemedewerker/InnameVoertuigen/InnameVoertuigen"
+import BusinessRequests from "./Backofficemedewerker/BusinessRequests";
+import CarEmployeeScherm from "./Backofficemedewerker/CarEmployeeScherm";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [typeKlant, setTypeKlant] = useState(''); // Dit is de state voor het klanttype
@@ -60,6 +62,8 @@ function App() {
                 <Route path="/Privacy" element={<PrivacyPolicy/>} />
                 <Route path="/Notifications" element={<NotificationScherm/>} />
                 <Route path="/IntakeVehicles" element = {<InnameVoertuig />} />
+                <Route path="/BusinessRequests" element = {<BusinessRequests />} />
+                <Route path="/CarEmployees" element = {<CarEmployeeScherm />} />
             </Routes>
             <Footer /> {/* Footer hier toegevoegd */}
         </Router>

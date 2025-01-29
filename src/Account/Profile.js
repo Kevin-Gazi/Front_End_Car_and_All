@@ -225,10 +225,16 @@ const Profile = () => {
                 </div>
 
                 {userData.typeKlant === "Zakelijk" && (
-                    <div className="profile-row">
-                        <div className="profile-label">KVK Nummer:</div>
-                        <div className="profile-value">{userData.kvkNumber}</div>
-                    </div>
+                    <>
+                        <div className="profile-row">
+                            <div className="profile-label">KVK Nummer:</div>
+                            <div className="profile-value">{userData.kvkNumber}</div>
+                        </div>
+                        <div className="profile-row">
+                            <div className="profile-label">Abonnement:</div>
+                            <div className="profile-value">{userData.subscription || "None"}</div>
+                        </div>
+                    </>
                 )}
 
                 <div className="profile-actions">

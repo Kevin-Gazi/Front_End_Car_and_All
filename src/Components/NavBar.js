@@ -76,13 +76,14 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
                                         <div className="navbar-dropdown-menu">
                                             <Link to="/Verhuuraanvraag">Rental Requests</Link>
                                             <Link to="/DamageClaims">Damage Claims</Link>
-                                            <Link to="/BusinessAccounts">Business Accounts</Link>
+                                            <Link to="/BusinessRequests">Business Accounts</Link>
+                                            <Link to="/AlleAbonnementen">Subscriptions Requests</Link>
                                         </div>
                                     </li>
                                     <li className="navbar-dropdown">
                                         <span className="navbar-links">CarAndAll</span>
                                         <div className="navbar-dropdown-menu">
-                                            <Link to="/Employees">Employees</Link>
+                                            <Link to="/CarEmployees">Carandall Employees</Link>
                                             <Link to="/Vehicles">Vehicles</Link>
                                             <Link to="/Logs">Logs</Link>
                                         </div>

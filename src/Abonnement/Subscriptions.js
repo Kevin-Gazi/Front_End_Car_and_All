@@ -29,7 +29,7 @@ const Subscriptions = () => {
 
         try {
             const response = await fetch(
-                `https://localhost:7017/api/gebruiker/${gebruikerId}/update-abonnement`,
+                `https://localhost:7017/api/abonnement/${gebruikerId}/update-abonnement`,
                 {
                     method: "PUT",
                     headers: {
