@@ -25,7 +25,6 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Successfully logged in:", data);
-                
                 const token = data.token;
                 localStorage.setItem("authToken", token);
                 
@@ -33,12 +32,13 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                 const telefoonNummer = decodedToken.userPhone || "";
                 const adres = decodedToken.userAddress || "";
                 const postcode = decodedToken.userPostalCode || "";
-
+                
                 localStorage.setItem("telefoonNummer", telefoonNummer);
                 localStorage.setItem("adres", adres);
                 localStorage.setItem("postcode", postcode);
                 localStorage.setItem("authToken", data.token);
                 localStorage.setItem("Typeklant", data.typeKlant);
+                localStorage.setItem("userId", data.userId);
                 
                 const userData = {
                     token: data.token,
