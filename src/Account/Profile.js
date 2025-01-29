@@ -112,9 +112,16 @@ const Profile = () => {
 
             console.log("[Frontend] Account succesvol verwijderd");
             alert("Uw account is succesvol verwijderd.");
-            // Redirect of logout de gebruiker
             localStorage.removeItem("authToken");
-            window.location.href = "/login";
+            localStorage.removeItem('Typeklant');
+            localStorage.removeItem('adres');
+            localStorage.removeItem('postcode');
+            localStorage.removeItem('telefoonNummer');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userKvkNumber');
+            localStorage.removeItem("user");
+            localStorage.clear();
+            window.location.href = "/";
         } catch (err) {
             console.error("[Frontend] Fout bij verwijderen van account:", err.message);
             setError(err.message);
