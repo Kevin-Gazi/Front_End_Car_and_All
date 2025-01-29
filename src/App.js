@@ -23,6 +23,7 @@ import NotificationScherm from "./Account/NotificationScherm";
 import TermsAndConditions from "./Privacy-en-Terms/TermsOfService";
 import PrivacyPolicy from "./Privacy-en-Terms/PrivacyPolicy";
 import VehicleIntake from "./Frontofficemedewerker/VehicleIntake";
+import EditVehicleScherm from "./Backofficemedewerker/EditVehicleScherm"
 import BusinessRequests from "./Backofficemedewerker/BusinessRequests";
 import CarEmployeeScherm from "./Backofficemedewerker/CarEmployeeScherm";
 import UitgifteScherm from "./Frontofficemedewerker/UitgifteScherm";
@@ -63,6 +64,7 @@ function App() {
                 <Route path="/Notifications" element={<NotificationScherm/>} />
                 <Route path="/IntakeVehicles" element = {<VehicleIntake />} />
                 <Route path="/SentOutVehicles" element={<Verhuuraanvraag/>} />
+                <Route path="/EditVehicleScherm" element={<EditVehicleScherm />} />
                 <Route path="/BusinessRequests" element = {<BusinessRequests />} />
                 <Route path="/CarEmployees" element = {<CarEmployeeScherm />} />
                 <Route path="/Uitgifte" element={<UitgifteScherm />} />

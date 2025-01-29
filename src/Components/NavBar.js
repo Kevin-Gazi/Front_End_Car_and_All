@@ -12,10 +12,10 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
         const token = localStorage.getItem('authToken');
         if (token) {
             const decodedToken = jwt_decode(token);
-            setUserType(decodedToken.userType ?? decodedToken.functie); // Verkrijg de userType uit de token
-            console.log("usertype: " , decodedToken.userType);
-            setFunctie(decodedToken.functie); // Verkrijg de functie van de medewerker uit localStorage
-            console.log("functie: ", functie); // Verkrijg de functie van de medewerker uit localStorage
+            setUserType(decodedToken.userType ?? decodedToken.functie);
+            console.log("usertype: " , localStorage.getItem('userType'));
+            setFunctie(decodedToken.functie);
+            console.log("functie: ", functie);
         }
     }, [isLoggedIn]);
 
@@ -84,7 +84,7 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
                                         <span className="navbar-links">CarAndAll</span>
                                         <div className="navbar-dropdown-menu">
                                             <Link to="/CarEmployees">Carandall Employees</Link>
-                                            <Link to="/Vehicles">Vehicles</Link>
+                                            <Link to="/EditVehicleScherm">Edit Vehicles</Link>
                                             <Link to="/Logs">Logs</Link>
                                         </div>
                                     </li>
