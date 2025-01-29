@@ -25,10 +25,11 @@ function MedewerkerLogin({ setIsLoggedIn }) {
                 console.log("Successfully logged in:", data);
                 localStorage.setItem('authToken', data.token);
                 localStorage.setItem('userType', data.functie);
+                localStorage.setItem('functie', data.functie);
+                
 
                 setIsLoggedIn(true);
-                 // Zorg ervoor dat isEmployee op true staat
-                navigate("/"); // Redirect naar de homepagina
+                navigate("/");
             } else {
                 const errorMsg = await response.text();
                 setError(errorMsg);
