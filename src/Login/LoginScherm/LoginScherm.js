@@ -63,7 +63,7 @@ function LoginScherm({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                 setError(errorMsg || "Login failed. Please try again.");
             }
         } catch (err) {
-            setError("Er is een fout opgetreden bij het inloggen. Controleer je verbinding en probeer opnieuw.");
+            setError("There was an error logging in. Please check your connection and try again.");
         }
     };
 

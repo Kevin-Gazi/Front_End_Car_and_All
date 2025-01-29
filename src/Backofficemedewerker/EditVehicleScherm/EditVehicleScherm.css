@@ -1,21 +1,21 @@
 .edit-vehicles-list {
     display: flex;
-    flex-direction: column; /* Zorgt ervoor dat de items onder elkaar staan */
-    gap: 20px; /* Ruimte tussen de voertuigen */
-    align-items: center; /* Center de voertuigen horizontaal */
+    flex-direction: column; 
+    gap: 20px; 
+    align-items: center; 
 }
 
 .edit-vehicle-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #f9f9f9; /* Lichte achtergrondkleur voor de kaarten */
+    background: #f9f9f9; 
     padding: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Schaduw voor een 'kaart' effect */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
     width: 100%;
-    max-width: 400px; /* Beperk de breedte van de kaarten */
+    max-width: 400px; 
 }
 
 .edit-vehicle-details {
@@ -65,7 +65,7 @@ button {
 }
 
 .block-vehicle-btn {
-    background: #f44336; /* Rode knop voor blokkeren */
+    background: #f44336;
     color: white;
 }
 
@@ -94,9 +94,9 @@ button {
     background: white;
     padding: 20px;
     border-radius: 15px;
-    width: 350px; /* Breedte van de popup */
+    width: 350px; 
     max-height: 400px;
-    overflow-y: auto; /* Zorgt voor scrollen als de inhoud te groot is */
+    overflow-y: auto; 
 }
 
 .edit-vehicle-popup-content input {

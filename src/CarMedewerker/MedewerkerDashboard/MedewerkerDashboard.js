@@ -15,8 +15,8 @@ function MedewerkerDashboard() {
 
     return (
         <div>
-            <h1>Welkom in het Medewerker Dashboard</h1>
-            <p>Dit is de omgeving voor de medewerker.</p>
+            <h1>Welcome to the Employee Dashboard</h1>
+            <p>This is the environment for the employee.</p>
             {/* Voeg hier extra content toe die specifiek is voor medewerkers */}
         </div>
     );

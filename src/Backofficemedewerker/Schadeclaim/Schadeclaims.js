@@ -19,7 +19,7 @@ const DamageClaims = () => {
             setClaims(response.data);
         } catch (error) {
             setError(
-                "Fout bij het ophalen van schadeclaims. Probeer het later opnieuw."
+                "Error retrieving damage claims. Please try again later."
             );
         } finally {
             setLoading(false);

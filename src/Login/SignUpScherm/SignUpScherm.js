@@ -54,13 +54,13 @@ function SignUpScherm() {
         <div className="login-container">
             <div className="wrapper">
                 <form onSubmit={handleSubmit}>
-                    <h1>Maak een Account</h1>
+                    <h1>Create an Account</h1>
                     {error && <p className="error-message">{error}</p>}
                     <div className="input-box">
                         <input
                             type="text"
                             name="naam"
-                            placeholder="Voornaam"
+                            placeholder="First Name"
                             value={formData.naam}
                             onChange={handleChange}
                             required
@@ -70,7 +70,7 @@ function SignUpScherm() {
                         <input
                             type="text"
                             name="achternaam"
-                            placeholder="Achternaam"
+                            placeholder="Last Name"
                             value={formData.achternaam}
                             onChange={handleChange}
                             required
@@ -90,7 +90,7 @@ function SignUpScherm() {
                         <input
                             type="password"
                             name="password"
-                            placeholder="Wachtwoord"
+                            placeholder="Password"
                             value={formData.password}
                             onChange={handleChange}
                             required
@@ -103,8 +103,8 @@ function SignUpScherm() {
                             onChange={handleChange}
                             required
                         >
-                            <option value="Particulier">Particulier</option>
-                            <option value="Zakelijk">Zakelijk</option>
+                            <option value="Particulier">Individual customer</option>
+                            <option value="Zakelijk">Business customer</option>
                         </select>
                     </div>
                     {formData.typeKlant === "Zakelijk" && (
@@ -112,17 +112,17 @@ function SignUpScherm() {
                             <input
                                 type="text"
                                 name="kvkNummer"
-                                placeholder="KvK-nummer"
+                                placeholder="KvK-number"
                                 value={formData.kvkNummer}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
                     )}
-                    <button type="submit">Account aanmaken</button>
+                    <button type="submit">Create an account</button>
                     <div className="register-link">
                         <p>
-                            Heb je al een account? <a href="/login">Log in</a>
+                            Do you already have an account? <a href="/login">Log in</a>
                         </p>
                     </div>
                 </form>
