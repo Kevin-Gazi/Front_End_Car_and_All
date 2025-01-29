@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import "./IssueScreen.css"; // Custom CSS for issue planning
+import "./VehicleIntake.css"; // Eigen CSS voor voertuig inname
 
-const IssueScreen = () => {
+const VehicleIntake = () => {
     const [rentals, setRentals] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const token = localStorage.getItem("authToken");
 
-    // Fetch approved rentals that are starting today
+    // ✅ Ophalen van voertuigen die vandaag moeten worden ingeleverd
     const fetchRentals = async () => {
         if (!token) {
-            console.error("[Frontend] No token found.");
-            setError("You are not logged in. Please log in to view the issue schedule.");
+            console.error("[Frontend] Geen token gevonden.");
+            setError("U bent niet ingelogd. Log in om de innameplanning te bekijken.");
             return;
         }
 
         try {
-            const response = await fetch("https://localhost:7017/api/carmedewerker/Issue-VehicleList", {
+            const response = await fetch("https://localhost:7017/api/carmedewerker/intake-voertuiglijst", {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -26,16 +26,16 @@ const IssueScreen = () => {
 
             if (!response.ok) {
                 const errorMessage = await response.json().catch(() => ({
-                    message: "Unexpected error without JSON body.",
+                    message: "Onverwachte fout zonder JSON-body.",
                 }));
-                throw new Error(errorMessage.message || "Error while fetching rentals.");
+                throw new Error(errorMessage.message || "Fout tijdens ophalen van rentals.");
             }
 
             const data = await response.json();
             console.log("[API Response] Rentals:", data);
             setRentals(data);
         } catch (err) {
-            console.error("[Frontend] Error fetching rentals:", err.message);
+            console.error("[Frontend] Fout tijdens ophalen rentals:", err.message);
             setError(err.message);
         } finally {
             setLoading(false);
@@ -46,16 +46,16 @@ const IssueScreen = () => {
         fetchRentals();
     }, [token]);
 
-    // Change rental status to "Issued"
-    const handleIssueRental = async (rentalId) => {
+    // ✅ Status van rental wijzigen naar "Returned"
+    const handleReturnRental = async (rentalId) => {
         if (!rentalId) {
-            console.error("[Frontend] Error: rentalId is undefined!");
-            setError("Error: There was an issue with fetching the rental ID.");
+            console.error("[Frontend] Fout: rentalId is undefined!");
+            setError("Fout: Er is een probleem met het ophalen van de rental ID.");
             return;
         }
 
         try {
-            const response = await fetch(`https://localhost:7017/api/carmedewerker/issue/${rentalId}`, {
+            const response = await fetch(`https://localhost:7017/api/carmedewerker/return/${rentalId}`, {
                 method: "PATCH",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -65,37 +65,37 @@ const IssueScreen = () => {
 
             if (!response.ok) {
                 const errorMessage = await response.json().catch(() => ({
-                    message: "Error while updating the status.",
+                    message: "Fout bij het updaten van de status.",
                 }));
-                throw new Error(errorMessage.message || "Error while issuing the vehicle.");
+                throw new Error(errorMessage.message || "Fout bij inname van voertuig.");
             }
 
-            alert("Vehicle successfully issued.");
-            fetchRentals(); // Fetch the list again to show the updates
+            alert("Voertuig succesvol ingenomen.");
+            fetchRentals(); // ✅ Lijst opnieuw ophalen om de wijzigingen te tonen
         } catch (err) {
-            console.error("[Frontend] Error while issuing vehicle:", err.message);
+            console.error("[Frontend] Fout bij inname van voertuig:", err.message);
             setError(err.message);
         }
     };
 
     return (
         <div className="business-requests">
-            <h1>Issue Schedule</h1>
-            <p>Overview of vehicles to be picked up today</p>
+            <h1>Voertuig Inname</h1>
+            <p>Overzicht van voertuigen die vandaag worden teruggebracht</p>
 
             {loading ? (
-                <p className="loading">Loading rentals...</p>
+                <p className="loading">Rentals laden...</p>
             ) : error ? (
                 <p className="error-message">{error}</p>
             ) : rentals.length > 0 ? (
                 <div className="requests-container">
                     {rentals.map((rental, index) => {
-                        console.log(`[DEBUG] Rental ID for ${rental.vehicleBrand} ${rental.vehicleModel}:`, rental.rentalId);
+                        console.log(`[DEBUG] Rental ID voor ${rental.vehicleBrand} ${rental.vehicleModel}:`, rental.rentalId);
 
                         return (
                             <div key={rental.rentalId || index} className="request-card">
                                 <div className="request-details">
-                                    <p><strong>Rental ID:</strong> {rental.rentalId || "ID missing!"}</p>
+                                    <p><strong>Rental ID:</strong> {rental.rentalId || "ID ontbreekt!"}</p>
                                     <p><strong>Type:</strong> {rental.vehicleType}</p>
                                     <p><strong>Model:</strong> {rental.vehicleModel}</p>
                                     <p><strong>Brand:</strong> {rental.vehicleBrand}</p>
@@ -103,22 +103,22 @@ const IssueScreen = () => {
                                     <hr />
                                     <p><strong>Rented by:</strong> {rental.userName} {rental.userLastName}</p>
                                     <p><strong>Phone:</strong> {rental.userPhone}</p>
-                                    <p><strong>Customer type:</strong> {rental.userType}</p>
+                                    <p><strong>Type klant:</strong> {rental.userType}</p>
                                     <hr />
-                                    <p><strong>Start date:</strong> {new Date(rental.startDate).toLocaleDateString()}</p>
-                                    <p><strong>End date:</strong> {new Date(rental.endDate).toLocaleDateString()}</p>
-                                    <p className="status approved"><strong>Status:</strong> {rental.status}</p>
+                                    <p><strong>Startdatum:</strong> {new Date(rental.startDate).toLocaleDateString()}</p>
+                                    <p><strong>Einddatum:</strong> {new Date(rental.endDate).toLocaleDateString()}</p>
+                                    <p className="status issued"><strong>Status:</strong> {rental.status}</p>
                                 </div>
                                 <div className="request-actions">
                                     <button
-                                        className="issue-btn"
+                                        className="return-btn"
                                         onClick={() => {
-                                            console.log("[DEBUG] 'Issue' clicked for Rental ID:", rental.rentalId);
-                                            handleIssueRental(rental.rentalId);
+                                            console.log("[DEBUG] Op 'Return' geklikt voor Rental ID:", rental.rentalId);
+                                            handleReturnRental(rental.rentalId);
                                         }}
                                         disabled={!rental.rentalId}
                                     >
-                                        Issue
+                                        Return
                                     </button>
                                 </div>
                             </div>
@@ -127,10 +127,10 @@ const IssueScreen = () => {
                 </div>
 
             ) : (
-                <p className="no-rentals">No issues scheduled for today.</p>
+                <p className="no-rentals">Geen inname gepland voor vandaag.</p>
             )}
         </div>
     );
 };
 
-export default IssueScreen;
+export default VehicleIntake;

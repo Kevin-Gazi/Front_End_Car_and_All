@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-function EmployeeLogin({ setIsLoggedIn }) {
+function MedewerkerLogin({ setIsLoggedIn }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -26,6 +26,7 @@ function EmployeeLogin({ setIsLoggedIn }) {
                 localStorage.setItem('authToken', data.token);
                 localStorage.setItem('userType', data.functie);
                 localStorage.setItem('functie', data.functie);
+                
 
                 setIsLoggedIn(true);
                 navigate("/");
@@ -35,7 +36,7 @@ function EmployeeLogin({ setIsLoggedIn }) {
             }
         } catch (err) {
             console.error("Login error:", err);
-            setError("An error occurred while logging in.");
+            setError("Er is een fout opgetreden bij het inloggen.");
         }
     };
 
@@ -75,4 +76,4 @@ function EmployeeLogin({ setIsLoggedIn }) {
     );
 }
 
-export default EmployeeLogin;
+export default MedewerkerLogin;

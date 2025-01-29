@@ -42,8 +42,6 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
                     <li className="navbar-item"><Link to="/" className="navbar-links">Home</Link></li>
                     <li className="navbar-item"><Link to="/Vehicles" className="navbar-links">Vehicles</Link></li>
                     <li className="navbar-item"><Link to="/Contact" className="navbar-links">Contact</Link></li>
-                    <li>                                            <Link to="/EditVehicleScherm">Edit Vehicles</Link>
-                    </li>
 
                     {isLoggedIn ? (
                         <>

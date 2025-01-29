@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import "./LoginScreen.css";
+import "./LoginScherm.css";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
-function LoginScreen({ setIsLoggedIn, setIsEmployee, setRole }) {
+function LoginScherm({ setIsLoggedIn, setIsEmployee, setFunctie }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -20,7 +20,7 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setRole }) {
         const loginDetails = { email, password };
 
         try {
-            const response = await fetch('https://localhost:7017/api/user/login', {
+            const response = await fetch('https://localhost:7017/api/gebruiker/login', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(loginDetails),
@@ -31,31 +31,31 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setRole }) {
                 console.log("Successfully logged in:", data);
                 const token = data.token;
                 localStorage.setItem("authToken", token);
-
+                
                 const decodedToken = jwtDecode(token);
-                const phoneNumber = decodedToken.userPhone || "";
-                const address = decodedToken.userAddress || "";
-                const postalCode = decodedToken.userPostalCode || "";
-
-                localStorage.setItem("phoneNumber", phoneNumber);
-                localStorage.setItem("address", address);
-                localStorage.setItem("postalCode", postalCode);
+                const telefoonNummer = decodedToken.userPhone || "";
+                const adres = decodedToken.userAddress || "";
+                const postcode = decodedToken.userPostalCode || "";
+                
+                localStorage.setItem("telefoonNummer", telefoonNummer);
+                localStorage.setItem("adres", adres);
+                localStorage.setItem("postcode", postcode);
                 localStorage.setItem("authToken", data.token);
-                localStorage.setItem("customerType", data.customerType);
+                localStorage.setItem("Typeklant", data.typeKlant);
                 localStorage.setItem("userId", data.userId);
-
+                
                 const userData = {
                     token: data.token,
                     userId: data.userId,
-                    userName: data.userName,
+                    userNaam: data.userNaam,
                     userEmail: data.userEmail,
                     userType: data.userType,
                 };
                 localStorage.setItem("user", JSON.stringify(userData));
                 setIsLoggedIn(true);
-                if (data.role) {
-                    setRole(data.role);
-                    localStorage.setItem('role', data.role);
+                if (data.functie) {
+                    setFunctie(data.functie);
+                    localStorage.setItem('functie', data.functie);
                 }
                 navigate("/");
             } else {
@@ -63,13 +63,13 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setRole }) {
                 setError(errorMsg || "Login failed. Please try again.");
             }
         } catch (err) {
-            setError("An error occurred while logging in. Check your connection and try again.");
+            setError("Er is een fout opgetreden bij het inloggen. Controleer je verbinding en probeer opnieuw.");
         }
     };
 
     const requestPasswordReset = async () => {
         try {
-            const response = await fetch('https://localhost:7017/api/user/request-password-reset', {
+            const response = await fetch('https://localhost:7017/api/gebruiker/request-password-reset', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email })
@@ -88,11 +88,11 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setRole }) {
 
     const resetPassword = async () => {
         try {
-            const response = await fetch('https://localhost:7017/api/user/reset-password', {
+            const response = await fetch('https://localhost:7017/api/gebruiker/reset-password', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    Email: confirmEmail, // Make sure this matches what the server expects
+                    Email: confirmEmail, // Zorg dat dit overeenkomt met wat de server verwacht
                     VerificationCode: verifyCode,
                     NewPassword: newPassword
                 })
@@ -127,7 +127,7 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setRole }) {
                     </div>
                     <button type="submit">Login</button>
                     <div className="register-link">
-                        <p>CarAndAll Employee? <Link to="/EmployeeLogin">Login as Employee</Link></p>
+                        <p>CarAndAll Employee? <Link to="/CarMedewerkerLogin">Login as Employee</Link></p>
                         <p>Don't have an account? <Link to="/SignUp">Register</Link></p>
                         <button className="forgot-password-btn" onClick={() => setForgotPassword(true)}>Forgot Password?</button>
                     </div>
@@ -161,4 +161,4 @@ function LoginScreen({ setIsLoggedIn, setIsEmployee, setRole }) {
     );
 }
 
-export default LoginScreen;
+export default LoginScherm;

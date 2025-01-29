@@ -5,18 +5,18 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const RentalScherm = () => {
     const [rentals, setRentals] = useState([]);
-    const [editMode, setEditMode] = useState(null);
+    const [editMode, setEditMode] = useState(null); 
     const [formData, setFormData] = useState({ startDate: "", endDate: "" });
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const token = localStorage.getItem("authToken");
     const [unavailableDates, setUnavailableDates] = useState([]);
     const [selectedRental, setSelectedRental] = useState(null);
-
+    
     const fetchRentals = async () => {
         if (!token) {
-            console.error("[Frontend] No token found.");
-            setError("You are not logged in. Log in to view your rental history.");
+            console.error("[Frontend] Geen token gevonden.");
+            setError("U bent niet ingelogd. Log in om uw huurgeschiedenis te bekijken.");
             return;
         }
 
@@ -31,16 +31,16 @@ const RentalScherm = () => {
 
             if (!response.ok) {
                 const errorMessage = await response.json().catch(() => ({
-                    message: "Unexpected error with no JSON body.",
+                    message: "Onverwachte fout zonder JSON-body.",
                 }));
-                throw new Error(errorMessage.message || "Error while retrieving rentals.");
+                throw new Error(errorMessage.message || "Fout tijdens ophalen van rentals.");
             }
 
             const data = await response.json();
             console.log("[API Response] Rentals:", data);
             setRentals(data);
         } catch (err) {
-            console.error("[Frontend] Error retrieving rentals:", err.message);
+            console.error("[Frontend] Fout tijdens ophalen rentals:", err.message);
             setError(err.message);
         } finally {
             setLoading(false);
@@ -60,14 +60,14 @@ const RentalScherm = () => {
     };
 
     const handleEdit = async (rental) => {
-        console.log("[handleEdit] Selected rentals:", rental);
+        console.log("[handleEdit] Geselecteerde rental:", rental);
 
         if (!rental.rentalId || !rental.voertuigId) {
-            console.error("RentalId or VehicleId missing!", rental);
+            console.error("rentalId of voertuigId ontbreekt!", rental);
             return;
         }
 
-        setSelectedRental(rental);
+        setSelectedRental(rental); 
         setEditMode(rental.rentalId);
         setFormData({
             startDate: rental.startDate ? rental.startDate.slice(0, 10) : "",
@@ -87,12 +87,12 @@ const RentalScherm = () => {
     };
 
     const handleSave = async () => {
-        console.log("[handleSave] Current selected rental:", selectedRental);
+        console.log("[handleSave] Huidige geselecteerde rental:", selectedRental);
         const gebruikerId = parseInt(localStorage.getItem("userId"), 10);
 
         if (!selectedRental || !selectedRental.rentalId) {
-            console.error("[Frontend] No selected rental or missing rentalId.");
-            setError("No selected rental found.");
+            console.error("[Frontend] Geen geselecteerde rental of rentalId ontbreekt.");
+            setError("Geen geselecteerde rental gevonden.");
             return;
         }
 
@@ -102,7 +102,7 @@ const RentalScherm = () => {
             nieuweEndDate: new Date(formData.endDate).toISOString()
         };
 
-        console.log("[DEBUG] JSON body being sent to backend:", JSON.stringify(requestBody));
+        console.log("[DEBUG] JSON body die naar backend wordt gestuurd:", JSON.stringify(requestBody));
 
         try {
             const response = await fetch(`https://localhost:7017/api/rentals/update-period/${selectedRental.rentalId}`, {
@@ -118,20 +118,20 @@ const RentalScherm = () => {
             const responseData = await response.json();
 
             if (!response.ok) {
-                throw new Error(responseData.message || "Error while updating rental.");
+                throw new Error(responseData.message || "Fout tijdens bijwerken van rental.");
             }
 
-            alert("Rental successfully updated.");
+            alert("Rental succesvol bijgewerkt.");
             setEditMode(null);
             fetchRentals();
         } catch (err) {
-            console.error("[Frontend] Error while updating rental:", err.message);
+            console.error("[Frontend] Fout bij bijwerken rental:", err.message);
             setError(err.message);
         }
     };
 
     const handleDelete = async (rentalId) => {
-        if (!window.confirm("Are you sure you want to cancel this rental?")) {
+        if (!window.confirm("Weet u zeker dat u deze rental wilt annuleren?")) {
             return;
         }
 
@@ -146,29 +146,29 @@ const RentalScherm = () => {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({
-                    message: "An error occurred.",
+                    message: "Er is een fout opgetreden.",
                 }));
-                throw new Error(errorData.message || "Error while canceling rental.");
+                throw new Error(errorData.message || "Fout tijdens annuleren van rental.");
             }
 
-            alert("Rental successfully canceled.");
+            alert("Rental succesvol geannuleerd.");
             fetchRentals();
         } catch (err) {
-            console.error("[Frontend] Error while canceling rental:", err.message);
+            console.error("[Frontend] Fout bij annuleren rental:", err.message);
             alert(err.message);
         }
     };
-
+    
     return (
         <div>
             <header className="rental-header">
-                <h1>Your Rental History</h1>
-                <p>Overview of all the cars you have rented</p>
+                <h1>Uw Huurgeschiedenis</h1>
+                <p>Overzicht van alle auto's die u heeft gehuurd</p>
             </header>
 
             <main className="rental-container">
                 {loading ? (
-                    <p>Loading rentals...</p>
+                    <p>Rentals laden...</p>
                 ) : error ? (
                     <p className="error-message">{error}</p>
                 ) : rentals.length > 0 ? (
@@ -177,7 +177,7 @@ const RentalScherm = () => {
                             <div key={rental.rentalId} className="vehicle-card">
                                 {editMode === rental.rentalId ? (
                                     <div className="edit-form">
-                                        <label>Start Date:</label>
+                                        <label>Startdatum:</label>
                                         <DatePicker
                                             selected={new Date(formData.startDate)}
                                             onChange={(date) => setFormData((prev) => ({
@@ -188,7 +188,7 @@ const RentalScherm = () => {
                                             excludeDates={unavailableDates.map((date) => new Date(date))}
                                             dateFormat="yyyy-MM-dd"
                                         />
-                                        <label>End Date:</label>
+                                        <label>Einddatum:</label>
                                         <DatePicker
                                             selected={new Date(formData.endDate)}
                                             onChange={(date) => setFormData((prev) => ({
@@ -206,12 +206,12 @@ const RentalScherm = () => {
                                     <>
                                         <div className="vehicle-start">
                                             <h2>{rental.vehicleBrand} {rental.vehicleModel}</h2>
-                                            <p>Rented by: {rental.userName} {rental.userLastName}</p>
-                                            <p>From: {new Date(rental.startDate).toLocaleDateString()}</p>
-                                            <p>Until: {new Date(rental.endDate).toLocaleDateString()}</p>
+                                            <p>Gehuurd door: {rental.userName} {rental.userLastName}</p>
+                                            <p>Van: {new Date(rental.startDate).toLocaleDateString()}</p>
+                                            <p>Tot: {new Date(rental.endDate).toLocaleDateString()}</p>
                                         </div>
                                         <div className="vehicle-end">
-                                            <p>Price: €{rental.price}</p>
+                                            <p>Prijs: €{rental.price}</p>
                                             <p>Status: {rental.status}</p>
                                         </div>
                                         <div className="actions">
@@ -229,7 +229,7 @@ const RentalScherm = () => {
                         ))}
                     </div>
                 ) : (
-                    <p>No rental history found.</p>
+                    <p>Geen huurgeschiedenis gevonden.</p>
                 )}
             </main>
         </div>

@@ -24,7 +24,7 @@ export default function BusinessRequests() {
         fetchRequests();
     }, []);
 
-    // Approve Business Account (PATCH request)
+    // ✅ Approve Business Account (PATCH request)
     const handleApproval = async (id) => {
         try {
             console.log(`🔹 Sending approval request for ID: ${id}`);
@@ -36,17 +36,17 @@ export default function BusinessRequests() {
 
             if (response.ok) {
                 setRequests((prevRequests) => prevRequests.filter((request) => request.id !== id));
-                console.log(`Business account (ID: ${id}) approved successfully.`);
+                console.log(`✅ Business account (ID: ${id}) approved successfully.`);
             } else {
                 const errorText = await response.text();
-                console.error(`Approval error for ID ${id}:`, errorText);
+                console.error(`❌ Approval error for ID ${id}:`, errorText);
             }
         } catch (error) {
-            console.error(`Server error for ID ${id}:`, error);
+            console.error(`❌ Server error for ID ${id}:`, error);
         }
     };
 
-    // Reject Business Account (DELETE request)
+    // ✅ Reject Business Account (DELETE request)
     const handleRejection = async (id) => {
         try {
             console.log(`🔹 Sending rejection request for ID: ${id}`);
@@ -58,13 +58,13 @@ export default function BusinessRequests() {
 
             if (response.ok) {
                 setRequests((prevRequests) => prevRequests.filter((request) => request.id !== id));
-                console.log(`Business account (ID: ${id}) rejected and deleted successfully.`);
+                console.log(`✅ Business account (ID: ${id}) rejected and deleted successfully.`);
             } else {
                 const errorText = await response.text();
-                console.error(`Rejection error for ID ${id}:`, errorText);
+                console.error(`❌ Rejection error for ID ${id}:`, errorText);
             }
         } catch (error) {
-            console.error(`Server error for ID ${id}:`, error);
+            console.error(`❌ Server error for ID ${id}:`, error);
         }
     };
 
@@ -78,7 +78,7 @@ export default function BusinessRequests() {
                 {requests.map((request) => (
                     <div key={request.id} className="request-card">
                         <div className="request-details">
-                            <p><strong>ID:</strong> {request.id}</p>  {/* Display User ID */}
+                            <p><strong>ID:</strong> {request.id}</p>  {/* ✅ Display User ID */}
                             <p><strong>Name:</strong> {request.naam} {request.achternaam}</p>
                             <p><strong>Email:</strong> {request.email}</p>
                             <p><strong>KVK Number:</strong> {request.kvkNummer}</p>

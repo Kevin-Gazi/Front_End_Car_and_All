@@ -6,8 +6,8 @@ import Home from "./Homepage/Home";
 import Vehicles from "./Vehicles/Vehicles";
 import NavBar from "./Components/NavBar";
 import Footer from "./Components/Footer"; // Footer toegevoegd
-import Login from "./Login/LoginScherm/LoginScherm";
-import SignUp from "./Login/SignUpScherm/SignUpScherm";
+import Login from "./Login/LoginScherm";
+import SignUp from "./Login/SignUpScherm";
 import MedewerkerLogin from "./CarMedewerker/MedewerkerLogin/MedewerkerLogin";
 import MedewerkerDashboard from './CarMedewerker/MedewerkerDashboard/MedewerkerDashboard';
 import DamageClaims from "./Backofficemedewerker/Schadeclaim/Schadeclaims";
@@ -22,11 +22,11 @@ import Verhuuraanvraag from "./Backofficemedewerker/Verhuuraanvragen/Verhuuraanv
 import NotificationScherm from "./Account/NotificationScherm";
 import TermsAndConditions from "./Privacy-en-Terms/TermsOfService";
 import PrivacyPolicy from "./Privacy-en-Terms/PrivacyPolicy";
-import VehicleIntake from "./Frontofficemedewerker/IntakeVehicles/VehicleIntake";
-import EditVehicleScherm from "./Backofficemedewerker/EditVehicleScherm/EditVehicleScherm"
-import BusinessRequests from "./Backofficemedewerker/BusinessRequests/BusinessRequests";
-import CarEmployeeScherm from "./Backofficemedewerker/CarEmployeeScherm/CarEmployeeScherm";
-import UitgifteScherm from "./Frontofficemedewerker/Uitgifte/UitgifteScherm";
+import VehicleIntake from "./Frontofficemedewerker/VehicleIntake";
+import EditVehicleScherm from "./Backofficemedewerker/EditVehicleScherm"
+import BusinessRequests from "./Backofficemedewerker/BusinessRequests";
+import CarEmployeeScherm from "./Backofficemedewerker/CarEmployeeScherm";
+import UitgifteScherm from "./Frontofficemedewerker/UitgifteScherm";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [typeKlant, setTypeKlant] = useState(''); // Dit is de state voor het klanttype

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import ClaimCard from "./ClaimCard"; // Renamed to "ClaimCard" for consistency
+import SchadeclaimCard from "./SchadeclaimCard";
 
 const DamageClaims = () => {
     const [claims, setClaims] = useState([]);
@@ -14,12 +14,12 @@ const DamageClaims = () => {
 
         try {
             const response = await axios.get(
-                "https://localhost:7017/api/Claim/claims" // Renamed API endpoint to match English translation
+                "https://localhost:7017/api/Schadeclaim/schadeclaim"
             );
             setClaims(response.data);
         } catch (error) {
             setError(
-                "Error fetching claims. Please try again later."
+                "Fout bij het ophalen van schadeclaims. Probeer het later opnieuw."
             );
         } finally {
             setLoading(false);
@@ -40,7 +40,7 @@ const DamageClaims = () => {
             : claims.filter((claim) => claim.status === filter);
 
     if (loading) {
-        return <p>Loading data...</p>;
+        return <p>Gegevens worden geladen...</p>;
     }
 
     return (
@@ -96,7 +96,7 @@ const DamageClaims = () => {
             ) : (
                 <div>
                     {filteredClaims.map((claim) => (
-                        <ClaimCard
+                        <SchadeclaimCard
                             key={claim.id}
                             claim={claim}
                             fetchClaims={fetchClaims}

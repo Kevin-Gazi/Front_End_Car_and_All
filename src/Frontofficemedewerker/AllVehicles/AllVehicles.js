@@ -5,15 +5,16 @@ import CorollaImage from './Corolla.jpg';
 import FocusImage from './Focus.jpg';
 import GolfImage from './Golf.jpg';
 import CivicImage from './Civic.jpg';
+//import Serie3Image from './3Series.jpg';
 
 export default function VehicleList() {
     const [vehicles, setVehicles] = useState([]);
     const [filteredVehicles, setFilteredVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
+
     const [selectedType, setSelectedType] = useState('All');
     const [selectedBrand, setSelectedBrand] = useState([]);
     const [selectedColor, setSelectedColor] = useState([]);
-    const [blockMessage, setBlockMessage] = useState(""); // Added state for block message
 
     useEffect(() => {
         const fetchVehicles = async () => {
@@ -31,29 +32,6 @@ export default function VehicleList() {
 
         fetchVehicles();
     }, []);
-
-    const handleBlock = async (vehicleId) => {
-        try {
-            const response = await fetch(`https://localhost:7017/api/carmedewerker/blokkeer-voertuig/${vehicleId}`, {
-                method: 'PATCH',
-            });
-
-            if (response.ok) {
-                setBlockMessage("Vehicle successfully blocked.");
-
-                // Correctly update state immutably
-                const updatedVehicles = vehicles.map(vehicle =>
-                    vehicle.id === vehicleId ? { ...vehicle, IsBeschikbaar: false } : vehicle
-                );
-                setVehicles(updatedVehicles);
-            } else {
-                setBlockMessage("Error blocking the vehicle.");
-            }
-        } catch (error) {
-            setBlockMessage("An error occurred. Please try again later.");
-            console.error("Error:", error);
-        }
-    };
 
     useEffect(() => {
         let filtered = vehicles;
@@ -105,7 +83,8 @@ export default function VehicleList() {
         1: CorollaImage,
         2: FocusImage,
         3: GolfImage,
-        4: CivicImage,
+        4: CivicImage
+       // 5: Serie3Image,
     };
 
     if (loading) {
@@ -140,7 +119,7 @@ export default function VehicleList() {
                                 checked={selectedType === 'Auto'}
                                 onChange={(e) => setSelectedType(e.target.value)}
                             />
-                            Car
+                            Auto
                         </label>
                         <label>
                             <input
@@ -196,7 +175,6 @@ export default function VehicleList() {
                 </div>
 
                 <section className="vehicle-list-grid">
-                    {blockMessage && <div className="block-message">{blockMessage}</div>} {/* Display block message */}
                     {filteredVehicles.map((vehicle) => (
                         <div className="vehicle-list-card" key={vehicle.id}>
                             <div className="vehicle-list-image">
@@ -216,13 +194,8 @@ export default function VehicleList() {
                             <div className="vehicle-list-price">
                                 <p><strong>ID:</strong> {vehicle.id}</p>
                                 <p><strong>Available:</strong> {vehicle.IsBeschikbaar ? 'Yes' : 'No'}</p>
-                                <p><strong>Price:</strong>€ {vehicle.prijsPerDag} / day</p>
-                                <button
-                                    className="block-btn"
-                                    onClick={() => handleBlock(vehicle.id)}
-                                >
-                                    Block
-                                </button>
+                                <p><strong>Prijs:</strong>€ {vehicle.prijsPerDag} / day</p>
+
                             </div>
                         </div>
                     ))}

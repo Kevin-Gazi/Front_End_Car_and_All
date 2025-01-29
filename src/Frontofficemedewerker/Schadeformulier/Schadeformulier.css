@@ -1,11 +1,11 @@
 /* Algemene container styling */
 .schadeclaim-form-container {
-    max-width: 600px; 
-    margin: 50px auto;
+    max-width: 600px; /* Maximale breedte van het formulier */
+    margin: 50px auto; /* Centraal plaatsen op de pagina */
     padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9; /* Lichtgrijze achtergrond */
+    border-radius: 10px; /* Afgeronde hoeken */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Schaduw voor diepte */
 }
 
 /* Titel styling */
@@ -18,9 +18,9 @@
 
 /* Formuliergroepen */
 .form-group {
-    margin-bottom: 15px; 
+    margin-bottom: 15px; /* Ruimte tussen formuliergroepen */
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Plaats labels boven invoervelden */
 }
 
 /* Labels */
@@ -35,33 +35,33 @@ input[type="text"],
 input[type="number"],
 input[type="date"],
 textarea {
-    width: 100%; 
+    width: 100%; /* Volledige breedte van de container */
     padding: 10px;
     font-size: 1rem;
-    border: 1px solid #ccc; 
-    border-radius: 5px; 
-    background-color: #fff;
+    border: 1px solid #ccc; /* Subtiele rand */
+    border-radius: 5px; /* Afgeronde hoeken */
+    background-color: #fff; /* Witte achtergrond */
     color: #333;
 }
 
 /* Textarea */
 textarea {
-    resize: none; 
-    height: 100px;
+    resize: none; /* Schakel handmatige grootte-aanpassing uit */
+    height: 100px; /* Stel een standaardhoogte in */
 }
 
 /* Checkbox styling */
 input[type="checkbox"] {
-    margin-left: 5px;
+    margin-left: 5px; /* Ruimte tussen checkbox en tekst */
 }
 
 /* Knoppen */
 button {
-    width: 100%; 
+    width: 100%; /* Knop beslaat de hele breedte */
     padding: 12px;
     font-size: 1rem;
-    background-color: #007bff;
-    color: white; 
+    background-color: #007bff; /* Blauwe achtergrond */
+    color: white; /* Witte tekst */
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -70,7 +70,7 @@ button {
 
 /* Hover-effect voor de knop */
 button:hover {
-    background-color: #0056b3; 
+    background-color: #0056b3; /* Donkerder blauw */
 }
 
 /* Succes- en foutberichten */

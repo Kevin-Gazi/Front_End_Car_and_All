@@ -37,13 +37,13 @@
 
 .subscription-card:hover {
     transform: translateY(-5px);
-    background-color: #e6f7ff; 
+    background-color: #e6f7ff; /* Light blue background on hover */
     cursor: pointer;
 }
 
 .subscription-card.selected {
-    background-color: #d1ecf1; 
-    border-color: #17a2b8; 
+    background-color: #d1ecf1; /* Light teal for selected subscription */
+    border-color: #17a2b8; /* Teal border for selected subscription */
 }
 
 .subscription-card h2 {
