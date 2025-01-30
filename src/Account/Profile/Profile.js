@@ -33,7 +33,7 @@ const Profile = () => {
 
                 const data = await response.json();
                 setUserData(data);
-                setFormData(data); // Voor initialisatie van bewerkbare velden
+                setFormData(data);
             } catch (err) {
                 console.error("[Frontend] Error:", err.message);
                 setError(err.message);

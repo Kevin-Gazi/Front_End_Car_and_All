@@ -87,22 +87,33 @@ function LoginScherm({ setIsLoggedIn, setIsEmployee, setFunctie }) {
             setError("Failed to send verification code.");
         }
     };
+    const isPasswordStrong = (password) => {
+        const strongPasswordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?"':{}|<>])(?=.*\d).{8,}$/;
+        return strongPasswordRegex.test(password);
+    };
 
     const resetPassword = async () => {
+        if (!isPasswordStrong(newPassword)) {
+            setError("The password must be at least 8 characters long and include an uppercase letter, a number, and a special character.");
+            return;
+        }
+
         try {
             const response = await fetch('https://localhost:7017/api/gebruiker/reset-password', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    Email: confirmEmail, // Zorg dat dit overeenkomt met wat de server verwacht
+                    Email: confirmEmail,
                     VerificationCode: verifyCode,
                     NewPassword: newPassword
                 })
             });
+
             if (response.ok) {
                 alert("Password reset successfully. You can now log in.");
                 setForgotPassword(false);
                 setStep(1);
+                setError("");
             } else {
                 const errorMsg = await response.text();
                 setError(errorMsg || "Error resetting password.");
@@ -111,7 +122,6 @@ function LoginScherm({ setIsLoggedIn, setIsEmployee, setFunctie }) {
             setError("Failed to reset password.");
         }
     };
-
 
     return (
         <div className="login-container">
@@ -149,6 +159,7 @@ function LoginScherm({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                         {step === 2 && (
                             <>
                                 <p>Enter your email, verification code, and new password.</p>
+                                {error && <p className="error-message-passwordreset">{error}</p>}
                                 <input type="email" placeholder="Email" value={confirmEmail} onChange={(e) => setConfirmEmail(e.target.value)} required />
                                 <input type="text" placeholder="Verification Code" value={verifyCode} onChange={(e) => setVerifyCode(e.target.value)} required />
                                 <input type="password" placeholder="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
