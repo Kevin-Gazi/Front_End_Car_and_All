@@ -137,12 +137,13 @@ const RentalScherm = () => {
 
         try {
             const response = await fetch(`https://localhost:7017/api/rentals/cancel/${rentalId}`, {
-                method: "PATCH",
+                method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
             });
+
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({
@@ -211,7 +212,7 @@ const RentalScherm = () => {
                                             <p>Tot: {new Date(rental.endDate).toLocaleDateString()}</p>
                                         </div>
                                         <div className="vehicle-end">
-                                            <p>Prijs: €{rental.price}</p>
+                                            <p>Prijs: €{rental.price !== undefined ? rental.price.toFixed(2) : "N/A"}</p>
                                             <p>Status: {rental.status}</p>
                                         </div>
                                         <div className="actions">
