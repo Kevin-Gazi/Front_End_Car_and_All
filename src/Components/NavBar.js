@@ -45,7 +45,7 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
 
                     {isLoggedIn ? (
                         <>
-                            {userType === 'Particulier' ? (
+                            {userType === 'Particulier' || 'Werknemer' ? (
                                 <>
                                     <li className="navbar-dropdown">
                                         <span className="navbar-links">Account</span>

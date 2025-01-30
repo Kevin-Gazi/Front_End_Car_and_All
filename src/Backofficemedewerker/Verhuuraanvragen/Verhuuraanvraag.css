@@ -81,3 +81,13 @@ button {
     background: #ef9a9a;
     cursor: not-allowed;
 }
+.no-requests-message {
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+    padding: 20px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

@@ -12,7 +12,7 @@ export default function RentalRequests() {
                 const response = await fetch('https://localhost:7017/api/rentals/GetRentals');
                 if (!response.ok) throw new Error(`Error: ${response.statusText}`);
                 const data = await response.json();
-                
+
                 const mappedRequests = data.map((r) => ({
                     id: r.id,
                     vehicleId: r.voertuigId,
@@ -31,7 +31,7 @@ export default function RentalRequests() {
 
         fetchRequests();
     }, []);
-    
+
     const handleApprove = async (id) => {
         try {
             const response = await fetch(
@@ -42,7 +42,7 @@ export default function RentalRequests() {
             if (response.ok) {
                 setRequests((prevRequests) =>
                     prevRequests.map((request) =>
-                        request.id === id ? { ...request, status: 'Accepted', isGoedgekeurd: true } : request
+                        request.id === id ? { ...request, status: 'Approved', isGoedgekeurd: true } : request
                     )
                 );
             } else {
@@ -52,7 +52,7 @@ export default function RentalRequests() {
             console.error('Error approving request:', error);
         }
     };
-    
+
     const handleReject = async (id) => {
         try {
             const response = await fetch(
@@ -73,11 +73,11 @@ export default function RentalRequests() {
             console.error('Error rejecting request:', error);
         }
     };
-    
+
     if (loading) {
         return <div className="loading">Loading rental requests...</div>;
     }
-    
+
     if (error) {
         return <div className="error">{error}</div>;
     }
@@ -86,34 +86,39 @@ export default function RentalRequests() {
         <div className="rental-requests">
             <h1>Rental Requests</h1>
             <div className="requests-container">
-                {requests.map((request) => (
-                    <div key={request.id} className="request-card">
-                        <div className="request-details">
-                            <p><strong>Vehicle ID:</strong> {request.vehicleId}</p>
-                            <p><strong>User ID:</strong> {request.userId}</p>
-                            <p><strong>Price:</strong> ${request.price}</p>
-                            <p><strong>Status:</strong> {request.status}</p>
-                        </div>
-                        <div className="request-actions">
-                            <button
-                                className="approve-btn"
-                                onClick={() => handleApprove(request.id)}
-                                disabled={request.status !== 'Pending'}
-                            >
-                                Approve
-                            </button>
-                            <button
-                                className="reject-btn"
-                                onClick={() => handleReject(request.id)}
-                                disabled={request.status !== 'Pending'}
-                            >
-                                Reject
-                            </button>
-                        </div>
+                {requests.length === 0 ? ( 
+                    <div className="no-requests-message">
+                        There are no rental requests at the moment.
                     </div>
-                ))}
+                ) : (
+                    requests.map((request) => (
+                        <div key={request.id} className="request-card">
+                            <div className="request-details">
+                                <p><strong>Vehicle ID:</strong> {request.vehicleId}</p>
+                                <p><strong>User ID:</strong> {request.userId}</p>
+                                <p><strong>Price:</strong> ${request.price}</p>
+                                <p><strong>Status:</strong> {request.status}</p>
+                            </div>
+                            <div className="request-actions">
+                                <button
+                                    className="approve-btn"
+                                    onClick={() => handleApprove(request.id)}
+                                    disabled={request.status !== 'Pending'}
+                                >
+                                    Approve
+                                </button>
+                                <button
+                                    className="reject-btn"
+                                    onClick={() => handleReject(request.id)}
+                                    disabled={request.status !== 'Pending'}
+                                >
+                                    Reject
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );
-
 }

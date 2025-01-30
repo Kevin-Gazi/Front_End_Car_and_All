@@ -5,14 +5,14 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const RentalScherm = () => {
     const [rentals, setRentals] = useState([]);
-    const [editMode, setEditMode] = useState(null); 
+    const [editMode, setEditMode] = useState(null);
     const [formData, setFormData] = useState({ startDate: "", endDate: "" });
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const token = localStorage.getItem("authToken");
     const [unavailableDates, setUnavailableDates] = useState([]);
     const [selectedRental, setSelectedRental] = useState(null);
-    
+
     const fetchRentals = async () => {
         if (!token) {
             console.error("[Frontend] Geen token gevonden.");
@@ -55,6 +55,7 @@ const RentalScherm = () => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
+
     const isDateUnavailable = (date) => {
         return unavailableDates.includes(date);
     };
@@ -67,7 +68,7 @@ const RentalScherm = () => {
             return;
         }
 
-        setSelectedRental(rental); 
+        setSelectedRental(rental);
         setEditMode(rental.rentalId);
         setFormData({
             startDate: rental.startDate ? rental.startDate.slice(0, 10) : "",
@@ -158,7 +159,19 @@ const RentalScherm = () => {
             alert(err.message);
         }
     };
-    
+
+    // Functie om te controleren of de "Change Date" knop moet worden weergegeven
+    const shouldShowChangeDateButton = (rental) => {
+        const currentDate = new Date();
+        const startDate = new Date(rental.startDate);
+
+        // Toon de knop alleen als de status "Pending" is of als de status "Approved" is en de startdatum nog niet is gepasseerd
+        return (
+            rental.status === "Pending" ||
+            (rental.status === "Approved" && startDate > currentDate)
+        );
+    };
+
     return (
         <div>
             <header className="rental-header">
@@ -215,7 +228,9 @@ const RentalScherm = () => {
                                             <p>Status: {rental.status}</p>
                                         </div>
                                         <div className="actions">
-                                            <button onClick={() => handleEdit(rental)}>Change Date</button>
+                                            {shouldShowChangeDateButton(rental) && (
+                                                <button onClick={() => handleEdit(rental)}>Change Date</button>
+                                            )}
                                             <button
                                                 onClick={() => handleDelete(rental.rentalId)}
                                                 style={{ backgroundColor: "red", color: "white" }}
