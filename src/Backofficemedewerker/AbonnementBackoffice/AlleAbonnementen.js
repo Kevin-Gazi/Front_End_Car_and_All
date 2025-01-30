@@ -25,19 +25,19 @@ export default function AlleAbonnementen() {
             });
 
             if (response.status === 404) {
-                console.warn("[Frontend] Geen pending abonnementen gevonden.");
+                console.warn("[Frontend] No pending subscriptions found.");
                 setPendingAccounts([]); // ✅ Zorgt ervoor dat de lijst leeg is zonder error
                 return;
             }
 
             if (!response.ok) {
-                throw new Error("Fout bij ophalen van zakelijke aanvragen.");
+                throw new Error("Error retrieving business requests.");
             }
 
             const data = await response.json();
             setPendingAccounts(data);
         } catch (err) {
-            console.error("[Frontend] Fout bij ophalen pending abonnementen:", err.message);
+            console.error("[Frontend] Error retrieving pending subscriptions:", err.message);
             setPendingAccounts([]); // ✅ Zorgt ervoor dat er geen error ontstaat
         } finally {
             setLoading(false);
@@ -57,7 +57,7 @@ export default function AlleAbonnementen() {
             });
 
             if (!response.ok) {
-                throw new Error("Fout bij goedkeuren van abonnement.");
+                throw new Error("Error approving subscription.");
             }
 
             alert("Subscription Approved.");
@@ -79,17 +79,17 @@ export default function AlleAbonnementen() {
             });
 
             if (!response.ok) {
-                throw new Error("Fout bij afwijzen van abonnement.");
+                throw new Error("Error declining subscription.");
             }
 
-            alert("Abonnement Rejected.");
+            alert("Subscription Rejected.");
             fetchPendingSubscriptions(); // Refresh de lijst
         } catch (err) {
             setError(err.message);
         }
     };
 
-    if (loading) return <div className="loading">Laden...</div>;
+    if (loading) return <div className="loading">Loading...</div>;
     if (error) return <div className="error">{error}</div>;
 
     return (
@@ -115,11 +115,11 @@ export default function AlleAbonnementen() {
                         <div key={account.id} className="request-card">
                             <div className="request-details">
                                 <p><strong>ID:</strong> {account.id}</p>
-                                <p><strong>Naam:</strong> {account.naam} {account.achternaam}</p>
+                                <p><strong>Name:</strong> {account.naam} {account.achternaam}</p>
                                 <p><strong>Email:</strong> {account.email}</p>
                                 <p><strong>KVK:</strong> {account.kvkNummer}</p>
-                                <p><strong>Abonnement:</strong> {account.abonnement}</p>
-                                <p><strong>Registratie:</strong> {new Date(account.registratieDatum).toLocaleDateString()}</p>
+                                <p><strong>Subscription:</strong> {account.abonnement}</p>
+                                <p><strong>Registration:</strong> {new Date(account.registratieDatum).toLocaleDateString()}</p>
                             </div>
                             <div className="request-actions">
                                 <button className="approve-btn" onClick={() => handleApprove(account.id)}>Approve</button>
