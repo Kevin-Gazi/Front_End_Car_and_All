@@ -4,29 +4,29 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Contact from "./Contact/Contact";
 import Home from "./Homepage/Home";
 import Vehicles from "./Vehicles/Vehicles";
-import NavBar from "./Components/NavBar";
-import Footer from "./Components/Footer"; // Footer toegevoegd
-import Login from "./Login/LoginScherm";
-import SignUp from "./Login/SignUpScherm";
+import NavBar from "./Components/Navbar/NavBar";
+import Footer from "./Components/Footer/Footer";
+import Login from "./Login/LoginScherm/LoginScherm";
+import SignUp from "./Login/SignUpScherm/SignUpScherm";
 import MedewerkerLogin from "./CarMedewerker/MedewerkerLogin/MedewerkerLogin";
 import MedewerkerDashboard from './CarMedewerker/MedewerkerDashboard/MedewerkerDashboard';
 import DamageClaims from "./Backofficemedewerker/Schadeclaim/Schadeclaims";
 import Subscriptions from "./Abonnement/Subscriptions";
 import AlleAbonnementen from "./Backofficemedewerker/AbonnementBackoffice/AlleAbonnementen";
 import DamageReport from "./Frontofficemedewerker/Schadeformulier/Schadeformulier";
-import Profile from "./Account/Profile";
-import Rentals from "./Account/RentalsScherm";
-import EmployeeScherm from './Account/EmployeeScherm';
+import Profile from "./Account/Profile/Profile";
+import Rentals from "./Account/RentalScherm/RentalsScherm";
+import EmployeeScherm from './Account/Employees/EmployeeScherm';
 import AllVehicles from "./Frontofficemedewerker/AllVehicles/AllVehicles";
 import Verhuuraanvraag from "./Backofficemedewerker/Verhuuraanvragen/Verhuuraanvraag";
-import NotificationScherm from "./Account/NotificationScherm";
+import NotificationScherm from "./Account/NotificationScherm/NotificationScherm";
 import TermsAndConditions from "./Privacy-en-Terms/TermsOfService";
 import PrivacyPolicy from "./Privacy-en-Terms/PrivacyPolicy";
-import VehicleIntake from "./Frontofficemedewerker/VehicleIntake";
-import EditVehicleScherm from "./Backofficemedewerker/EditVehicleScherm"
-import BusinessRequests from "./Backofficemedewerker/BusinessRequests";
-import CarEmployeeScherm from "./Backofficemedewerker/CarEmployeeScherm";
-import UitgifteScherm from "./Frontofficemedewerker/UitgifteScherm";
+import VehicleIntake from "./Frontofficemedewerker/VehicleIntake/VehicleIntake";
+import EditVehicleScherm from "./Backofficemedewerker/EditVehicleScherm/EditVehicleScherm"
+import BusinessRequests from "./Backofficemedewerker/BusinessRequests/BusinessRequests";
+import CarEmployeeScherm from "./Backofficemedewerker/CarEmployeeScherm/CarEmployeeScherm";
+import UitgifteScherm from "./Frontofficemedewerker/UitgifteScherm/UitgifteScherm";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [typeKlant, setTypeKlant] = useState(''); // Dit is de state voor het klanttype

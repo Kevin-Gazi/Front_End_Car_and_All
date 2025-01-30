@@ -41,8 +41,8 @@ function LoginScherm({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                 localStorage.setItem("adres", adres);
                 localStorage.setItem("postcode", postcode);
                 localStorage.setItem("authToken", data.token);
-                localStorage.setItem("Typeklant", data.typeKlant);
-                localStorage.setItem("userId", data.userId);
+                localStorage.setItem("userId", decodedToken.userId);
+                localStorage.setItem("Typeklant", decodedToken.userType);
                 
                 const userData = {
                     token: data.token,
@@ -57,13 +57,15 @@ function LoginScherm({ setIsLoggedIn, setIsEmployee, setFunctie }) {
                     setFunctie(data.functie);
                     localStorage.setItem('functie', data.functie);
                 }
+                console.log("Decoded Token:", decodedToken);
+                /*console.log("TypeKlant:", data.typeKlant);*/
                 navigate("/");
             } else {
                 const errorMsg = await response.text();
                 setError(errorMsg || "Login failed. Please try again.");
             }
         } catch (err) {
-            setError("Er is een fout opgetreden bij het inloggen. Controleer je verbinding en probeer opnieuw.");
+            setError("There was an error logging in. Please check your connection and try again.");
         }
     };
 

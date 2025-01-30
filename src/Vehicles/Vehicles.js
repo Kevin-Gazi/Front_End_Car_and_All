@@ -27,12 +27,12 @@ export default function Vehicles() {
     const [selectedType, setSelectedType] = useState('All');
     const [selectedBrand, setSelectedBrand] = useState([]);
     const [selectedColor, setSelectedColor] = useState([]);
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [unavailableDates, setUnavailableDates] = useState([]);
-        
+    const [isBusinessUser, setIsBusinessUser] = useState(false); // Nieuwe state voor zakelijke gebruikers
+
     const authToken = localStorage.getItem('authToken');
     const safeJwtDecode = (authToken) => {
         if (!authToken) {
@@ -40,14 +40,24 @@ export default function Vehicles() {
             return null;
         }
         try {
-            return jwtDecode(authToken);
+            const decoded = jwtDecode(authToken);
+            console.log("Decoded Token:", decoded);
+            return decoded;
         } catch (error) {
             console.error("Failed to decode token:", error.message);
             return null;
         }
     };
     const decodedToken = safeJwtDecode(authToken);
-
+    
+    useEffect(() => {
+        if (decodedToken?.userType === "Zakelijk" || decodedToken.userType === "Werknemer") {
+            setIsBusinessUser(true);
+            setSelectedType("Auto");
+        }
+    }, [decodedToken]);
+    
+    
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
@@ -83,6 +93,12 @@ export default function Vehicles() {
         setFilteredVehicles(filtered);
     }, [selectedType, selectedBrand, selectedColor, vehicles]);
     
+    const handleTypeChange = (e) => {
+        if (!isBusinessUser) {
+            setSelectedType(e.target.value);
+        }
+    };
+    
     const getUniqueBrands = () => {
         const brands = filteredVehicles.map(vehicle => vehicle.merk);
         return [...new Set(brands)];
@@ -107,11 +123,11 @@ export default function Vehicles() {
     };
 
     const vehicleImages = {
-        1: CorollaImage,
-        2: FocusImage,
-        3: GolfImage,
-        4: CivicImage,
-        5: Serie3Image,
+        200: CorollaImage,
+        201: FocusImage,
+        202: GolfImage,
+        203: CivicImage,
+        204: Serie3Image,
     };
     const getUniqueColors = () => {
         const colors = filteredVehicles.map(vehicle => vehicle.kleur);
@@ -304,7 +320,8 @@ export default function Vehicles() {
                                 name="type"
                                 value="All"
                                 checked={selectedType === 'All'}
-                                onChange={(e) => setSelectedType(e.target.value)}
+                                onChange={handleTypeChange}
+                                disabled={isBusinessUser} // Schakel de filter uit voor zakelijke gebruikers
                             />
                             All
                         </label>
@@ -314,7 +331,8 @@ export default function Vehicles() {
                                 name="type"
                                 value="Auto"
                                 checked={selectedType === 'Auto'}
-                                onChange={(e) => setSelectedType(e.target.value)}
+                                onChange={handleTypeChange}
+                                disabled={isBusinessUser} // Schakel de filter uit voor zakelijke gebruikers
                             />
                             Auto
                         </label>
@@ -324,7 +342,8 @@ export default function Vehicles() {
                                 name="type"
                                 value="Caravan"
                                 checked={selectedType === 'Caravan'}
-                                onChange={(e) => setSelectedType(e.target.value)}
+                                onChange={handleTypeChange}
+                                disabled={isBusinessUser} // Schakel de filter uit voor zakelijke gebruikers
                             />
                             Caravan
                         </label>
@@ -334,7 +353,8 @@ export default function Vehicles() {
                                 name="type"
                                 value="Camper"
                                 checked={selectedType === 'Camper'}
-                                onChange={(e) => setSelectedType(e.target.value)}
+                                onChange={handleTypeChange}
+                                disabled={isBusinessUser} // Schakel de filter uit voor zakelijke gebruikers
                             />
                             Camper
                         </label>

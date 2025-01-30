@@ -18,10 +18,12 @@ body {
 .vehicles-header h1 {
     margin: 0;
     font-size: 2rem;
+    color: white;
 }
 
 .vehicles-header p {
     font-size: 1.1rem;
+    color: white;
 }
 
 /* Main container for filters and vehicle grid */

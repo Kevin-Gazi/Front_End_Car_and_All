@@ -17,7 +17,7 @@ const SchadeclaimCard = ({ claim, fetchClaims }) => {
     // Save schadekosten function
     const handleSave = async () => {
         if (status === "Pending" && schadeKosten === "") {
-            setResponseMessage("Schadekosten moeten worden ingevuld!");
+            setResponseMessage("Damage costs must be filled in!");
             return false;
         }
 
@@ -36,12 +36,12 @@ const SchadeclaimCard = ({ claim, fetchClaims }) => {
                 headers: { "Content-Type": "application/json" },
             });
 
-            setResponseMessage("Schadekosten succesvol opgeslagen!");
+            setResponseMessage("Damage costs successfully saved!");
             fetchClaims(); // Refresh claims
             return true;
         } catch (error) {
             console.error("Error saving Schadekosten:", error.response?.data || error.message);
-            setResponseMessage("Fout bij het opslaan van de schadekosten.");
+            setResponseMessage("Error saving damage costs.");
             return false;
         }
     };
@@ -58,7 +58,7 @@ const SchadeclaimCard = ({ claim, fetchClaims }) => {
             setStatus("Approved");
             fetchClaims(); // Refresh the claims list after approval
         } catch (error) {
-            setResponseMessage("Fout bij het goedkeuren van de claim.");
+            setResponseMessage("Error approving the claim.");
             console.error(error);
         }
     };
@@ -73,7 +73,7 @@ const SchadeclaimCard = ({ claim, fetchClaims }) => {
             setStatus("Rejected");
             fetchClaims(); // Refresh the claims list after rejection
         } catch (error) {
-            setResponseMessage("Fout bij het afkeuren van de claim.");
+            setResponseMessage("Error rejecting the claim.");
             console.error(error);
         }
     };
@@ -82,11 +82,11 @@ const SchadeclaimCard = ({ claim, fetchClaims }) => {
         <div className="schadeclaim-card">
             <div className="info-row">
                 <div className="info-item">
-                    <strong>GebruikerId:</strong>
+                    <strong>UserId:</strong>
                     <p>{claim.gebruikerId}</p>
                 </div>
                 <div className="info-item">
-                    <strong>VoertuigId:</strong>
+                    <strong>VehicleId:</strong>
                     <p>{claim.voertuigId}</p>
                 </div>
                 <div className="info-item">
