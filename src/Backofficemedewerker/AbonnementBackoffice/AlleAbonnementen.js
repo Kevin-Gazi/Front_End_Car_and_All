@@ -46,9 +46,10 @@ export default function AlleAbonnementen() {
 
 
     // ✅ Approve een abonnement
+    // ✅ Approve een abonnement (fix API-aanroep)
     const handleApprove = async (id) => {
         try {
-            const response = await fetch(`https://localhost:7017/api/abonnement/approve-abonnement?id=${id}`, {
+            const response = await fetch(`https://localhost:7017/api/abonnement/approve-abonnement/${id}`, { // ✅ ID als route-parameter
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -67,10 +68,10 @@ export default function AlleAbonnementen() {
         }
     };
 
-    // ✅ Reject een abonnement
+// ✅ Reject een abonnement (fix API-aanroep)
     const handleReject = async (id) => {
         try {
-            const response = await fetch(`https://localhost:7017/api/abonnement/reject-abonnement?id=${id}`, {
+            const response = await fetch(`https://localhost:7017/api/abonnement/reject-abonnement/${id}`, { // ✅ ID als route-parameter
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -88,6 +89,7 @@ export default function AlleAbonnementen() {
             setError(err.message);
         }
     };
+
 
     if (loading) return <div className="loading">Loading...</div>;
     if (error) return <div className="error">{error}</div>;

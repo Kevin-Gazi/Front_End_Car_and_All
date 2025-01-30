@@ -225,11 +225,9 @@ const RentalScherm = () => {
                                             <p>Until: {new Date(rental.endDate).toLocaleDateString()}</p>
                                         </div>
                                         <div className="vehicle-end">
-<<<<<<< HEAD:src/Account/RentalsScherm.js
                                             <p>Prijs: €{rental.price !== undefined ? rental.price.toFixed(2) : "N/A"}</p>
-=======
+
                                             <p>Price: €{rental.price}</p>
->>>>>>> origin/main:src/Account/RentalScherm/RentalsScherm.js
                                             <p>Status: {rental.status}</p>
                                         </div>
                                         <div className="actions">
@@ -257,119 +255,4 @@ const RentalScherm = () => {
 };
 
 export default RentalScherm;
-    const [editMode, setEditMode] = useState(null);
-
-            console.error("[Frontend] No token found.");
-            setError("You are not logged in. Log in to view your rental history.");
-                    message: "Unexpected error with no JSON body.",
-                throw new Error(errorMessage.message || "Error while retrieving rentals.");
-            console.error("[Frontend] Error while retrieving rentals:", err.message);
-
-        console.log("[handleEdit] Selected rental:", rental);
-            console.error("RentalId of VehicleId is missing", rental);
-        setSelectedRental(rental);
-        console.log("[handleSave] Current selected rental:", selectedRental);
-            console.error("[Frontend] No selected rental or rentalId is missing.");
-            setError("No selected rentals found.");
-        console.log("[DEBUG] JSON body sent to backend:", JSON.stringify(requestBody));
-                throw new Error(responseData.message || "Error updating rental.");
-            alert("Rental successfully updated.");
-            console.error("[Frontend] Error updating rental:", err.message);
-        if (!window.confirm("Are you sure you want to cancel this rental??")) {
-                method: "DELETE",
-
-                    message: "An error has occurred",
-                throw new Error(errorData.message || "Error while canceling rental.");
-            alert("Rental successfully cancelled.");
-            console.error("[Frontend] Error canceling rental:", err.message);
-
-    // Functie om te controleren of de "Change Date" knop moet worden weergegeven
-    const shouldShowChangeDateButton = (rental) => {
-        const currentDate = new Date();
-        const startDate = new Date(rental.startDate);
-
-        // Toon de knop alleen als de status "Pending" is of als de status "Approved" is en de startdatum nog niet is gepasseerd
-        return (
-            rental.status === "Pending" ||
-            (rental.status === "Approved" && startDate > currentDate)
-        );
-    };
-
-            return (
-                <div>
-                    <header className="rental-header">
-                        <h1>Uw Huurgeschiedenis</h1>
-                        <p>Overzicht van alle auto's die u heeft gehuurd</p>
-                    </header>
-
-                    <main className="rental-container">
-                        {loading ? (
-                            <p>Rentals laden...</p>
-                        ) : error ? (
-                            <p className="error-message">{error}</p>
-                        ) : rentals.length > 0 ? (
-                            <div className="vehicle-grid">
-                                {rentals.map((rental) => (
-                                    <div key={rental.rentalId} className="vehicle-card">
-                                        {editMode === rental.rentalId ? (
-                                            <div className="edit-form">
-                                                <label>Startdatum:</label>
-                                                <DatePicker
-                                                    selected={new Date(formData.startDate)}
-                                                    onChange={(date) => setFormData((prev) => ({
-                                                        ...prev,
-                                                        startDate: date.toISOString().split("T")[0]
-                                                    }))}
-                                                    minDate={new Date()}
-                                                    excludeDates={unavailableDates.map((date) => new Date(date))}
-                                                    dateFormat="yyyy-MM-dd"
-                                                />
-                                                <label>Einddatum:</label>
-                                                <DatePicker
-                                                    selected={new Date(formData.endDate)}
-                                                    onChange={(date) => setFormData((prev) => ({
-                                                        ...prev,
-                                                        endDate: date.toISOString().split("T")[0]
-                                                    }))}
-                                                    minDate={new Date(formData.startDate)}
-                                                    excludeDates={unavailableDates.map((date) => new Date(date))}
-                                                    dateFormat="yyyy-MM-dd"
-                                                />
-                                                <button onClick={handleSave}>Save</button>
-                                                <button onClick={() => setEditMode(null)}>Cancel</button>
-                                            </div>
-                                        ) : (
-                                            <>
-                                                <div className="vehicle-start">
-                                                    <h2>{rental.vehicleBrand} {rental.vehicleModel}</h2>
-                                                    <p>Gehuurd door: {rental.userName} {rental.userLastName}</p>
-                                                    <p>Van: {new Date(rental.startDate).toLocaleDateString()}</p>
-                                                    <p>Tot: {new Date(rental.endDate).toLocaleDateString()}</p>
-                                                </div>
-                                                <div className="vehicle-end">
-                                                    <p>Prijs: €{rental.price !== undefined ? rental.price.toFixed(2) : "N/A"}</p>
-                                                    <p>Status: {rental.status}</p>
-                                                </div>
-                                                <div className="actions">
-                                                    <button onClick={() => handleEdit(rental)}>Change Date</button>
-                                                    <button
-                                                        onClick={() => handleDelete(rental.rentalId)}
-                                                        style={{ backgroundColor: "red", color: "white" }}
-                                                    >
-                                                        Cancel Rental
-                                                    </button>
-                                                </div>
-                                            </>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <p>Geen huurgeschiedenis gevonden.</p>
-                        )}
-                    </main>
-                </div>
-            );
-        };
-
-export default RentalScherm;
+    
