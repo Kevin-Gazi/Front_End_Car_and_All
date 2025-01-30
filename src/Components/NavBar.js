@@ -45,7 +45,7 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
 
                     {isLoggedIn ? (
                         <>
-                            {userType === 'Particulier' ? (
+                            {userType === 'Particulier' || 'Werknemer' ? (
                                 <>
                                     <li className="navbar-dropdown">
                                         <span className="navbar-links">Account</span>
@@ -83,6 +83,7 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
                                     <li className="navbar-dropdown">
                                         <span className="navbar-links">CarAndAll</span>
                                         <div className="navbar-dropdown-menu">
+                                            <Link to="/CarProfile"> Profile</Link>
                                             <Link to="/CarEmployees">Carandall Employees</Link>
                                             <Link to="/EditVehicleScherm">Edit Vehicles</Link>
                                             <Link to="/Logs">Logs</Link>
@@ -94,6 +95,7 @@ export const NavBar = ({ isLoggedIn, isEmployee, setIsLoggedIn }) => {
                                     <li className="navbar-dropdown">
                                         <span className="navbar-links">CarAndAll</span>
                                         <div className="navbar-dropdown-menu">
+                                            <Link to="/CarProfile"> Profile</Link>
                                             <Link to="/IntakeVehicles">Intake Vehicles</Link>
                                             <Link to="/Uitgifte">Sent-out Vehicles</Link>
                                             <Link to="/AllVehicles">All Vehicles</Link>

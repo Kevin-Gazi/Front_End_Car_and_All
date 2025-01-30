@@ -441,16 +441,15 @@ export default function Vehicles() {
                         <p><strong>Vehicle:</strong> {selectedVehicle.model}</p>
                         <p><strong>From:</strong> {startDate?.toLocaleDateString()}</p>
                         <p><strong>Until:</strong> {endDate?.toLocaleDateString()}</p>
-                        <p><strong>Total
-                            price:</strong> €{selectedVehicle.prijsPerDag * (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)}
+                        <p><strong>Total price:</strong> €
+                            {selectedVehicle.prijsPerDag * (Math.max(1, Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24))))}
                         </p>
-
-
                         <button onClick={handleConfirmRent}>Confirm</button>
                         <button onClick={() => setIsConfirmModalOpen(false)}>Cancel</button>
                     </div>
                 </div>
             )}
+
             {isUserInfoModalOpen && (
                 <div className="modal">
                     <div className="modal-content">
